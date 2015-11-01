@@ -27,7 +27,7 @@ MServer::MServer(int argc, char * argv[]): call_id_kind(NONE)
 
 //==========================================================================================================
 //==========================================================================================================
-MServer::Option::Option(bool mandatory, bool _need_arg): need_arg(_need_arg), found(false){}
+MServer::Option::Option(bool _mandatory, bool _need_arg): mandatory(_mandatory), need_arg(_need_arg), found(false){}
 
 //==========================================================================================================
 //==========================================================================================================
@@ -75,7 +75,7 @@ void MServer::process_args(int argc, char * argv[])
             error("Option " + opt_name + " doesn't exist");
         }
         
-        Option opt = options.at(opt_name);
+        Option &opt = options.at(opt_name);
         opt.found = true;
         
         if(last_arg && opt.need_arg)
@@ -97,7 +97,7 @@ void MServer::process_args(int argc, char * argv[])
              [&missing_opts](string_opt_pair val)
                 {
                     if(val.second.missing())
-                        missing_opts += val.first;
+                        missing_opts += val.first + " " ;
                 });
     
     if(!missing_opts.empty())
