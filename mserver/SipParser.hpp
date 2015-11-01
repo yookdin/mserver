@@ -16,16 +16,23 @@
 //==========================================================================================================
 enum SipElement
 {
-    NUM,
-    NAME,
-    PHONE_NUM,
-    USER,
-    PASSWORD,
-    URI,
-    HOST,
-    IP,
-    DOMAIN,
-    PORT
+    _NUM_,
+    _NAME_,
+    _PHONE_NUM_,
+    _USER_,
+    _PASSWORD_,
+    _URI_,
+    _HOST_,
+    _IP_,
+    _DOMAIN_,
+    _PORT_,
+    _METHOD_,
+    _REQUEST_LINE_,
+    _STATUS_LINE_,
+    _SIP_VERSION_,
+    _PARAM_,
+    _OPT_PARAM_LIST_,
+    _STATUS_CODE_
 };
 
 //==========================================================================================================
@@ -60,7 +67,6 @@ private:
         string get_highlevel_re() { return highlevel_re_str; }
         string get_re() { return re_str; }
         long get_re_length() { return re_str.length(); }
-        int get_total_submatches() { return re.mark_count(); }
         bool is_final() { return final; }
         
     private:

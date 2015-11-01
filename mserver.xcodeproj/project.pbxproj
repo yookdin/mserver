@@ -96,7 +96,7 @@
 				FE0ECE7D1BDF882B00958E40 /* MServer.cpp */,
 				FE0ECE691BDF832E00958E40 /* ScriptReader.h */,
 				FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */,
-				FE0ECE7A1BDF854600958E40 /* messages */,
+				FE0ECE7A1BDF854600958E40 /* sip */,
 				FE0ECE741BDF848600958E40 /* commands */,
 				FE610F101BE0D0F6002834FC /* utils */,
 				FE0ECE781BDF850E00958E40 /* Docs */,
@@ -134,13 +134,13 @@
 			name = Docs;
 			sourceTree = "<group>";
 		};
-		FE0ECE7A1BDF854600958E40 /* messages */ = {
+		FE0ECE7A1BDF854600958E40 /* sip */ = {
 			isa = PBXGroup;
 			children = (
 				FE0ECE971BE0B76400958E40 /* SipParser.hpp */,
 				FE0ECE961BE0B76400958E40 /* SipParser.cpp */,
 			);
-			name = messages;
+			name = sip;
 			sourceTree = "<group>";
 		};
 		FE610F101BE0D0F6002834FC /* utils */ = {
