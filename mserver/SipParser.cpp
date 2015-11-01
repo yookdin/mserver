@@ -21,9 +21,11 @@ SipParser SipParser::inst;
 SipParser::SipParser()
 {
 
+#define QUOTE(EXP) #EXP
+    
 #define ADD_ELEMENT_MATCHER(ELEM, STR, BOOL)\
-    sip_element_names[ELEM] = #ELEM;\
-    matchers[ELEM] = new SipMatcher(STR, BOOL)
+    sip_element_names[ELEM] = QUOTE(_##ELEM##_);\
+    matchers[ELEM] = new SipMatcher(ELEM, STR, BOOL)
 
     //------------------------------------------------------------------------------------------------------
     // Create regular expressions for the SIP elements. Some contain reference to other regular-expressions,
@@ -32,23 +34,35 @@ SipParser::SipParser()
     // in SIP).
     // If this isn't done right reference loops might occur, but I don't check for them.
     //------------------------------------------------------------------------------------------------------
-    ADD_ELEMENT_MATCHER(_METHOD_,           "ACK|BYE|CANCEL|INFO|INVITE|MESSAGE|NOTIFY|OPTIONS|PRACK|PUBLISH|REFER|REGISTER|SUBSCRIBE|UPDATE", true);
-    ADD_ELEMENT_MATCHER(_NUM_,              "\\d+",                                         true);
-    ADD_ELEMENT_MATCHER(_NAME_,             "\\w+",                                         true);
-    ADD_ELEMENT_MATCHER(_PHONE_NUM_,        "\\+?\\d[\\d-]*\\d",                            true);
-    ADD_ELEMENT_MATCHER(_USER_,             "_NAME_|_PHONE_NUM_",                           false);
-    ADD_ELEMENT_MATCHER(_PASSWORD_,         "\\S+",                                         true);
-    ADD_ELEMENT_MATCHER(_URI_,              "sip:((_USER_)(:(_PASSWORD_))?@)?(_HOST_)(:(_PORT_))?(_OPT_PARAM_LIST_)", false);
-    ADD_ELEMENT_MATCHER(_HOST_,             "_IP_|_DOMAIN_",                                    false);
-    ADD_ELEMENT_MATCHER(_IP_,               "(\\d{1,3}\\.){3}\\d{1,3}",                     true);
-    ADD_ELEMENT_MATCHER(_DOMAIN_,           "_NAME_\\._NAME_",                                  false);
-    ADD_ELEMENT_MATCHER(_PORT_,             "_NUM_",                                          false);
-    ADD_ELEMENT_MATCHER(_REQUEST_LINE_,     "(_METHOD_) (_URI_) (_SIP_VERSION_)",   false);
-    ADD_ELEMENT_MATCHER(_STATUS_LINE_,      "(_SIP_VERSION_) (_STATUS_CODE_) .*", false); // Don't care about the reason phrase (everything after the status code)
-    ADD_ELEMENT_MATCHER(_SIP_VERSION_,      "SIP/2.0", true);
-    ADD_ELEMENT_MATCHER(_PARAM_,            "[^ =](=[^ =])?", true);
-    ADD_ELEMENT_MATCHER(_OPT_PARAM_LIST_,   "(;_PARAM_)*", false);
-    ADD_ELEMENT_MATCHER(_STATUS_CODE_,      "\\d{3}", true);
+    ADD_ELEMENT_MATCHER(METHOD,             "[[:upper:]]+",                             true);
+    ADD_ELEMENT_MATCHER(NUM,                "\\d+",                                     true);
+    ADD_ELEMENT_MATCHER(NAME,               "\\w+",                                     true);
+    ADD_ELEMENT_MATCHER(USER_NAME,          "[^ :@]+",                                  true);
+    ADD_ELEMENT_MATCHER(PASSWORD,           "\\S+",                                     true);
+    ADD_ELEMENT_MATCHER(IP,                 "(\\d{1,3}\\.){3}\\d{1,3}",                 true);
+    ADD_ELEMENT_MATCHER(SIP_VERSION,        "SIP/2.0",                                  true);
+    ADD_ELEMENT_MATCHER(PARAM,              "[^ ;=]+(=[^ ;=]+)?",                       true);
+    ADD_ELEMENT_MATCHER(STATUS_CODE,        "\\d{3}",                                   true);
+    ADD_ELEMENT_MATCHER(HEADER_NAME,        "[[:alnum:]]+(-[[:alnum:]]+)*",             true);
+    ADD_ELEMENT_MATCHER(HEADER_VALUE,       ".*",                                       true); // Allow anything
+    
+    
+    ADD_ELEMENT_MATCHER(PHONE_NUM,          "\\+?_NUM_(-_NUM_)*",                       false);
+
+    // TODO: add headers (optional after the parameter list) ?
+    ADD_ELEMENT_MATCHER(URI,                "sip:((_USER_)(:(_PASSWORD_))?@)?(_HOST_)(:(_PORT_))?(_OPT_PARAM_LIST_)", false);
+    
+    ADD_ELEMENT_MATCHER(PORT,               "_NUM_",                                    false);
+    ADD_ELEMENT_MATCHER(USER,               "_USER_NAME_|_PHONE_NUM_",                       false);
+    ADD_ELEMENT_MATCHER(HOST,               "_IP_|_DOMAIN_",                            false);
+    ADD_ELEMENT_MATCHER(DOMAIN,             "_NAME_\\._NAME_",                          false);
+    ADD_ELEMENT_MATCHER(REQUEST_LINE,       "(_METHOD_) (_URI_) (_SIP_VERSION_)",       false);
+    
+    // Don't care about the reason phrase (everything after the status code)
+    ADD_ELEMENT_MATCHER(STATUS_LINE,      "(_SIP_VERSION_) (_STATUS_CODE_) .*",         false);
+
+    ADD_ELEMENT_MATCHER(OPT_PARAM_LIST,   "(;_PARAM_)*",                                false);
+    ADD_ELEMENT_MATCHER(HEADER,           "(_HEADER_NAME_) *: *(_HEADER_VALUE_)",       false);
     
 #undef ADD_ELEMENT_MATCHER
     
@@ -59,12 +73,11 @@ SipParser::SipParser()
     
     for(auto pair: sip_element_names)
     {
-        s += pair.second + "|";
+        s += "\\b" + pair.second + "\\b|";
     }
     
     s.resize(s.length() - 1); // Remove last '|'
     sip_element_re = s;
-    
     finalize_matchers();
 }
 
@@ -90,6 +103,29 @@ bool SipParser::match(SipElement elem, string line)
     return cur_matcher->match(line);
 }
 
+
+//==========================================================================================================
+//==========================================================================================================
+string SipParser::get_match(SipElement elem, string line)
+{
+    cur_matcher = matchers[elem];
+    return cur_matcher->get_match(line);
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+string SipParser::get_match()
+{
+    if(cur_matcher != nullptr)
+    {
+        return cur_matcher->get_match();
+    }
+
+    throw string("No match has been performed");
+}
+
+
 //==========================================================================================================
 // After a successful match this will return the sub-match of the given element within the match of the last
 // matched element. If called with elements not contained in the last element, an empty string will be
@@ -106,6 +142,16 @@ string SipParser::get_sub_match(SipElement elem, int pos)
         throw string("No match has been performed");
     }
 }
+
+
+//=====================================x=====================================================================
+//==========================================================================================================
+void SipParser::print_match(SipElement elem, string line)
+{
+    match(elem, line);
+    cur_matcher->print_match();
+}
+
 
 //==========================================================================================================
 // Private function, used for the finalize matcher process.
@@ -129,22 +175,22 @@ void SipParser::print()
 {
     for(auto pair: matchers)
     {
-        cout << "Element name: " << sip_element_names[pair.first] << endl;
         pair.second->print();
         cout << endl;
     }
 }
 
 
-/**********************************************************************************************************
- *
- *                                  CLASS SipParser::SipMatcher
- *
- **********************************************************************************************************/
+/***********************************************************************************************************
+ *                                                                                                         *
+ *                                  CLASS SipParser::SipMatcher                                            *
+ *                                                                                                         *
+ ***********************************************************************************************************/
 
 //==========================================================================================================
 //==========================================================================================================
-SipParser::SipMatcher::SipMatcher(string _highlevel_re_str, bool _final):
+SipParser::SipMatcher::SipMatcher(SipElement _elem, string _highlevel_re_str, bool _final):
+    elem(_elem),
     highlevel_re_str(_highlevel_re_str),
     final(_final)
 {
@@ -160,7 +206,18 @@ SipParser::SipMatcher::SipMatcher(string _highlevel_re_str, bool _final):
 //==========================================================================================================
 bool SipParser::SipMatcher::match(string line)
 {
-    return false;
+    cur_line = line;
+    return regex_match(cur_line, match_result, re);
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+string SipParser::SipMatcher::get_match(string line)
+{
+    cur_line = line;
+    match(cur_line);
+    return match_result.str();
 }
 
 
@@ -168,14 +225,24 @@ bool SipParser::SipMatcher::match(string line)
 //==========================================================================================================
 string SipParser::SipMatcher::get_match()
 {
-    return "";
+    return match_result.str();
 }
 
 
 //==========================================================================================================
 //==========================================================================================================
-string SipParser::SipMatcher::get_sub_match(SipElement elem, int pos)
+string SipParser::SipMatcher::get_sub_match(SipElement sub_elem, int pos)
 {
+    int cur_pos = -1;
+    
+    for(auto pair: subs)
+    {
+        if(pair.first == sub_elem && ++cur_pos == pos)
+        {
+            return match_result[pair.second];
+        }
+    }
+    
     return "";
 }
 
@@ -223,7 +290,7 @@ void SipParser::SipMatcher::finalize()
             
             auto element_subs = matcher->subs;
             
-            for(auto p: element_subs)
+            for(auto &p: element_subs)
             {
                 p.second += num_subs;
             }
@@ -245,6 +312,7 @@ void SipParser::SipMatcher::finalize()
     
     re = re_str;
     final = true;
+    self_check();
 }
 
 
@@ -252,12 +320,21 @@ void SipParser::SipMatcher::finalize()
 //==========================================================================================================
 void SipParser::SipMatcher::print()
 {
+    cout << "Element name: " << SipParser::inst.get_sip_elem_name(elem) << endl;
+
+    string title;
+
     if(highlevel_re_str != re_str)
     {
-        cout << "highlevel: \"" << highlevel_re_str << "\"" << ", ";
+        cout << "Highlevel regex: \"" << highlevel_re_str << "\"" << endl;
+        title = "Actual regex   :";
     }
-
-    cout << "regex: \"" << re_str << "\"" << endl;
+    else
+    {
+        title = "Actual regex:";
+    }
+    
+    cout << title << " \"" << re_str << "\"" << endl;
     
     if(!subs.empty())
     {
@@ -266,12 +343,53 @@ void SipParser::SipMatcher::print()
     
     for(auto p: subs)
     {
-        cout << SipParser::inst.get_sip_elem_name(p.first) << ":" << p.second << endl;
+        cout << SipParser::inst.get_sip_elem_name(p.first) << ": " << p.second << endl;
     }
 }
 
 
+//==========================================================================================================
+//==========================================================================================================
+void SipParser::SipMatcher::self_check()
+{
+    regex possible_elem("_([[:upper:]]+_)+");
+    sregex_iterator iter(re_str.begin(), re_str.end(), possible_elem);
+    sregex_iterator end;
 
+    vector<string> names;
+    
+    while(iter != end) {
+        names.push_back(iter->str());
+        iter++;
+    }
+
+    if(!names.empty())
+    {
+        cout << "Possible unresolved element names in SIP matcher " << SipParser::inst.get_sip_elem_name(elem) << ":" << endl;
+
+        for(auto s: names)
+        {
+            cout << s << endl;
+        }
+        
+        cout << endl;
+    }
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+void SipParser::SipMatcher::print_match()
+{
+    cout << "High-level  : \"" << highlevel_re_str << "\"" << endl;
+    cout << "Actual regex: \"" << re_str << "\"" << endl;
+    cout << "Entire match: " << get_match() << endl;
+    for(auto p: subs)
+    {
+        cout << "Sub-match " << SipParser::inst.get_sip_elem_name(p.first) << "(" << p.second << "): '" << match_result[p.second] << "'" << endl;
+    }
+    cout << endl;
+}
 
 
 

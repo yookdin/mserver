@@ -16,23 +16,27 @@
 //==========================================================================================================
 enum SipElement
 {
-    _NUM_,
-    _NAME_,
-    _PHONE_NUM_,
-    _USER_,
-    _PASSWORD_,
-    _URI_,
-    _HOST_,
-    _IP_,
-    _DOMAIN_,
-    _PORT_,
-    _METHOD_,
-    _REQUEST_LINE_,
-    _STATUS_LINE_,
-    _SIP_VERSION_,
-    _PARAM_,
-    _OPT_PARAM_LIST_,
-    _STATUS_CODE_
+    NUM,
+    NAME,
+    PHONE_NUM,
+    PASSWORD,
+    USER,
+    URI,
+    HOST,
+    IP,
+    DOMAIN,
+    PORT,
+    METHOD,
+    REQUEST_LINE,
+    STATUS_LINE,
+    SIP_VERSION,
+    PARAM,
+    OPT_PARAM_LIST,
+    STATUS_CODE,
+    HEADER_NAME,
+    HEADER_VALUE,
+    HEADER,
+    USER_NAME
 };
 
 //==========================================================================================================
@@ -45,8 +49,11 @@ public:
     static SipParser inst;
     
     bool match(SipElement elem, string line);
+    string get_match(SipElement elem, string line);
+    string get_match();
     string get_sub_match(SipElement elem, int pos = 0);
     void print();
+    void print_match(SipElement elem, string line);
 
 private:
     SipParser();
@@ -57,10 +64,14 @@ private:
     class SipMatcher
     {
     public:
-        SipMatcher(string highlevel_re, bool _final = false);
+        const SipElement elem;
+        const string highlevel_re_str;
+        
+        SipMatcher(SipElement elem, string highlevel_re, bool _final = false);
         bool match(string line);
+        string get_match(string line);
         string get_match();
-        string get_sub_match(SipElement elem, int pos = 0);
+        string get_sub_match(SipElement sub_elem, int pos = 0);
         void finalize();
         void print();
         
@@ -68,10 +79,12 @@ private:
         string get_re() { return re_str; }
         long get_re_length() { return re_str.length(); }
         bool is_final() { return final; }
+        void self_check();
+        void print_match();
         
     private:
+        string cur_line;
         bool final;
-        string highlevel_re_str;
         string re_str;
         regex re;
         smatch match_result;
@@ -82,7 +95,7 @@ private:
             return count_if(re_str.begin(), re_str.begin() + pos + 1,
                             [](char c){ return c == '('; });
         }
-};
+    };
     
     bimap<SipElement, string> sip_element_names; // Used to get from element to its name and vice versa
     regex sip_element_re;
