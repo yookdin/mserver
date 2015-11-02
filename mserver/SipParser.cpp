@@ -53,16 +53,17 @@ SipParser::SipParser()
     ADD_ELEMENT_MATCHER(URI,                "sip:((_USER_)(:(_PASSWORD_))?@)?(_HOST_)(:(_PORT_))?(_OPT_PARAM_LIST_)", false);
     
     ADD_ELEMENT_MATCHER(PORT,               "_NUM_",                                    false);
-    ADD_ELEMENT_MATCHER(USER,               "_USER_NAME_|_PHONE_NUM_",                       false);
+    ADD_ELEMENT_MATCHER(USER,               "_USER_NAME_|_PHONE_NUM_",                  false);
     ADD_ELEMENT_MATCHER(HOST,               "_IP_|_DOMAIN_",                            false);
     ADD_ELEMENT_MATCHER(DOMAIN,             "_NAME_\\._NAME_",                          false);
     ADD_ELEMENT_MATCHER(REQUEST_LINE,       "(_METHOD_) (_URI_) (_SIP_VERSION_)",       false);
     
     // Don't care about the reason phrase (everything after the status code)
-    ADD_ELEMENT_MATCHER(STATUS_LINE,      "(_SIP_VERSION_) (_STATUS_CODE_) .*",         false);
+    ADD_ELEMENT_MATCHER(STATUS_LINE,        "(_SIP_VERSION_) (_STATUS_CODE_) .*",       false);
 
-    ADD_ELEMENT_MATCHER(OPT_PARAM_LIST,   "(;_PARAM_)*",                                false);
-    ADD_ELEMENT_MATCHER(HEADER,           "(_HEADER_NAME_) *: *(_HEADER_VALUE_)",       false);
+    ADD_ELEMENT_MATCHER(OPT_PARAM_LIST,     "(;_PARAM_)*",                              false);
+    ADD_ELEMENT_MATCHER(HEADER_LINE,        "(_HEADER_NAME_) *: *(_HEADER_VALUE_)",     false);
+    ADD_ELEMENT_MATCHER(START_LINE,         "(_STATUS_LINE_)|(_REQUEST_LINE_)",         false);
     
 #undef ADD_ELEMENT_MATCHER
     

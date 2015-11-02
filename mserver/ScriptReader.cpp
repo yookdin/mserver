@@ -6,51 +6,30 @@
 #include "RecvCommand.h"
 #include "PauseCommand.h"
 #include "AnswerCommand.h"
-#include "SipParser.hpp"
+#include "MServer.hpp"
 
 //==========================================================================================================
-// Declare ScriptReader static varibales
 //==========================================================================================================
-regex ScriptReader::command_start_regex;
-map<string, Command*> ScriptReader::commands;
+regex ScriptReader::command_start_regex("^ *<(answer)|^ *<(pause)|^ *<(recv)|^ *<(scenario)|^ *<(send)>");
 
-//==========================================================================================================
-// Init commands map and command_start_regex; will be called only once
-//==========================================================================================================
-map<string, Command*>& ScriptReader::init_commands()
-{
-    commands["scenario"] = new ScenarioCommand();
-    commands["send"] = new SendCommand();
-    commands["recv"] = new RecvCommand();
-    commands["pause"] = new PauseCommand();
-    commands["answer"] = new AnswerCommand();
-
-    string s;
-    auto last = --commands.end();
-    
-    for(auto iter = commands.begin(); iter != commands.end(); iter++)
-    {
-        s += iter->second->get_start_regex();
-        if(iter != last)
-        {
-            s += "|";
-        }
-    }
-    
-    command_start_regex = s;
-
-    return commands;
-}
 
 //==========================================================================================================
 //==========================================================================================================
 ScriptReader::ScriptReader(string filepath)
 {
-    if(commands.empty())
-    {
-        init_commands();
-    }
+    commands["scenario"] = new ScenarioCommand(*this);
+    commands["send"] = new SendCommand(*this);
+    commands["recv"] = new RecvCommand(*this);
+    commands["pause"] = new PauseCommand(*this);
+    commands["answer"] = new AnswerCommand(*this);
     
+    // TMP, for testing purposes, will replaced by values from MServer or values generated during read
+    vars["transport"] = "tcp";
+    vars["branch"] = "z9hG4bKPjkCnP1tH3DTBjBrlojZPYdV6aaDWiiV.e";
+    vars["call_number"] = "123456";
+    vars["call_id"] = "x4eVMfdlOg3XN2Tp0Ucy7btabxHb-gby1446389861";
+    vars["len"] = "13";
+
     read_file(filepath);
 }
 
@@ -75,6 +54,7 @@ void ScriptReader::read_file(string filepath)
 			string command_name;
 			
 			// Find the sub-match which succeeded; that is the command name
+            // Skip the first match, it is the entire match
 			for(auto iter = ++res.begin(); iter != res.end(); iter++)
 			{
 				if(! iter->str().empty())
@@ -85,9 +65,43 @@ void ScriptReader::read_file(string filepath)
 			}
 
 			line = res.suffix().str(); // Skip the matched part, so the command won't need to deal with it
-			cout << command_name << endl;
-			commands[command_name]->interpret(line, file);
+            commands[command_name]->interpret(line, file);
 		}
 	}
 }
+
+
+//==========================================================================================================
+//==========================================================================================================
+string & ScriptReader::get_value(string var)
+{
+    if(vars.count(var) == 0)
+    {
+        return MServer::inst.get_value(var);
+    }
+    
+    return vars[var];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -10,15 +10,31 @@
 #include "ScriptReader.h"
 #include "SipParser.hpp"
 
+
 //==========================================================================================================
 //==========================================================================================================
-MServer::MServer(int argc, char * argv[]): call_id_kind(NONE)
+MServer MServer::inst;
+
+//==========================================================================================================
+//==========================================================================================================
+
+MServer::MServer(): call_id_kind(NONE)
+{
+    // TMP, to be replaced by getting actual value from OS
+    vars["client_ip"] = "10.0.0.116";
+    vars["client_port"] = "5060";
+    vars["pid"] = "666";
+}
+
+//==========================================================================================================
+//==========================================================================================================
+void MServer::run(int argc, char * argv[])
 {
     process_args(argc, argv);
     
     try
     {
-        ScriptReader reader(scenario_file);
+        ScriptReader reader(get_value("scenario"));
     } catch (string err)
     {
         error(err);
@@ -50,16 +66,19 @@ void MServer::error(string msg)
 // -port <PORT>         port to use
 // -test_dir <NAME>     test directory (for log file)
 // -scenario <NAME>     scenario file to run
-
+//
 // Optional options:
 // -call_id_<min|max>   generate either minimal or maximal call id for a generated call
 //==========================================================================================================
 void MServer::process_args(int argc, char * argv[])
 {
+    //------------------------------------------------------------------------------------------------------
+    // Collect and check options
+    //------------------------------------------------------------------------------------------------------
     map<string, Option> options;
 
-    options.emplace("-ip", Option(true, true));
-    options.emplace("-port", Option(true, true));
+    options.emplace("-server_ip", Option(true, true));
+    options.emplace("-server_port", Option(true, true));
     options.emplace("-test_dir", Option(true, true));
     options.emplace("-scenario", Option(true, true));
     options.emplace("-call_id_min", Option(false, false));
@@ -105,19 +124,20 @@ void MServer::process_args(int argc, char * argv[])
         error("Missing options: " + missing_opts);
     }
     
-    ip = options.at("-ip").val;
-    port = stoi(options.at("-port").val);
-    test_dir = options.at("-test_dir").val;
-    scenario_file = options.at("-scenario").val;
-    
-    if(!ifstream(test_dir))
+    //------------------------------------------------------------------------------------------------------
+    // Put collected values in the vars map. Why not just put it in fields? because script reader will need
+    // these values and it will query for them by their variable names.
+    //------------------------------------------------------------------------------------------------------
+    for(auto pair: options)
     {
-        error("Dir " + test_dir + " doesn't exist");
-    }
-
-    if(!ifstream(scenario_file))
-    {
-        error("File " + scenario_file + " doesn't exist");
+        if(pair.first == "-call_id_min" || pair.first == "-call_id_max")
+        {
+            continue;
+        }
+        
+        string var_name = pair.first;
+        var_name.erase(0, 1);
+        vars[var_name] = pair.second.val;
     }
     
     if(options.at("-call_id_min").found)
@@ -128,4 +148,62 @@ void MServer::process_args(int argc, char * argv[])
     {
         call_id_kind = MAX;
     }
+    
+    //------------------------------------------------------------------------------------------------------
+    // Check validity of given parameters
+    //------------------------------------------------------------------------------------------------------
+    if(!ifstream(get_value("test_dir")))
+    {
+        error("Dir " + get_value("test_dir") + " doesn't exist");
+    }
+
+    if(!ifstream(get_value("scenario")))
+    {
+        error("File " + get_value("scenario") + " doesn't exist");
+    }
 }
+
+
+//==========================================================================================================
+//==========================================================================================================
+string& MServer::get_value(string var)
+{
+    if(vars.count(var) == 0)
+    {
+        throw string("Variable '" + var + "' doesn't exist");
+    }
+    
+    return vars[var];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

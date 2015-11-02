@@ -35,8 +35,9 @@ enum SipElement
     STATUS_CODE,
     HEADER_NAME,
     HEADER_VALUE,
-    HEADER,
-    USER_NAME
+    HEADER_LINE,
+    USER_NAME,
+    START_LINE
 };
 
 //==========================================================================================================

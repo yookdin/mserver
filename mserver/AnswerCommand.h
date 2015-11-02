@@ -4,8 +4,7 @@
 class AnswerCommand : public Command
 {
 public:
-	AnswerCommand(void);
-	~AnswerCommand(void);
-	virtual void interpret(string &line, ifstream &file);
+    AnswerCommand(ScriptReader &_reader): Command(_reader) {}
+    virtual void interpret(string &line, ifstream &file);
 };
 

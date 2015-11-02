@@ -17,13 +17,15 @@
 class MServer
 {
 public:
-    MServer(int argc, char * argv[]);
+    static MServer inst;
 
+    void run(int argc, char * argv[]);
+    string& get_value(string var);
+    
 private:
-    string test_dir;
-    string scenario_file;
-    string ip;
-    int port;
+    MServer();
+
+    map<string, string> vars;
     enum CallIDKind {NONE, MIN, MAX} call_id_kind;
     
     void process_args(int argc, char * argv[]);

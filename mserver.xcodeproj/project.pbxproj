@@ -17,6 +17,7 @@
 		FE0ECE731BDF832E00958E40 /* SendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE6A1BDF832E00958E40 /* SendCommand.cpp */; };
 		FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE7D1BDF882B00958E40 /* MServer.cpp */; };
 		FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE961BE0B76400958E40 /* SipParser.cpp */; };
+		FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +58,8 @@
 		FE0ECE7E1BDF882B00958E40 /* MServer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MServer.hpp; sourceTree = "<group>"; };
 		FE0ECE961BE0B76400958E40 /* SipParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipParser.cpp; sourceTree = "<group>"; };
 		FE0ECE971BE0B76400958E40 /* SipParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipParser.hpp; sourceTree = "<group>"; };
+		FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipMessage.cpp; sourceTree = "<group>"; };
+		FE2FFC501BE76B3E004E05A2 /* SipMessage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipMessage.hpp; sourceTree = "<group>"; };
 		FE610F111BE0D126002834FC /* bimap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bimap.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,6 +142,8 @@
 			children = (
 				FE0ECE971BE0B76400958E40 /* SipParser.hpp */,
 				FE0ECE961BE0B76400958E40 /* SipParser.cpp */,
+				FE2FFC501BE76B3E004E05A2 /* SipMessage.hpp */,
+				FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */,
 			);
 			name = sip;
 			sourceTree = "<group>";
@@ -212,6 +217,7 @@
 				FE0ECE6C1BDF832E00958E40 /* AnswerCommand.cpp in Sources */,
 				FE0ECE701BDF832E00958E40 /* RecvCommand.cpp in Sources */,
 				FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */,
+				FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */,
 				FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */,
 				FE0ECE711BDF832E00958E40 /* ScenarioCommand.cpp in Sources */,
 				FE0ECE6F1BDF832E00958E40 /* PauseCommand.cpp in Sources */,

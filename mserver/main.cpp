@@ -5,9 +5,7 @@
 
 int main(int argc, char * argv[])
 {
-    //MServer mserver(argc, argv);
-    
-    SipParser::inst.print();
+    MServer::inst.run(argc, argv);
     
 	return 0;
 }

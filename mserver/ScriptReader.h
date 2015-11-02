@@ -6,12 +6,13 @@ class ScriptReader
 {
 public:
 	ScriptReader(string filepath);
-
+    string &get_value(string var);
+    
 private:
-	static regex command_start_regex;
-	static map<string, Command*> commands;
+    static regex command_start_regex;
+    map<string, Command*> commands;
+    map<string, string> vars; // Map of var names and their values
 
-    map<string, Command*>& init_commands();
     void read_file(string filepath);
 };
 

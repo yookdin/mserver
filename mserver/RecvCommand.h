@@ -4,8 +4,8 @@
 class RecvCommand :	public Command
 {
 public:
-	RecvCommand(void);
-	~RecvCommand(void);
+    RecvCommand(ScriptReader &_reader): Command(_reader) {}
+
 	virtual void interpret(string &line, ifstream &file);
 };
 

@@ -1,17 +1,12 @@
 #include "ScenarioCommand.h"
 #include "ScriptReader.h"
 
-ScenarioCommand::ScenarioCommand(void)
-{
-	start_regex = "^ *<(scenario)";
-	param_regex = "file *= *\"(.*)\"";
-}
+//==========================================================================================================
+//==========================================================================================================
+const regex ScenarioCommand::param_regex("file *= *\"(.*)\"");
 
-
-ScenarioCommand::~ScenarioCommand(void)
-{
-}
-
+//==========================================================================================================
+//==========================================================================================================
 void ScenarioCommand::interpret(string &line, ifstream &file)
 {
 	smatch match;

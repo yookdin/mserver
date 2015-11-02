@@ -4,8 +4,7 @@
 class PauseCommand : public Command
 {
 public:
-	PauseCommand(void);
-	~PauseCommand(void);
+    PauseCommand(ScriptReader &_reader): Command(_reader) {}
 	virtual void interpret(string &line, ifstream &file);
 };
 

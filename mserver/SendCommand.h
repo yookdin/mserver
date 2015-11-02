@@ -4,10 +4,11 @@
 class SendCommand :	public Command
 {
 public:
-	SendCommand();
-	~SendCommand();
+    SendCommand(ScriptReader &_reader): Command(_reader) {}
+
 	virtual void interpret(string &line, ifstream &file);
 
 private:
+    static const regex end_regex;
 };
 
