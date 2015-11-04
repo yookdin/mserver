@@ -10,5 +10,7 @@ public:
 
 private:
     static const regex end_regex;
+    
+    void replcae_vars(ifstream &file, vector<string>& msg_lines);
 };
 

@@ -13,7 +13,8 @@ public:
 protected:
     ScriptReader &reader;
 
-    void trim(string &line);
-    void replace_vars(string &line);
+    void trim(string &line);    
+    bool replace_vars(string &line);
+    void replace_len(string &line, string& len);
 };
 
