@@ -62,8 +62,8 @@ SipParser::SipParser()
     ADD_ELEMENT_MATCHER(STATUS_LINE,        "(_SIP_VERSION_) (_STATUS_CODE_) .*",       false);
 
     ADD_ELEMENT_MATCHER(OPT_PARAM_LIST,     "(;_PARAM_)*",                              false);
-    ADD_ELEMENT_MATCHER(HEADER_LINE,        "(_HEADER_NAME_) *: *(_HEADER_VALUE_)",     false);
-    ADD_ELEMENT_MATCHER(START_LINE,         "(_STATUS_LINE_)|(_REQUEST_LINE_)",         false);
+    ADD_ELEMENT_MATCHER(HEADER_LINE,        "(_HEADER_NAME_) *: *(_HEADER_VALUE_)" CRLF,     false);
+    ADD_ELEMENT_MATCHER(START_LINE,         "(_STATUS_LINE_)|(_REQUEST_LINE_)" CRLF,         false);
     
 #undef ADD_ELEMENT_MATCHER
     

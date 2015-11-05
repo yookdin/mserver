@@ -17,13 +17,14 @@ MServer MServer::inst;
 
 //==========================================================================================================
 //==========================================================================================================
-
 MServer::MServer(): call_id_kind(NONE)
 {
-    // TMP, to be replaced by getting actual value from OS
-    vars["client_ip"] = "10.0.0.116";
-    vars["client_port"] = "5060";
-    vars["pid"] = "666";
+    vars[PID] = to_string(getpid());
+    vars[TRANSPORT] = "tcp"; // Currently supporting only TCP
+
+    // Not sure these actually need real values
+    vars[CLIENT_IP] = "10.0.0.116";
+    vars[CLIENT_PORT] = "5060";
 }
 
 //==========================================================================================================
@@ -77,16 +78,17 @@ void MServer::process_args(int argc, char * argv[])
     //------------------------------------------------------------------------------------------------------
     map<string, Option> options;
 
-    options.emplace("-server_ip", Option(true, true));
-    options.emplace("-server_port", Option(true, true));
-    options.emplace("-test_dir", Option(true, true));
-    options.emplace("-scenario", Option(true, true));
-    options.emplace("-call_id_min", Option(false, false));
-    options.emplace("-call_id_max", Option(false, false));
+    options.emplace(SERVER_IP, Option(true, true));
+    options.emplace(SERVER_PORT, Option(true, true));
+    options.emplace(TEST_DIR, Option(true, true));
+    options.emplace(SCENARIO, Option(true, true));
+    options.emplace("call_id_min", Option(false, false));
+    options.emplace("call_id_max", Option(false, false));
 
     for(int i = 1; i < argc; i++)
     {
         string opt_name = argv[i];
+        opt_name.erase(0, 1); // Remove leading '-'
         bool last_arg = (i == argc - 1);
         
         if(options.count(opt_name) == 0)
@@ -130,21 +132,20 @@ void MServer::process_args(int argc, char * argv[])
     //------------------------------------------------------------------------------------------------------
     for(auto pair: options)
     {
-        if(pair.first == "-call_id_min" || pair.first == "-call_id_max")
+        if(pair.first == "call_id_min" || pair.first == "call_id_max")
         {
             continue;
         }
         
         string var_name = pair.first;
-        var_name.erase(0, 1);
         vars[var_name] = pair.second.val;
     }
     
-    if(options.at("-call_id_min").found)
+    if(options.at("call_id_min").found)
     {
         call_id_kind = MIN;
     }
-    else if(options.at("-call_id_max").found)
+    else if(options.at("call_id_max").found)
     {
         call_id_kind = MAX;
     }

@@ -18,6 +18,7 @@
 		FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE7D1BDF882B00958E40 /* MServer.cpp */; };
 		FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE961BE0B76400958E40 /* SipParser.cpp */; };
 		FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */; };
+		FE2FFC671BEB79A1004E05A2 /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC651BEB79A1004E05A2 /* Connection.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -60,6 +61,9 @@
 		FE0ECE971BE0B76400958E40 /* SipParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipParser.hpp; sourceTree = "<group>"; };
 		FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipMessage.cpp; sourceTree = "<group>"; };
 		FE2FFC501BE76B3E004E05A2 /* SipMessage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipMessage.hpp; sourceTree = "<group>"; };
+		FE2FFC641BEB59C9004E05A2 /* defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = defines.h; sourceTree = "<group>"; };
+		FE2FFC651BEB79A1004E05A2 /* Connection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Connection.cpp; sourceTree = "<group>"; };
+		FE2FFC661BEB79A1004E05A2 /* Connection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Connection.hpp; sourceTree = "<group>"; };
 		FE610F111BE0D126002834FC /* bimap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bimap.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,9 +98,12 @@
 			isa = PBXGroup;
 			children = (
 				FE0ECE601BDF832E00958E40 /* common_headers.h */,
+				FE2FFC641BEB59C9004E05A2 /* defines.h */,
 				FE0ECE611BDF832E00958E40 /* main.cpp */,
 				FE0ECE7E1BDF882B00958E40 /* MServer.hpp */,
 				FE0ECE7D1BDF882B00958E40 /* MServer.cpp */,
+				FE2FFC661BEB79A1004E05A2 /* Connection.hpp */,
+				FE2FFC651BEB79A1004E05A2 /* Connection.cpp */,
 				FE0ECE691BDF832E00958E40 /* ScriptReader.h */,
 				FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */,
 				FE0ECE7A1BDF854600958E40 /* sip */,
@@ -215,6 +222,7 @@
 				FE0ECE6E1BDF832E00958E40 /* main.cpp in Sources */,
 				FE0ECE731BDF832E00958E40 /* SendCommand.cpp in Sources */,
 				FE0ECE6C1BDF832E00958E40 /* AnswerCommand.cpp in Sources */,
+				FE2FFC671BEB79A1004E05A2 /* Connection.cpp in Sources */,
 				FE0ECE701BDF832E00958E40 /* RecvCommand.cpp in Sources */,
 				FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */,
 				FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */,

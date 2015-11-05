@@ -9,11 +9,13 @@
 #include "MServer.hpp"
 
 //==========================================================================================================
+// Static regular expression describing commands start
 //==========================================================================================================
 regex ScriptReader::command_start_regex("^ *<(answer)|^ *<(pause)|^ *<(recv)|^ *<(scenario)|^ *<(send)>");
 
 
 //==========================================================================================================
+// Init command map, read and execute file.
 //==========================================================================================================
 ScriptReader::ScriptReader(string filepath)
 {
@@ -23,13 +25,6 @@ ScriptReader::ScriptReader(string filepath)
     commands["pause"] = new PauseCommand(*this);
     commands["answer"] = new AnswerCommand(*this);
     
-    // TMP, for testing purposes, will replaced by values from MServer or values generated during read
-    vars["transport"] = "tcp";
-    vars["branch"] = "z9hG4bKPjkCnP1tH3DTBjBrlojZPYdV6aaDWiiV.e";
-    vars["call_number"] = "123456";
-    vars["call_id"] = "x4eVMfdlOg3XN2Tp0Ucy7btabxHb-gby1446389861";
-    vars["len"] = "13";
-
     read_file(filepath);
 }
 
@@ -72,9 +67,26 @@ void ScriptReader::read_file(string filepath)
 
 
 //==========================================================================================================
+// Get the value for a variable that appear in the script in brackets (like [call_id]). Some are static to
+// the test (received from MServer), some generated, some stored from previous messages.
 //==========================================================================================================
-string & ScriptReader::get_value(string var)
+string ScriptReader::get_value(string var)
 {
+    if(var == BRANCH)
+    {
+        return gen_branch();
+    }
+    
+    if(var == CALL_ID)
+    {
+        return gen_call_id();
+    }
+    
+    if(var == TAG)
+    {
+        return gen_tag();
+    }
+    
     if(vars.count(var) == 0)
     {
         return MServer::inst.get_value(var);
@@ -84,9 +96,28 @@ string & ScriptReader::get_value(string var)
 }
 
 
+//==========================================================================================================
+//==========================================================================================================
+string ScriptReader::gen_branch()
+{
+    return "i_am_a_branch_string"; // TODO
+}
 
 
+//==========================================================================================================
+//==========================================================================================================
+string ScriptReader::gen_call_id()
+{
+    return "i_am_a_call_id_string"; // todo
+}
 
+
+//==========================================================================================================
+//==========================================================================================================
+string ScriptReader::gen_tag()
+{
+    return "i_am_a_tag_string"; // todo
+}
 
 
 
