@@ -11,6 +11,7 @@
 
 #include "common_headers.h"
 #include "SipParser.hpp"
+#include "Connection.hpp"
 
 //==========================================================================================================
 //==========================================================================================================
@@ -21,29 +22,18 @@ public:
 
     void run(int argc, char * argv[]);
     string& get_value(string var);
+    SipMessage* get_message(string kind, int timeout); // Message kind is either method or status code
+    bool send_message(SipMessage &message);
     
 private:
     MServer();
 
+    Connection connection;
     map<string, string> vars;
     enum CallIDKind {NONE, MIN, MAX} call_id_kind;
     
     void process_args(int argc, char * argv[]);
     void error(string msg);
-    
-    //======================================================================================================
-    //======================================================================================================
-    class Option
-    {
-    public:
-        Option(bool mandatory, bool need_arg);
-        bool missing();
-        
-        string val;
-        bool mandatory;
-        bool need_arg;
-        bool found;
-    };
 };
 
 #endif /* MServer_hpp */

@@ -19,6 +19,7 @@
 		FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE961BE0B76400958E40 /* SipParser.cpp */; };
 		FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */; };
 		FE2FFC671BEB79A1004E05A2 /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC651BEB79A1004E05A2 /* Connection.cpp */; };
+		FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -64,6 +65,8 @@
 		FE2FFC641BEB59C9004E05A2 /* defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = defines.h; sourceTree = "<group>"; };
 		FE2FFC651BEB79A1004E05A2 /* Connection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Connection.cpp; sourceTree = "<group>"; };
 		FE2FFC661BEB79A1004E05A2 /* Connection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Connection.hpp; sourceTree = "<group>"; };
+		FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OptionParser.cpp; sourceTree = "<group>"; };
+		FE2FFC6F1BEF89E5004E05A2 /* OptionParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OptionParser.hpp; sourceTree = "<group>"; };
 		FE610F111BE0D126002834FC /* bimap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bimap.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -106,6 +109,8 @@
 				FE2FFC651BEB79A1004E05A2 /* Connection.cpp */,
 				FE0ECE691BDF832E00958E40 /* ScriptReader.h */,
 				FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */,
+				FE2FFC6F1BEF89E5004E05A2 /* OptionParser.hpp */,
+				FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */,
 				FE0ECE7A1BDF854600958E40 /* sip */,
 				FE0ECE741BDF848600958E40 /* commands */,
 				FE610F101BE0D0F6002834FC /* utils */,
@@ -221,6 +226,7 @@
 			files = (
 				FE0ECE6E1BDF832E00958E40 /* main.cpp in Sources */,
 				FE0ECE731BDF832E00958E40 /* SendCommand.cpp in Sources */,
+				FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */,
 				FE0ECE6C1BDF832E00958E40 /* AnswerCommand.cpp in Sources */,
 				FE2FFC671BEB79A1004E05A2 /* Connection.cpp in Sources */,
 				FE0ECE701BDF832E00958E40 /* RecvCommand.cpp in Sources */,

@@ -12,16 +12,18 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <poll.h>
 
 #include "Connection.hpp"
 
+#define CONNECT_TIMEOUT 10
 
 //======================================================================================================================
 // Open a connection and listen for incoming traffic
 //======================================================================================================================
-Connection::Connection(string _ip, int _port): ip(_ip), port(_port)
+void Connection::setup(string _ip, int _port)
 {
+    ip = _ip;
+    port = _port;
     traffic_socket = connect();
     pfd.fd = traffic_socket;
     pfd.events = POLLIN | POLLOUT;
@@ -38,7 +40,7 @@ SipMessage* Connection::get_message(string kind, int timeout)
     
     while(msg_queue.empty() && time(nullptr) <= start_time + timeout)
     {
-        try_poll(pfd); // Check that there are no errors on the socket
+        try_poll(); // Check that there are no errors on the socket
         
         long num_bytes = 0;
         
@@ -58,6 +60,7 @@ SipMessage* Connection::get_message(string kind, int timeout)
             {
                 buf[num_bytes] = '\0'; // Make buf a null-terminated string to enable printing etc.
                 
+                cout << endl << "Incoming message:" << endl;
                 cout << "---------------------------START----------------------------------" << endl;
                 cout << buf;
                 cout << "----------------------------END-----------------------------------" << endl << endl;
@@ -96,46 +99,35 @@ SipMessage* Connection::get_message(string kind, int timeout)
 bool Connection::send_message(SipMessage &message)
 {
     time_t start_time = time(nullptr);
-
-    while(!(pfd.revents & POLLOUT) && time(nullptr) <= start_time + 1)
+    int timeout = 5;
+    
+    while(time(nullptr) <= start_time + timeout)
     {
+        try_poll();
+        
+        if(pfd.revents & POLLOUT)
+        {
+            long bytes_to_write;
+            message.write_to_buffer(buf, bytes_to_write);
+            long bytes_writen = ::write(pfd.fd, buf, bytes_to_write);
+
+            if(bytes_writen != bytes_to_write)
+            {
+                throw string("write() error");
+            }
+            
+            cout << endl << "Outgoing message:" << endl;
+            cout << "---------------------------START----------------------------------" << endl;
+            cout << buf;
+            cout << "----------------------------END-----------------------------------" << endl << endl;
+            
+            return true;
+        }
+        
         usleep(10000);
     }
     
-    if(pfd.revents & POLLOUT)
-    {
-        long bytes_to_write;
-        message.write_to_buffer(buf, bytes_to_write);
-        long bytes_writen = ::write(pfd.fd, buf, bytes_to_write);
-        
-        if(bytes_writen != bytes_to_write)
-        {
-            throw string("write() error");
-        }
-    
-        return true;
-    }
-
     return false;
-}
-
-
-//======================================================================================================================
-// poll() the file descriptors (which are sockets) and exit if error
-//======================================================================================================================
-void Connection::try_poll(pollfd pfd)
-{
-    long res = poll(&pfd, 1, 0);
-    
-    if(res < 0)
-    {
-        throw string("poll() error");
-    }
-    
-    if(pfd.revents & POLLERR)
-    {
-        throw string("Error on voxip socket");
-    }
 }
 
 
@@ -146,12 +138,41 @@ int Connection::connect()
 {
     int listen_socket = setup_socket_for_listening();
     
-    int traffic_socket = -1;
     sockaddr_in client_addr;
     socklen_t client_length = sizeof(client_addr);
     
-    traffic_socket = accept(listen_socket, (sockaddr *) &client_addr, &client_length);
-    cout << "Connected to client on port " << port << endl;
+    // Wait for the client to connect; if the timeout expires throw error
+    cout << "Waiting for client to connect on " << ip << ":" << port << endl;
+    time_t start_time = time(nullptr);
+    
+    while(time(nullptr) <= start_time + CONNECT_TIMEOUT)
+    {
+        traffic_socket = accept(listen_socket, (sockaddr *) &client_addr, &client_length);
+        
+        if(traffic_socket == -1)
+        {
+            if(errno == EWOULDBLOCK) // No connections, sleep and try again
+            {
+                usleep(1000);
+            }
+            else // Real error
+            {
+                throw string("accept() error");
+            }
+        }
+        else // Successful
+        {
+            cout << "Connected to client" << endl;
+            break;
+        }
+    }
+    
+    if(traffic_socket == -1)
+    {
+        throw string("Client failed to connect for " + to_string(CONNECT_TIMEOUT) + " second" + (CONNECT_TIMEOUT > 1 ?   "s" : ""));
+        //cout << "Client failed to connect for " << CONNECT_TIMEOUT << " second" << (CONNECT_TIMEOUT > 1 ?   "s" : "") << endl;
+    }
+    
     return traffic_socket;
 }
 
@@ -192,15 +213,34 @@ int Connection::setup_socket_for_listening()
     }
     
     // Set listen_socket to be non-blocking, so accept() won't block
-//    int flags = fcntl(listen_socket, F_GETFL);
-//    flags |= O_NONBLOCK;
-//    
-//    if(fcntl(listen_socket, F_SETFL, flags) == -1)
-//    {
-//        throw string("fcntl() error");
-//    }
+    int flags = fcntl(listen_socket, F_GETFL);
+    flags |= O_NONBLOCK;
+    
+    if(fcntl(listen_socket, F_SETFL, flags) == -1)
+    {
+        throw string("fcntl() error");
+    }
     
     return listen_socket;
+}
+
+
+//======================================================================================================================
+// poll() the file descriptors (which are sockets) and exit if error
+//======================================================================================================================
+void Connection::try_poll()
+{
+    long res = poll(&pfd, 1, 0);
+    
+    if(res < 0)
+    {
+        throw string("poll() error");
+    }
+    
+    if(pfd.revents & POLLERR)
+    {
+        throw string("Error on voxip socket");
+    }
 }
 
 

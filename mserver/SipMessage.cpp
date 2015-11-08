@@ -129,12 +129,7 @@ void SipMessage::parse(bool add_crlf)
         }
     }
     
-    // TMP
-    cout << "Message kind: " << kind << endl << endl;
-    for(auto s: lines)
-    {
-        cout << s;
-    }
+    //print();
 }
 
 
@@ -148,23 +143,36 @@ string SipMessage::get_kind()
 
 //==========================================================================================================
 //==========================================================================================================
-void SipMessage::write_to_buffer(char *buf, long &num_to_write)
+void SipMessage::write_to_buffer(char buf[], long &num_to_write)
 {
     if(size > CONNECTION_BUFFER_SIZE)
     {
         throw string("Message size " + to_string(size) + " exceeds buffer size " + to_string(CONNECTION_BUFFER_SIZE));
     }
     
+    char *cur_buf = buf;
+    
     for(auto& line: lines)
     {
-        line.copy(buf, line.length());
+        line.copy(cur_buf, line.length());
+        cur_buf += line.length();
     }
     
+    buf[size] = '\0'; // For printing; buf is actually bigger by 1 then CONNECTION_BUFFER_SIZE to enable this
     num_to_write = size;
 }
 
 
-
+//==========================================================================================================
+//==========================================================================================================
+void SipMessage::print()
+{
+    cout << "Message kind: " << kind << endl << endl;
+    for(auto s: lines)
+    {
+        cout << s;
+    }
+}
 
 
 

@@ -9,6 +9,7 @@
 
 #include "SendCommand.h"
 #include "SipMessage.hpp"
+#include "MServer.hpp"
 
 
 //==========================================================================================================
@@ -30,6 +31,7 @@ void SendCommand::interpret(string &line, ifstream &file)
     }
     
     SipMessage message(msg_lines);
+    MServer::inst.send_message(message);
 }
 
 

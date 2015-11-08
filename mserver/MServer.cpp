@@ -9,6 +9,7 @@
 #include "MServer.hpp"
 #include "ScriptReader.h"
 #include "SipParser.hpp"
+#include "OptionParser.hpp"
 
 
 //==========================================================================================================
@@ -31,26 +32,16 @@ MServer::MServer(): call_id_kind(NONE)
 //==========================================================================================================
 void MServer::run(int argc, char * argv[])
 {
-    process_args(argc, argv);
-    
     try
     {
+        process_args(argc, argv);
+        connection.setup(vars[SERVER_IP], stoi(vars[SERVER_PORT]));
         ScriptReader reader(get_value("scenario"));
-    } catch (string err)
+    }
+    catch (string err)
     {
         error(err);
     }
-}
-
-//==========================================================================================================
-//==========================================================================================================
-MServer::Option::Option(bool _mandatory, bool _need_arg): mandatory(_mandatory), need_arg(_need_arg), found(false){}
-
-//==========================================================================================================
-//==========================================================================================================
-bool MServer::Option::missing()
-{
-    return mandatory && !found;
 }
 
 //==========================================================================================================
@@ -85,46 +76,7 @@ void MServer::process_args(int argc, char * argv[])
     options.emplace("call_id_min", Option(false, false));
     options.emplace("call_id_max", Option(false, false));
 
-    for(int i = 1; i < argc; i++)
-    {
-        string opt_name = argv[i];
-        opt_name.erase(0, 1); // Remove leading '-'
-        bool last_arg = (i == argc - 1);
-        
-        if(options.count(opt_name) == 0)
-        {
-            error("Option " + opt_name + " doesn't exist");
-        }
-        
-        Option &opt = options.at(opt_name);
-        opt.found = true;
-        
-        if(last_arg && opt.need_arg)
-        {
-            error("Option " + opt_name + " needs an argument");
-        }
-        
-        if(opt.need_arg)
-        {
-            opt.val = argv[++i];
-        }
-    }
-    
-    typedef pair<string, Option> string_opt_pair;
-    string missing_opts;
-    
-    // Collect missing options
-    for_each(options.begin(), options.end(),
-             [&missing_opts](string_opt_pair val)
-                {
-                    if(val.second.missing())
-                        missing_opts += val.first + " " ;
-                });
-    
-    if(!missing_opts.empty())
-    {
-        error("Missing options: " + missing_opts);
-    }
+    OptionParser parser(argc, argv, options); // Parse command line option and put values in the map
     
     //------------------------------------------------------------------------------------------------------
     // Put collected values in the vars map. Why not just put it in fields? because script reader will need
@@ -178,6 +130,20 @@ string& MServer::get_value(string var)
 }
 
 
+//==========================================================================================================
+//==========================================================================================================
+SipMessage* MServer::get_message(string kind, int timeout)
+{
+    return connection.get_message(kind, timeout);
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+bool MServer::send_message(SipMessage &message)
+{
+    return connection.send_message(message);
+}
 
 
 

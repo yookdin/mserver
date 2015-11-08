@@ -5,6 +5,7 @@
 #include <string>
 #include <regex>
 #include <queue>
+#include <poll.h>
 
 #include "bimap.h"
 #include "defines.h"

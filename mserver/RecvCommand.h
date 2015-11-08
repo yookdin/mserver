@@ -7,5 +7,8 @@ public:
     RecvCommand(ScriptReader &_reader): Command(_reader) {}
 
 	virtual void interpret(string &line, ifstream &file);
+    
+private:
+    void process_args(string& line, string& message_kind, bool& optional, int& timeout);
 };
 
