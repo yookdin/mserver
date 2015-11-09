@@ -116,7 +116,7 @@ bool Connection::send_message(SipMessage &message)
                 throw string("write() error");
             }
             
-            cout << endl << "Outgoing message:" << endl;
+            cout << endl << "Outgoing message (" << bytes_writen << " bytes):" << endl;
             cout << "---------------------------START----------------------------------" << endl;
             cout << buf;
             cout << "----------------------------END-----------------------------------" << endl << endl;

@@ -129,7 +129,12 @@ void SipMessage::parse(bool add_crlf)
         }
     }
     
-    //print();
+    // in_header can remian true only if user didn't write an empty line at the end of the header section. So instead of failing just add it
+    if(in_header)
+    {
+        lines.push_back(CRLF);
+        size += 2;
+    }
 }
 
 
