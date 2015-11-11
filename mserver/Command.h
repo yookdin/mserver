@@ -14,7 +14,7 @@ protected:
     ScriptReader &reader;
 
     void trim(string &line);    
-    bool replace_vars(string &line);
+    bool replace_vars(string &line, string last_descriptor = "");
     void replace_len(string &line, string& len);
 };
 

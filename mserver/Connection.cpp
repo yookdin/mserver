@@ -170,7 +170,6 @@ int Connection::connect()
     if(traffic_socket == -1)
     {
         throw string("Client failed to connect for " + to_string(CONNECT_TIMEOUT) + " second" + (CONNECT_TIMEOUT > 1 ?   "s" : ""));
-        //cout << "Client failed to connect for " << CONNECT_TIMEOUT << " second" << (CONNECT_TIMEOUT > 1 ?   "s" : "") << endl;
     }
     
     return traffic_socket;

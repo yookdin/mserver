@@ -18,6 +18,8 @@ public:
     
     string get_kind();
     void write_to_buffer(char buf[], long &num_to_write);
+    string get_value(string& var);
+    void print();
     
 private:
     vector<string> lines;
@@ -26,7 +28,6 @@ private:
     
     void parse(bool add_crlf);
     string* get_sip_line(char*& cur_buf, long& remaining_bytes);
-    void print();
 };
 
 #endif /* SipMessage_hpp */

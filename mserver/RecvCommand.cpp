@@ -17,6 +17,7 @@ TODO:
 #include "RecvCommand.h"
 #include "MServer.hpp"
 #include "OptionParser.hpp"
+#include "ScriptReader.h"
 
 
 //==========================================================================================================
@@ -34,6 +35,11 @@ void RecvCommand::interpret(string &line, ifstream &file)
     {
         string plural = (timeout > 1 ? "s" : "");
         throw string("Expected message " + message_kind + " didn't arrive (timed out after " + to_string(timeout) + " second" + plural + ")");
+    }
+    
+    if(msg != nullptr)
+    {
+        reader.add_message(*msg);
     }
 }
 

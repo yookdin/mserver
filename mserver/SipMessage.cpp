@@ -169,6 +169,38 @@ void SipMessage::write_to_buffer(char buf[], long &num_to_write)
 
 
 //==========================================================================================================
+// Get the an entire header line, or just its value.
+// If var is a name of a header, the entire line will be returned (not including CRLF)
+// If var is of the form <header-name>_value, only the value will be returned.
+//==========================================================================================================
+string SipMessage::get_value(string& var)
+{
+    regex re("([-[:alnum:]]+)(_value)?");
+    smatch match;
+    
+    if(!regex_match(var, match, re))
+    {
+        throw string("SipMessage::get_value(): wrong format of var: " + var);
+    }
+    
+    string header_name = match[1];
+    bool entire_hdr = match[2].str().empty();
+    
+    for(int i = 1; i < lines.size() && !lines[i].empty(); ++i)
+    {
+        SipParser::inst.match(HEADER_LINE, lines[i]);
+
+        if(header_name == SipParser::inst.get_sub_match(HEADER_NAME))
+        {
+            return (entire_hdr ? (header_name + ": ") : "") + SipParser::inst.get_sub_match(HEADER_VALUE);
+        }
+    }
+    
+    throw string("SipMessage::get_value(): header " + header_name + " not found");
+}
+
+
+//==========================================================================================================
 //==========================================================================================================
 void SipMessage::print()
 {

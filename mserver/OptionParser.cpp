@@ -32,7 +32,7 @@ bool OptionParser::Option::missing() {
 // Parse options received in a string, of type: opt=val
 //==========================================================================================================
 OptionParser::OptionParser(string& line, map<string, Option>& _options): options(_options) {
-    regex param_re("(\\w+)( *= *(\\w+))?");
+    regex param_re("(\\w+)( *= *(\\w+|\"([^\"]+)\"))?");
     sregex_iterator iter(line.begin(), line.end(), param_re);
     sregex_iterator end;
     
@@ -40,6 +40,12 @@ OptionParser::OptionParser(string& line, map<string, Option>& _options): options
     {
         string opt_name = (*iter)[1];
         string opt_val = (*iter)[3];
+
+        if(opt_val[0] == '"')
+        {
+            opt_val = (*iter)[4];
+        }
+        
         Option& opt = check_option(opt_name);
         set_option_value(opt, opt_name, opt_val);
     }

@@ -11,7 +11,7 @@
 //==========================================================================================================
 // Static regular expression describing commands start
 //==========================================================================================================
-regex ScriptReader::command_start_regex("^ *<(answer)|^ *<(pause)|^ *<(recv)|^ *<(scenario)|^ *<(send)>");
+regex ScriptReader::command_start_regex("^ *<(answer)|^ *<(pause)|^ *<(recv)|^ *<(scenario)|^ *<(send)");
 
 
 //==========================================================================================================
@@ -70,7 +70,7 @@ void ScriptReader::read_file(string filepath)
 // Get the value for a variable that appear in the script in brackets (like [call_id]). Some are static to
 // the test (received from MServer), some generated, some stored from previous messages.
 //==========================================================================================================
-string ScriptReader::get_value(string var)
+string ScriptReader::get_value(string var, string last_descriptor)
 {
     if(var == BRANCH)
     {
@@ -85,6 +85,11 @@ string ScriptReader::get_value(string var)
     if(var == TAG)
     {
         return gen_tag();
+    }
+    
+    if(is_last_var(var))
+    {
+        return get_last_value(var, last_descriptor);
     }
     
     if(vars.count(var) == 0)
@@ -120,10 +125,50 @@ string ScriptReader::gen_tag()
 }
 
 
+//==========================================================================================================
+//==========================================================================================================
+void ScriptReader::add_message(SipMessage& msg)
+{
+    messages.push_back(msg);
+}
 
 
+//==========================================================================================================
+//==========================================================================================================
+bool ScriptReader::is_last_var(string& var)
+{
+    return regex_match(var, regex("last_\\w+"));
+}
 
 
+//==========================================================================================================
+//==========================================================================================================
+string ScriptReader::get_last_value(string& var, string& last_descriptor)
+{
+    SipMessage& last_msg = get_last_message(last_descriptor);
+    string short_var = var.substr(5); // w/o the "last_"
+    return last_msg.get_value(short_var);
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+SipMessage& ScriptReader::get_last_message(string& last_descriptor)
+{
+    if(messages.empty())
+    {
+        throw string("Can't use last_*, no previous messages");
+    }
+    
+    if(last_descriptor.empty())
+    {
+        return messages.back();
+    }
+    else
+    {
+        throw string("Last descriptor \""  + last_descriptor + "\" not supported");
+    }
+}
 
 
 

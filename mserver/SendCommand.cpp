@@ -1,7 +1,7 @@
 
 /*
  
- <send>
+ <send [last="last-descriptor"]>
     SIP-MESSAGE
  </send>
  
@@ -10,6 +10,8 @@
 #include "SendCommand.h"
 #include "SipMessage.hpp"
 #include "MServer.hpp"
+#include "ScriptReader.h"
+#include "OptionParser.hpp"
 
 
 //==========================================================================================================
@@ -18,10 +20,10 @@ const regex SendCommand::end_regex("</send>");
 
 
 //==========================================================================================================
-//
 //==========================================================================================================
 void SendCommand::interpret(string &line, ifstream &file)
 {
+    process_args(line);
     vector<string> msg_lines;
     replcae_vars(file, msg_lines);
     
@@ -31,7 +33,9 @@ void SendCommand::interpret(string &line, ifstream &file)
     }
     
     SipMessage message(msg_lines);
+    message.print();
     MServer::inst.send_message(message);
+    reader.add_message(message);
 }
 
 
@@ -53,7 +57,7 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
         }
         
         trim(line); // Remove leading white spaces and tabs, final newline
-        bool contains_len = replace_vars(line); // replace_vars() return true if it sees "[len]"
+        bool contains_len = replace_vars(line, last_descriptor); // replace_vars() return true if it sees "[len]"
         msg_lines.push_back(line);
         
         if(contains_len)
@@ -80,3 +84,47 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
         replace_len(*pline, len_str);
     }
 }
+
+
+//==========================================================================================================
+//==========================================================================================================
+void SendCommand::process_args(string& line)
+{
+    map<string, Option> options;
+    options.emplace("last", Option(false, true));
+    OptionParser parser(line, options);
+
+    last_descriptor = options.at("last").val;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
