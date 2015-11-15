@@ -137,9 +137,28 @@ string ScriptReader::gen_tag()
 
 //==========================================================================================================
 //==========================================================================================================
-void ScriptReader::add_message(SipMessage& msg)
+void ScriptReader::add_message(SipMessage* msg)
 {
     messages.push_back(msg);
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+void ScriptReader::add_messages(vector<SipMessage*>& _messages)
+{
+    for(auto m: _messages)
+    {
+        messages.push_back(m);
+    }
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+vector<SipMessage*>& ScriptReader::get_messages()
+{
+    return messages;
 }
 
 
@@ -172,7 +191,7 @@ SipMessage& ScriptReader::get_last_message(string& last_descriptor)
     
     if(last_descriptor.empty())
     {
-        return messages.back();
+        return *messages.back();
     }
 
     smatch match;
@@ -213,9 +232,9 @@ SipMessage& ScriptReader::get_last_message(string& last_descriptor)
     {
         for(long i = messages.size() - 1; i >= 0; --i)
         {
-            if(messages[i].match(dir, kind))
+            if(messages[i]->match(dir, kind))
             {
-                return messages[i];
+                return *messages[i];
             }
         }
     }
@@ -223,11 +242,11 @@ SipMessage& ScriptReader::get_last_message(string& last_descriptor)
     {
         int cur_num = 0;
         
-        for(auto& msg: messages)
+        for(auto msg: messages)
         {
-            if(msg.match(dir, kind) && ++cur_num == num)
+            if(msg->match(dir, kind) && ++cur_num == num)
             {
-                return msg;
+                return *msg;
             }
         }
     }

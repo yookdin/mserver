@@ -39,7 +39,7 @@ void RecvCommand::interpret(string &line, ifstream &file)
     
     if(msg != nullptr)
     {
-        reader.add_message(*msg);
+        reader.add_message(msg);
     }
 }
 

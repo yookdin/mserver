@@ -16,12 +16,12 @@ void ScenarioCommand::interpret(string &line, ifstream &file)
 		throw string("Error in scenario command: \"" + line + "\"");
 	}
 
-	//cout << "file: " << match[1] << endl;
     string scenario_file = match[1];
     
     try
     {
-        ScriptReader reader(scenario_file);
+        ScriptReader nested_reader(scenario_file);
+        reader.add_messages(nested_reader.get_messages());
     } catch (string err) {
         cout << err << endl;
         throw string("Error executing scenario file " + scenario_file);

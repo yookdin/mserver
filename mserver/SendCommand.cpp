@@ -32,9 +32,9 @@ void SendCommand::interpret(string &line, ifstream &file)
         throw string("Send command must have a SIP message specified");
     }
     
-    SipMessage message(msg_lines);
-    message.print();
-    MServer::inst.send_message(message);
+    SipMessage* message = new SipMessage(msg_lines);
+    message->print();
+    MServer::inst.send_message(*message);
     reader.add_message(message);
 }
 
