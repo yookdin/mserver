@@ -25,6 +25,7 @@ private:
     string gen_branch();
     string gen_call_id();
     string gen_tag();
+    void gen_random_string(string& str, int min_length = 1);
     bool is_last_var(string&);
     string get_last_value(string& var, string& last_descriptor);
     SipMessage& get_last_message(string& last_descriptor);

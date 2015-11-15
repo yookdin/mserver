@@ -115,7 +115,9 @@ string ScriptReader::get_value(string var, string last_descriptor)
 //==========================================================================================================
 string ScriptReader::gen_branch()
 {
-    return "i_am_a_branch_string"; // TODO
+    string res = "z9hG4bK"; // Must start with this
+    gen_random_string(res);
+    return res;
 }
 
 
@@ -123,7 +125,9 @@ string ScriptReader::gen_branch()
 //==========================================================================================================
 string ScriptReader::gen_call_id()
 {
-    return "i_am_a_call_id_string"; // todo
+    string res;
+    gen_random_string(res);
+    return res;
 }
 
 
@@ -131,9 +135,36 @@ string ScriptReader::gen_call_id()
 //==========================================================================================================
 string ScriptReader::gen_tag()
 {
-    return "i_am_a_tag_string"; // todo
+    string res;
+    gen_random_string(res, 4); // Must be at least 32-bits long
+    return res;
 }
 
+
+//==========================================================================================================
+// Generate a random string, no smaller than min_len. If input str isn't empty append generated chars.
+//==========================================================================================================
+void ScriptReader::gen_random_string(string& str, int min_len)
+{
+    int max_len = 30; // Arbitrary
+
+    if(min_len < 1 || min_len > max_len)
+    {
+        throw string("gen_random_string(): min_len must be in [1.." + to_string(max_len) + "]");
+    }
+    
+    min_len -= str.length();                // Reduce because string already contains data
+    int len_range = max_len - min_len + 1;  // Number of values from min_len to max_len
+    int len = rand() % len_range + min_len; // add min_len because [rand() % x] is [0..x-1]
+    
+    int char_range = (126-33+1); // ASCII table printables are between 33 and 126
+    
+    for(int i = 0; i < len; ++i)
+    {
+        char c = int(rand() % char_range + 33);
+        str += c;
+    }
+}
 
 //==========================================================================================================
 //==========================================================================================================
