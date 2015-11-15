@@ -8,19 +8,26 @@
 
 #include "SipParser.hpp"
 
-
-
 //==========================================================================================================
 // The only instance of SipParser
 //==========================================================================================================
-SipParser SipParser::inst;
+SipParser* SipParser::p_inst = nullptr;
+SipParser& SipParser::inst()
+{
+    if(p_inst == nullptr)
+    {
+        p_inst = new SipParser();
+    }
+    
+    return *p_inst;
+}
+
 
 //==========================================================================================================
 // Init maps, process regexes
 //==========================================================================================================
 SipParser::SipParser()
-{
-
+{    
 #define QUOTE(EXP) #EXP
     
 #define ADD_ELEMENT_MATCHER(ELEM, STR, BOOL)\
@@ -34,7 +41,7 @@ SipParser::SipParser()
     // in SIP).
     // If this isn't done right reference loops might occur, but I don't check for them.
     //------------------------------------------------------------------------------------------------------
-    ADD_ELEMENT_MATCHER(METHOD,             "[[:upper:]]+",                             true);
+    ADD_ELEMENT_MATCHER(METHOD,             method_str,                                 true);
     ADD_ELEMENT_MATCHER(NUM,                "\\d+",                                     true);
     ADD_ELEMENT_MATCHER(NAME,               "\\w+",                                     true);
     ADD_ELEMENT_MATCHER(USER_NAME,          "[^ :@]+",                                  true);
@@ -91,7 +98,7 @@ void SipParser::finalize_matchers()
 {
     for(auto pair: matchers)
     {
-        pair.second->finalize();
+        pair.second->finalize(this);
     }
 }
 
@@ -164,7 +171,7 @@ SipParser::SipMatcher* SipParser::get_matcher(string elem_name)
     
     if(!matchers[elem]->is_final())
     {
-        matchers[elem]->finalize();
+        matchers[elem]->finalize(this);
     }
 
     return matchers[elem];
@@ -251,7 +258,7 @@ string SipParser::SipMatcher::get_sub_match(SipElement sub_elem, int pos)
 
 //==========================================================================================================
 //==========================================================================================================
-void SipParser::SipMatcher::finalize()
+void SipParser::SipMatcher::finalize(SipParser* parser)
 {
     if(final)
     {
@@ -269,11 +276,11 @@ void SipParser::SipMatcher::finalize()
     // string of the regex of that element.
     // In the process keep track of sub-matches and their positons.
     //-------------------------------------------------------------------------------------------------------
-    while(regex_search(first, last, match, SipParser::inst.sip_element_re))
+    while(regex_search(first, last, match, parser->sip_element_re))
     {
         // NOTE: if matcher for the matched element is not finalized yet, it will first be finalized before
         // returning it!
-        SipMatcher *matcher = SipParser::inst.get_matcher(match.str());
+        SipMatcher *matcher = parser->get_matcher(match.str());
         long pos = first_pos + match.position();
 
         //---------------------------------------------------------------------------------------------------
@@ -287,7 +294,7 @@ void SipParser::SipMatcher::finalize()
            (pos + match.length() < re_str.length() && re_str[pos + match.length()] == ')' ))
         {
             long num_subs = count_num_subs(pos); // Number of submatches up to and including the current one
-            SipElement elem = SipParser::inst.get_sip_elem(match.str());
+            SipElement elem = parser->get_sip_elem(match.str());
             subs.emplace(subs.end(), elem, num_subs); // Add a new pair to the vector
             
             auto element_subs = matcher->subs;
@@ -314,7 +321,7 @@ void SipParser::SipMatcher::finalize()
     
     re = re_str;
     final = true;
-    self_check();
+    self_check(parser);
 }
 
 
@@ -322,7 +329,7 @@ void SipParser::SipMatcher::finalize()
 //==========================================================================================================
 void SipParser::SipMatcher::print()
 {
-    cout << "Element name: " << SipParser::inst.get_sip_elem_name(elem) << endl;
+    cout << "Element name: " << SipParser::inst().get_sip_elem_name(elem) << endl;
 
     string title;
 
@@ -345,14 +352,14 @@ void SipParser::SipMatcher::print()
     
     for(auto p: subs)
     {
-        cout << SipParser::inst.get_sip_elem_name(p.first) << ": " << p.second << endl;
+        cout << SipParser::inst().get_sip_elem_name(p.first) << ": " << p.second << endl;
     }
 }
 
 
 //==========================================================================================================
 //==========================================================================================================
-void SipParser::SipMatcher::self_check()
+void SipParser::SipMatcher::self_check(SipParser* parser)
 {
     regex possible_elem("_([[:upper:]]+_)+");
     sregex_iterator iter(re_str.begin(), re_str.end(), possible_elem);
@@ -367,7 +374,7 @@ void SipParser::SipMatcher::self_check()
 
     if(!names.empty())
     {
-        cout << "Possible unresolved element names in SIP matcher " << SipParser::inst.get_sip_elem_name(elem) << ":" << endl;
+        cout << "Possible unresolved element names in SIP matcher " << parser->get_sip_elem_name(elem) << ":" << endl;
 
         for(auto s: names)
         {
@@ -388,7 +395,7 @@ void SipParser::SipMatcher::print_match()
     cout << "Entire match: " << get_match() << endl;
     for(auto p: subs)
     {
-        cout << "Sub-match " << SipParser::inst.get_sip_elem_name(p.first) << "(" << p.second << "): '" << match_result[p.second] << "'" << endl;
+        cout << "Sub-match " << SipParser::inst().get_sip_elem_name(p.first) << "(" << p.second << "): '" << match_result[p.second] << "'" << endl;
     }
     cout << endl;
 }

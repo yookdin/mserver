@@ -47,7 +47,8 @@ enum SipElement
 class SipParser
 {
 public:
-    static SipParser inst;
+    static SipParser& inst();
+    const string method_str = "ACK|BYE|CANCEL|INFO|INVITE|MESSAGE|NOTIFY|OPTIONS|PRACK|PUBLISH|REFER|REGISTER|SUBSCRIBE|UPDATE";
     
     bool match(SipElement elem, string line);
     string get_match(SipElement elem, string line);
@@ -57,6 +58,7 @@ public:
     void print_match(SipElement elem, string line);
 
 private:
+    static SipParser* p_inst;
     SipParser();
     
     //======================================================================================================
@@ -73,14 +75,14 @@ private:
         string get_match(string line);
         string get_match();
         string get_sub_match(SipElement sub_elem, int pos = 0);
-        void finalize();
+        void finalize(SipParser*);
         void print();
         
         string get_highlevel_re() { return highlevel_re_str; }
         string get_re() { return re_str; }
         long get_re_length() { return re_str.length(); }
         bool is_final() { return final; }
-        void self_check();
+        void self_check(SipParser*);
         void print_match();
         
     private:
@@ -102,7 +104,7 @@ private:
     regex sip_element_re;
     map<SipElement, SipMatcher*> matchers;
     SipMatcher *cur_matcher = nullptr;
-    
+
     SipElement get_sip_elem(string name) { return sip_element_names[name]; }
     string get_sip_elem_name(SipElement elem) { return sip_element_names[elem]; }
     SipMatcher* get_matcher(string);

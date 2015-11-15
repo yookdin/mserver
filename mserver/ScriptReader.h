@@ -11,7 +11,9 @@ public:
     void add_message(SipMessage&);
     
 private:
-    static regex command_start_regex;
+    static const regex command_start_regex;
+    static regex last_desc_regex;
+    
     map<string, Command*> commands;
     map<string, string> vars; // Map of var names and their values
 

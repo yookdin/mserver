@@ -16,15 +16,19 @@ public:
     SipMessage(vector<string> &lines);
     SipMessage(char *buf, long &offset, long num_bytes);
     
+    enum Direction {IN, OUT, ANY};
+    
     string get_kind();
     void write_to_buffer(char buf[], long &num_to_write);
     string get_value(string& var);
+    bool match(Direction dir, string kind);
     void print();
     
 private:
     vector<string> lines;
     string kind;
     int size = 0;
+    const Direction dir;
     
     void parse(bool add_crlf);
     string* get_sip_line(char*& cur_buf, long& remaining_bytes);

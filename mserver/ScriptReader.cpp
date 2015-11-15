@@ -11,8 +11,18 @@
 //==========================================================================================================
 // Static regular expression describing commands start
 //==========================================================================================================
-regex ScriptReader::command_start_regex("^ *<(answer)|^ *<(pause)|^ *<(recv)|^ *<(scenario)|^ *<(send)");
+const regex ScriptReader::command_start_regex("^ *<(answer)|^ *<(pause)|^ *<(recv)|^ *<(scenario)|^ *<(send)");
 
+
+//==========================================================================================================
+// Last message descriptor regular expression
+// Interesting submatches:
+// 1: Ordinal or 'last'
+// 2: Numerical part of ordinal
+// 4: in/out
+// 6: message kind (Method/status-code)
+//==========================================================================================================
+regex ScriptReader::last_desc_regex("((\\d+)[[:alpha:]]{2}|last)( +(in|out))?( +(" + SipParser::inst().method_str + "|\\d{3}))?$");
 
 //==========================================================================================================
 // Init command map, read and execute file.
@@ -164,10 +174,65 @@ SipMessage& ScriptReader::get_last_message(string& last_descriptor)
     {
         return messages.back();
     }
-    else
+
+    smatch match;
+    
+    if(!regex_search(last_descriptor, match, last_desc_regex))
     {
-        throw string("Last descriptor \""  + last_descriptor + "\" not supported");
+        throw string("Wrong last descriptor format: \"" + last_descriptor + "\"");
     }
+    
+    // Sunbatches:
+    // 1: Ordinal or 'last'
+    // 2: Numerical part of ordinal
+    // 4: in/out
+    // 6: message kind (Method/status-code)
+    int num = -1;
+    SipMessage::Direction dir = SipMessage::ANY;
+    string kind = match[6];
+    
+    if(!match[2].str().empty())
+    {
+        num = stoi(match[2]);
+    }
+    
+    if(!match[4].str().empty())
+    {
+        if(match[4] == "in")
+        {
+            dir = SipMessage::IN;
+        }
+        else
+        {
+            dir = SipMessage::OUT;
+        }
+    }
+    
+    // If 'last', go over messages from the end and return the first that matches
+    if(num == -1)
+    {
+        for(long i = messages.size() - 1; i >= 0; --i)
+        {
+            if(messages[i].match(dir, kind))
+            {
+                return messages[i];
+            }
+        }
+    }
+    else // If a number specified, go over messages from the begining and count until you reach the requested number
+    {
+        int cur_num = 0;
+        
+        for(auto& msg: messages)
+        {
+            if(msg.match(dir, kind) && ++cur_num == num)
+            {
+                return msg;
+            }
+        }
+    }
+    
+    throw string("No message matches last descriptor \"" + last_descriptor + "\"");
 }
 
 

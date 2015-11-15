@@ -12,7 +12,7 @@
 //==========================================================================================================
 // Construct message from a vector of strings, received from script file.
 //==========================================================================================================
-SipMessage::SipMessage(vector<string> &_lines): lines(_lines)
+SipMessage::SipMessage(vector<string> &_lines): lines(_lines), dir(OUT)
 {
     parse(true);
 }
@@ -23,7 +23,7 @@ SipMessage::SipMessage(vector<string> &_lines): lines(_lines)
 // The buffer might contain more than one sip message. Try to construct a message from it, and set offset to
 // indicate how many bytes where used.
 //==========================================================================================================
-SipMessage::SipMessage(char *buf, long &offset, long num_bytes)
+SipMessage::SipMessage(char *buf, long &offset, long num_bytes): dir(IN)
 {
     char *cur_buf = buf;
     long remaining_bytes = num_bytes;
@@ -39,7 +39,7 @@ SipMessage::SipMessage(char *buf, long &offset, long num_bytes)
         
         // Check if this line is not a start of a new message. If at least one line added and the current line
         // is a start line it belongs to the next message
-        if(!lines.empty() && SipParser::inst.match(START_LINE, *p_cur_line))
+        if(!lines.empty() && SipParser::inst().match(START_LINE, *p_cur_line))
         {
             cur_buf -= p_cur_line->length(); // We read one line too many, roll back cur_buf
             delete p_cur_line;
@@ -90,7 +90,7 @@ void SipMessage::parse(bool add_crlf)
         size += line.length();
     }
     
-    auto parser = SipParser::inst;
+    auto parser = SipParser::inst();
     
     if(!parser.match(START_LINE, lines[0]))
     {
@@ -188,11 +188,11 @@ string SipMessage::get_value(string& var)
     
     for(int i = 1; i < lines.size() && !lines[i].empty(); ++i)
     {
-        SipParser::inst.match(HEADER_LINE, lines[i]);
+        SipParser::inst().match(HEADER_LINE, lines[i]);
 
-        if(header_name == SipParser::inst.get_sub_match(HEADER_NAME))
+        if(header_name == SipParser::inst().get_sub_match(HEADER_NAME))
         {
-            return (entire_hdr ? (header_name + ": ") : "") + SipParser::inst.get_sub_match(HEADER_VALUE);
+            return (entire_hdr ? (header_name + ": ") : "") + SipParser::inst().get_sub_match(HEADER_VALUE);
         }
     }
     
@@ -202,9 +202,15 @@ string SipMessage::get_value(string& var)
 
 //==========================================================================================================
 //==========================================================================================================
+bool SipMessage::match(Direction _dir, string _kind)
+{
+    return (_dir == ANY || dir == _dir) && (_kind.empty() || kind == _kind);
+}
+
+//==========================================================================================================
+//==========================================================================================================
 void SipMessage::print()
 {
-    cout << "Message kind: " << kind << endl << endl;
     for(auto s: lines)
     {
         cout << s;
