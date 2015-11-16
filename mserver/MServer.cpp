@@ -145,7 +145,12 @@ bool MServer::send_message(SipMessage &message)
     return connection.send_message(message);
 }
 
-
+//==========================================================================================================
+//==========================================================================================================
+MServer::CallIDKind MServer::get_call_id_kind()
+{
+    return call_id_kind;
+}
 
 
 

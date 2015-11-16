@@ -123,13 +123,24 @@ string ScriptReader::gen_branch()
 
 
 //==========================================================================================================
-// Generate a random call-id string
+// Generate the call-id string
 //==========================================================================================================
 string ScriptReader::gen_call_id()
 {
-    string res;
-    gen_random_string(res);
-    return res;
+    switch(MServer::inst.get_call_id_kind())
+    {
+        case MServer::NONE: {
+            string res;
+            gen_random_string(res);
+            return res;
+        }
+        case MServer::MIN: {
+            return "!";
+        }
+        case MServer::MAX: {
+            return string(50, '~');
+        }
+    }
 }
 
 
