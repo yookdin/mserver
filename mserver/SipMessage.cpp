@@ -9,6 +9,13 @@
 #include "SipMessage.hpp"
 #include "SipParser.hpp"
 
+
+//==========================================================================================================
+// Regular expression describing a get_value() var format
+//==========================================================================================================
+const regex SipMessage::value_regex("([-[:alnum:]]+)(_value)?");
+
+
 //==========================================================================================================
 // Construct message from a vector of strings, received from script file.
 //==========================================================================================================
@@ -126,6 +133,13 @@ void SipMessage::parse(bool add_crlf)
             {
                 throw string("SIP message contains non header line in header section line " + to_string(i) + ":\n" + lines[i]);
             }
+            
+            string header_name = parser.get_sub_match(HEADER_NAME);
+            
+            if(header_name == "CSeq")
+            {
+                cseq = get_cseq(parser.get_sub_match(HEADER_VALUE));
+            }
         }
     }
     
@@ -135,10 +149,29 @@ void SipMessage::parse(bool add_crlf)
         lines.push_back(CRLF);
         size += 2;
     }
+    
+    if(cseq.empty())
+    {
+        throw string("No CSeq header in message!");
+    }
 }
 
 
 //==========================================================================================================
+//==========================================================================================================
+string SipMessage::get_cseq(string header_value)
+{
+    if(!SipParser::inst().match(CSEQ_VALUE, header_value))
+    {
+        throw string("Wrong CSeq header value: " + header_value);
+    }
+    
+    return SipParser::inst().get_sub_match(NUM);
+}
+
+
+//==========================================================================================================
+// Kind is either a method (INVITE, ACK, etc.) or a status-code (200, 183, etc.)
 //==========================================================================================================
 string SipMessage::get_kind()
 {
@@ -147,6 +180,7 @@ string SipMessage::get_kind()
 
 
 //==========================================================================================================
+// Write this message to given buffer and set num_to_write to the num of bytes written
 //==========================================================================================================
 void SipMessage::write_to_buffer(char buf[], long &num_to_write)
 {
@@ -169,9 +203,11 @@ void SipMessage::write_to_buffer(char buf[], long &num_to_write)
 
 
 //==========================================================================================================
-// Get the an entire header line, or just its value.
-// If var is a name of a header, the entire line will be returned (not including CRLF)
-// If var is of the form <header-name>_value, only the value will be returned.
+// Get a value from the current message according to the var string. The var can represent an entire header,
+// just the header value, or other data.
+// var = <header-name>          :   the entire header line will be returned (not including CRLF)
+// var = <header-name>_value    :   only the value part of the header line
+// var = cseq                   :   the numerical part of CSeq header
 //==========================================================================================================
 string SipMessage::get_value(string& var)
 {
@@ -183,20 +219,26 @@ string SipMessage::get_value(string& var)
         throw string("SipMessage::get_value(): wrong format of var: " + var);
     }
     
-    string header_name = match[1];
+    string name = match[1];
+    
+    if(name == CSEQ)
+    {
+        return cseq;
+    }
+    
     bool entire_hdr = match[2].str().empty();
     
     for(int i = 1; i < lines.size() && !lines[i].empty(); ++i)
     {
         SipParser::inst().match(HEADER_LINE, lines[i]);
 
-        if(header_name == SipParser::inst().get_sub_match(HEADER_NAME))
+        if(name == SipParser::inst().get_sub_match(HEADER_NAME))
         {
-            return (entire_hdr ? (header_name + ": ") : "") + SipParser::inst().get_sub_match(HEADER_VALUE);
+            return (entire_hdr ? (name + ": ") : "") + SipParser::inst().get_sub_match(HEADER_VALUE);
         }
     }
     
-    throw string("SipMessage::get_value(): header " + header_name + " not found");
+    throw string("SipMessage::get_value(): header " + name + " not found");
 }
 
 

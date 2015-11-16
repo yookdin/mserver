@@ -37,7 +37,8 @@ enum SipElement
     HEADER_VALUE,
     HEADER_LINE,
     USER_NAME,
-    START_LINE
+    START_LINE,
+    CSEQ_VALUE
 };
 
 //==========================================================================================================

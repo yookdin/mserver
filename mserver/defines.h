@@ -24,6 +24,7 @@
 #define TEST_DIR    "test_dir"
 #define SCENARIO    "scenario"
 #define TAG         "tag"
+#define CSEQ        "cseq"
 
 
 #define CONNECTION_BUFFER_SIZE 5000

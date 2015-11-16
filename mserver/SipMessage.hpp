@@ -25,13 +25,17 @@ public:
     void print();
     
 private:
+    static const regex value_regex;
+    
+    const Direction dir;
     vector<string> lines;
     string kind;
+    string cseq;
     int size = 0;
-    const Direction dir;
     
     void parse(bool add_crlf);
     string* get_sip_line(char*& cur_buf, long& remaining_bytes);
+    string get_cseq(string header_value);
 };
 
 #endif /* SipMessage_hpp */

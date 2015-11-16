@@ -52,8 +52,8 @@ SipParser::SipParser()
     ADD_ELEMENT_MATCHER(STATUS_CODE,        "\\d{3}",                                   true);
     ADD_ELEMENT_MATCHER(HEADER_NAME,        "[[:alnum:]]+(-[[:alnum:]]+)*",             true);
     ADD_ELEMENT_MATCHER(HEADER_VALUE,       ".*",                                       true); // Allow anything
-    
-    
+
+    ADD_ELEMENT_MATCHER(CSEQ_VALUE,         "(_NUM_) +(_NAME_)",                        false);
     ADD_ELEMENT_MATCHER(PHONE_NUM,          "\\+?_NUM_(-_NUM_)*",                       false);
 
     // TODO: add headers (optional after the parameter list) ?

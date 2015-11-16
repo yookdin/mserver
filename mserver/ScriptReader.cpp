@@ -112,6 +112,7 @@ string ScriptReader::get_value(string var, string last_descriptor)
 
 
 //==========================================================================================================
+// Generate a random branch string, that must begin with the constant prefix according to the spec.
 //==========================================================================================================
 string ScriptReader::gen_branch()
 {
@@ -122,6 +123,7 @@ string ScriptReader::gen_branch()
 
 
 //==========================================================================================================
+// Generate a random call-id string
 //==========================================================================================================
 string ScriptReader::gen_call_id()
 {
@@ -132,6 +134,7 @@ string ScriptReader::gen_call_id()
 
 
 //==========================================================================================================
+// Generate a random tag string, at least 4 bytes long
 //==========================================================================================================
 string ScriptReader::gen_tag()
 {
@@ -161,10 +164,11 @@ void ScriptReader::gen_random_string(string& str, int min_len)
     
     for(int i = 0; i < len; ++i)
     {
-        char c = int(rand() % char_range + 33);
+        char c = rand() % char_range + 33;
         str += c;
     }
 }
+
 
 //==========================================================================================================
 //==========================================================================================================
@@ -202,16 +206,24 @@ bool ScriptReader::is_last_var(string& var)
 
 
 //==========================================================================================================
+// Return the value of last_* variable
 //==========================================================================================================
 string ScriptReader::get_last_value(string& var, string& last_descriptor)
 {
     SipMessage& last_msg = get_last_message(last_descriptor);
-    string short_var = var.substr(5); // w/o the "last_"
+    string short_var = var.substr(5); // without the "last_"
     return last_msg.get_value(short_var);
 }
 
 
 //==========================================================================================================
+// Return a message from which the values of last_* params will be taken, according the last_descriptor
+// string, which format is:
+// <ordinal>|last [in|out] [Method|status-code]
+// For example:
+// "2nd in INVITE"  - return the second incoming INVITE
+// "last 183"       - return the last 183 response, no matter if it was incoming or outgoing
+// If last_descriptor is empty, return the last message.
 //==========================================================================================================
 SipMessage& ScriptReader::get_last_message(string& last_descriptor)
 {
@@ -220,7 +232,7 @@ SipMessage& ScriptReader::get_last_message(string& last_descriptor)
         throw string("Can't use last_*, no previous messages");
     }
     
-    if(last_descriptor.empty())
+    if(last_descriptor.empty()) // Default is the last message
     {
         return *messages.back();
     }
@@ -232,11 +244,13 @@ SipMessage& ScriptReader::get_last_message(string& last_descriptor)
         throw string("Wrong last descriptor format: \"" + last_descriptor + "\"");
     }
     
-    // Sunbatches:
+    //------------------------------------------------------------------------------------------------------
+    // Get values for the search from the submatches:
     // 1: Ordinal or 'last'
     // 2: Numerical part of ordinal
-    // 4: in/out
-    // 6: message kind (Method/status-code)
+    // 4: in|out
+    // 6: message kind (Method|status-code)
+    //------------------------------------------------------------------------------------------------------
     int num = -1;
     SipMessage::Direction dir = SipMessage::ANY;
     string kind = match[6];
@@ -244,6 +258,11 @@ SipMessage& ScriptReader::get_last_message(string& last_descriptor)
     if(!match[2].str().empty())
     {
         num = stoi(match[2]);
+        
+        if(num <= 0)
+        {
+            throw string("Ordinal of last_descriptor must be positive");
+        }
     }
     
     if(!match[4].str().empty())
@@ -282,6 +301,7 @@ SipMessage& ScriptReader::get_last_message(string& last_descriptor)
         }
     }
     
+    // This is reached only if no matching message found
     throw string("No message matches last descriptor \"" + last_descriptor + "\"");
 }
 
