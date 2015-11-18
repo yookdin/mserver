@@ -56,12 +56,12 @@ void RecvCommand::process_args(string& line, string& message_kind, bool& optiona
     options.emplace(timeout_opt, Option(false, true));
     OptionParser parser(line, options);
     
-    message_kind = options.at(msg_opt).val;
-    optional = options.at(optional_opt).found;
+    message_kind = options.at(msg_opt).get_value();
+    optional = options.at(optional_opt).was_found();
     
-    if(options.at(timeout_opt).found)
+    if(options.at(timeout_opt).was_found())
     {
-        timeout = stoi(options.at(timeout_opt).val);
+        timeout = stoi(options.at(timeout_opt).get_value());
     }
 }
 

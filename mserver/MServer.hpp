@@ -26,6 +26,7 @@ public:
     SipMessage* get_message(string kind, int timeout); // Message kind is either method or status code
     bool send_message(SipMessage &message);
     CallIDKind get_call_id_kind();
+    void print_vars();
     
 private:
     MServer();

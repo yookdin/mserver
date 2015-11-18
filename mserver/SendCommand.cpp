@@ -94,7 +94,7 @@ void SendCommand::process_args(string& line)
     options.emplace("last", Option(false, true));
     OptionParser parser(line, options);
 
-    last_descriptor = options.at("last").val;
+    last_descriptor = options.at("last").get_value();
 }
 
 

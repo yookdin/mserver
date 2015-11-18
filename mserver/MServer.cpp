@@ -75,6 +75,7 @@ void MServer::process_args(int argc, char * argv[])
     options.emplace(SCENARIO, Option(true, true));
     options.emplace("call_id_min", Option(false, false));
     options.emplace("call_id_max", Option(false, false));
+    options.emplace("var", Option(false, true, true)); // -var name=value
 
     OptionParser parser(argc, argv, options); // Parse command line option and put values in the map
     
@@ -90,14 +91,38 @@ void MServer::process_args(int argc, char * argv[])
         }
         
         string var_name = pair.first;
-        vars[var_name] = pair.second.val;
+    
+        if(var_name != "var")
+        {
+            // With "normal" options, the var name is the option name and the value is the option value
+            vars[var_name] = pair.second.get_value();
+        }
+        else
+        {
+            // -var option is of the form: -var name=value, and can appear multiple times. So need to further
+            // parse each 'name=value' string, and set vars[name] = value.
+            vector<string>& vals = pair.second.get_values();
+            
+            for(auto& pair_str: vals)
+            {
+                string name, val;
+                OptionParser::parse_cmd_line_eq_pair(pair_str, name, val);
+                
+                if(name.empty() || val.empty())
+                {
+                    throw string("Wrong format for -var option: " + pair_str);
+                }
+                
+                vars[name] = val;
+            }
+        }
     }
     
-    if(options.at("call_id_min").found)
+    if(options.at("call_id_min").was_found())
     {
         call_id_kind = MIN;
     }
-    else if(options.at("call_id_max").found)
+    else if(options.at("call_id_max").was_found())
     {
         call_id_kind = MAX;
     }
@@ -152,7 +177,15 @@ MServer::CallIDKind MServer::get_call_id_kind()
     return call_id_kind;
 }
 
-
+//==========================================================================================================
+//==========================================================================================================
+void MServer::print_vars()
+{
+    for(auto& pair: vars)
+    {
+        cout << pair.first << " = " << pair.second << endl;
+    }
+}
 
 
 

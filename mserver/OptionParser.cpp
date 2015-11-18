@@ -9,32 +9,99 @@
 #include "OptionParser.hpp"
 
 
+/***********************************************************************************************************
+ *                                                                                                         *
+ *                                  CLASS OptionParser::Option                                             *
+ *                                                                                                         *
+ ***********************************************************************************************************/
+
 //==========================================================================================================
 //==========================================================================================================
-OptionParser::Option::Option(bool _mandatory, bool _need_arg, string default_val):
-    mandatory(_mandatory), need_arg(_need_arg), val(default_val), found(false)
+Option::Option(bool _mandatory, bool _need_arg, bool _multi, string default_val):
+    mandatory(_mandatory), need_arg(_need_arg), multi(_multi), found(false)
 {
+    // Multi options (that can appear more than once) must have arguments, and no sense in having default
+    // value
+    if(multi && (!need_arg || !default_val.empty()))
+    {
+        throw string("Multi option must need an argument and can't have a default one");
+    }
+    
     if(!default_val.empty() && !need_arg)
     {
         throw string("Can't have an option with a default value if the option doesn't need an argument");
+    }
+    
+    if(!default_val.empty())
+    {
+        values.push_back(default_val);
     }
 }
 
 
 //==========================================================================================================
 //==========================================================================================================
-bool OptionParser::Option::missing() {
-    return mandatory && !found;
+void Option::set_found()
+{
+    if(found && !multi)
+    {
+        throw string("Option " + name + " already found");
+    }
+    
+    found = true;
 }
 
+
+//==========================================================================================================
+// Set the option value if necessary. If necessary and no option issue error. Return true to indicate
+// option value set, false o/w.
+//==========================================================================================================
+bool Option::set_value(string& val)
+{
+    if(need_arg)
+    {
+        // Multi opt must have an arg each time it appears. Single opt must have an arg if no default value was provided
+        if((multi || values.empty()) && val.empty())
+        {
+            throw string("Option " + name + " needs an argument");
+        }
+        
+        if(!val.empty())
+        {
+            values.push_back(val);
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+
+/***********************************************************************************************************
+ *                                                                                                         *
+ *                                  CLASS OptionParser                                                     *
+ *                                                                                                         *
+ ***********************************************************************************************************/
+
+//==========================================================================================================
+// A regex for opt[=val] appearing in a script file. May be opt = "val with spaces", and may be just opt.
+//==========================================================================================================
+const regex OptionParser::eq_pair_regex("(\\w+)( *= *(\\w+|\"([^\"]+)\"))?");
+
+
+//==========================================================================================================
+// A regex for opt=val from the command line. This is used when it's already known that a value exists.
+// Any ", if existed, were already stripped, since this is what happens on the command line.
+//==========================================================================================================
+const regex OptionParser::cmd_line_eq_pair_regex("(\\w+)=(.*)");
 
 //==========================================================================================================
 // Parse options received in a string, of type: opt=val
 //==========================================================================================================
 OptionParser::OptionParser(string& line, map<string, Option>& _options): options(_options) {
-    regex param_re("(\\w+)( *= *(\\w+|\"([^\"]+)\"))?");
-    sregex_iterator iter(line.begin(), line.end(), param_re);
+    sregex_iterator iter(line.begin(), line.end(), eq_pair_regex);
     sregex_iterator end;
+    set_option_names(options);
     
     for(;iter != end; ++iter)
     {
@@ -47,7 +114,7 @@ OptionParser::OptionParser(string& line, map<string, Option>& _options): options
         }
         
         Option& opt = check_option(opt_name);
-        set_option_value(opt, opt_name, opt_val);
+        opt.set_value(opt_val);
     }
     
     check_missing_options(options);
@@ -58,6 +125,8 @@ OptionParser::OptionParser(string& line, map<string, Option>& _options): options
 //==========================================================================================================
 OptionParser::OptionParser(int argc, char * argv[], map<string, Option>& _options): options(_options) {
     
+    set_option_names(options);
+
     for(int i = 1; i < argc; i++)
     {
         string opt_name = argv[i];
@@ -70,7 +139,7 @@ OptionParser::OptionParser(int argc, char * argv[], map<string, Option>& _option
             opt_val = argv[i+1];
         }
         
-        if(set_option_value(opt, opt_name, opt_val))
+        if(opt.set_value(opt_val))
         {
             ++i; // Skip the next argument which is the option value
         }
@@ -78,7 +147,19 @@ OptionParser::OptionParser(int argc, char * argv[], map<string, Option>& _option
     
     check_missing_options(options);
 }
-    
+
+
+//==========================================================================================================
+//==========================================================================================================
+void OptionParser::set_option_names(map<string, Option>& opts)
+{
+    for(auto& opt: opts)
+    {
+        opt.second.name = opt.first;
+    }
+}
+
+
 //==========================================================================================================
 // Check that the option exists and was not found yet
 //==========================================================================================================
@@ -90,37 +171,8 @@ OptionParser::Option& OptionParser::check_option(string& opt_name)
     }
     
     Option &opt = options.at(opt_name);
-    
-    if(opt.found)
-    {
-        throw string("Option " + opt_name + " already found");
-    }
-    
-    opt.found = true;
+    opt.set_found();
     return opt;
-}
-
-//==========================================================================================================
-// Set the option value if necessary. If necessary and no option issue error. Return true to indicate
-// option value set, false o/w.
-//==========================================================================================================
-bool OptionParser::set_option_value(Option& opt, string& opt_name, string& opt_val)
-{
-    if(opt.need_arg)
-    {
-        if(opt_val.empty() && opt.val.empty())
-        {
-            throw string("Option " + opt_name + " needs an argument");
-        }
-        
-        if(!opt_val.empty())
-        {
-            opt.val = opt_val;
-            return true;
-        }
-    }
-    
-    return false;
 }
 
 
@@ -144,4 +196,32 @@ void OptionParser::check_missing_options(map<string, Option>& options)
         throw string("Missing options: " + missing_opts);
     }
 }
+
+
+//==========================================================================================================
+//==========================================================================================================
+void OptionParser::parse_cmd_line_eq_pair(string& pair, string& name, string& val)
+{
+    smatch match;
+    
+    if(regex_search(pair, match, cmd_line_eq_pair_regex))
+    {
+        name = match[1];
+        val = match[2];
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
