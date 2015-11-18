@@ -42,11 +42,12 @@ void SendCommand::interpret(string &line, ifstream &file)
 //==========================================================================================================
 // Read lines from file until end_regex is encountered, and replace occurrences of vars with values. Put lines
 // in input vector.
+// Calculate [len] field - the lenght of the body section.
 //==========================================================================================================
 void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
 {
     bool calc_len = false;
-    int body_len = 0;
+    int len = 0;
     vector<string*> len_lines; // Lines containins [len]
     
     for(string line; getline(file, line);)
@@ -67,7 +68,7 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
         
         if(calc_len)
         {
-            body_len += line.length() + 2; // The plus 2 is for the \r\n that will be appended after each line
+            len += line.length() + 2; // The plus 2 is for the \r\n that will be appended after each line
         }
         
         if(line.empty()) //  This is the last line of the header section, after which there's the optional body
@@ -77,7 +78,7 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
     }
     
     // Replace [len] in all the lines that contain it; can it really be more than one line?
-    string len_str = to_string(body_len);
+    string len_str = to_string(len);
     
     for(auto pline: len_lines)
     {

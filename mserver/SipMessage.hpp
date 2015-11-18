@@ -33,7 +33,7 @@ private:
     string cseq;
     int size = 0;
     
-    void parse(bool add_crlf);
+    void parse(bool from_script);
     string* get_sip_line(char*& cur_buf, long& remaining_bytes);
     string get_cseq(string header_value);
 };

@@ -85,11 +85,11 @@ string* SipMessage::get_sip_line(char*& cur_buf, long& remaining_bytes)
 //==========================================================================================================
 // Parse the message contained in lines and throw error if not valid.
 //==========================================================================================================
-void SipMessage::parse(bool add_crlf)
+void SipMessage::parse(bool from_script)
 {
     for(auto &line: lines)
     {
-        if(add_crlf)
+        if(from_script)
         {
             line += CRLF;
         }
@@ -114,9 +114,13 @@ void SipMessage::parse(bool add_crlf)
     }
     
     bool in_header = true;
+    int header_size = 0;
+    int found_len = -1;
     
     for(int i = 1; i < lines.size(); ++i)
     {
+        header_size += lines[i].length();
+
         if(lines[i] == CRLF) // empty line
         {
             if(!in_header)
@@ -125,6 +129,7 @@ void SipMessage::parse(bool add_crlf)
             }
             
             in_header = false;
+            break;
         }
         
         if(in_header)
@@ -140,6 +145,13 @@ void SipMessage::parse(bool add_crlf)
             {
                 cseq = get_cseq(parser.get_sub_match(HEADER_VALUE));
             }
+            
+            // Need to check the Content-Length header only for incoming messages, not ones read from script
+            if(!from_script && header_name == "Content-Length")
+            {
+                found_len = stoi(parser.get_sub_match(HEADER_VALUE));
+            }
+            
         }
     }
     
@@ -148,6 +160,17 @@ void SipMessage::parse(bool add_crlf)
     {
         lines.push_back(CRLF);
         size += 2;
+        header_size += 2;
+    }
+    
+    if(found_len != -1 && !from_script)
+    {
+        int len = size - header_size;
+        
+        if(len != found_len)
+        {
+            throw string("Content-Length has wrong value: " + to_string(found_len) + " instead of " + to_string(len));
+        }
     }
     
     if(cseq.empty())
