@@ -74,6 +74,7 @@ SipParser::SipParser()
     ADD_ELEMENT_MATCHER(START_LINE,         "(_STATUS_LINE_)|(_REQUEST_LINE_)",         false);
     
 #undef ADD_ELEMENT_MATCHER
+#undef QUOTE
     
     //------------------------------------------------------------------------------------------------------
     // Init sip_element_re
@@ -92,7 +93,8 @@ SipParser::SipParser()
 
 
 //==========================================================================================================
-// Since the original regular expression contain references, it is needed to resolove them.
+// Since the original regular expressions contain references, it is needed to resolove them, i.e. replace
+// occurrences of _<ELEM_NAME>_ inside the string with the actual value of the regex string for that element.
 //==========================================================================================================
 void SipParser::finalize_matchers()
 {
@@ -114,6 +116,7 @@ bool SipParser::match(SipElement elem, string line)
 
 
 //==========================================================================================================
+// Do match and return the entire matched string
 //==========================================================================================================
 string SipParser::get_match(SipElement elem, string line)
 {
@@ -123,6 +126,7 @@ string SipParser::get_match(SipElement elem, string line)
 
 
 //==========================================================================================================
+// Return the entire matched string of the last match performed
 //==========================================================================================================
 string SipParser::get_match()
 {
@@ -153,7 +157,8 @@ string SipParser::get_sub_match(SipElement elem, int pos)
 }
 
 
-//=====================================x=====================================================================
+//==========================================================================================================
+// Try to match the given element with given line and print a report of the result
 //==========================================================================================================
 void SipParser::print_match(SipElement elem, string line)
 {
@@ -179,6 +184,7 @@ SipParser::SipMatcher* SipParser::get_matcher(string elem_name)
 
 
 //==========================================================================================================
+// Print matchers info
 //==========================================================================================================
 void SipParser::print()
 {
@@ -212,6 +218,7 @@ SipParser::SipMatcher::SipMatcher(SipElement _elem, string _highlevel_re_str, bo
 
 
 //==========================================================================================================
+// Return whether the given string matches this matcher SIP element
 //==========================================================================================================
 bool SipParser::SipMatcher::match(string line)
 {
@@ -221,6 +228,7 @@ bool SipParser::SipMatcher::match(string line)
 
 
 //==========================================================================================================
+// Do match and return the entire matched string
 //==========================================================================================================
 string SipParser::SipMatcher::get_match(string line)
 {
@@ -231,6 +239,7 @@ string SipParser::SipMatcher::get_match(string line)
 
 
 //==========================================================================================================
+// Return the entire matched string of the last match performed
 //==========================================================================================================
 string SipParser::SipMatcher::get_match()
 {
@@ -239,6 +248,8 @@ string SipParser::SipMatcher::get_match()
 
 
 //==========================================================================================================
+// After a successful match this will return the sub-match of the given element within the entire match.
+// If called with elements not contained in this element, an empty string will be returned.
 //==========================================================================================================
 string SipParser::SipMatcher::get_sub_match(SipElement sub_elem, int pos)
 {
@@ -257,6 +268,8 @@ string SipParser::SipMatcher::get_sub_match(SipElement sub_elem, int pos)
 
 
 //==========================================================================================================
+// Since the original regular expressions contain references, it is needed to resolove them, i.e. replace
+// occurrences of _<ELEM_NAME>_ inside the string with the actual value of the regex string for that element
 //==========================================================================================================
 void SipParser::SipMatcher::finalize(SipParser* parser)
 {
@@ -326,6 +339,7 @@ void SipParser::SipMatcher::finalize(SipParser* parser)
 
 
 //==========================================================================================================
+// Print info of this mathcer
 //==========================================================================================================
 void SipParser::SipMatcher::print()
 {
@@ -358,6 +372,7 @@ void SipParser::SipMatcher::print()
 
 
 //==========================================================================================================
+// Check that no "_<ELEM_NAME>_" remain in re_str. If found, report. 
 //==========================================================================================================
 void SipParser::SipMatcher::self_check(SipParser* parser)
 {
@@ -387,6 +402,7 @@ void SipParser::SipMatcher::self_check(SipParser* parser)
 
 
 //==========================================================================================================
+// Print info of the last match performed by this matcher
 //==========================================================================================================
 void SipParser::SipMatcher::print_match()
 {
