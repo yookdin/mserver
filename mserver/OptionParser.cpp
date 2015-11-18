@@ -98,9 +98,12 @@ const regex OptionParser::cmd_line_eq_pair_regex("(\\w+)=(.*)");
 //==========================================================================================================
 // Parse options received in a string, of type: opt=val
 //==========================================================================================================
-OptionParser::OptionParser(string& line, map<string, Option>& _options): options(_options) {
+OptionParser::OptionParser(string& line, char end_char, map<string, Option>& _options): options(_options) {
     sregex_iterator iter(line.begin(), line.end(), eq_pair_regex);
     sregex_iterator end;
+    regex end_regex(string("^ *") + end_char);
+    bool end_found = false;
+    
     set_option_names(options);
     
     for(;iter != end; ++iter)
@@ -115,6 +118,20 @@ OptionParser::OptionParser(string& line, map<string, Option>& _options): options
         
         Option& opt = check_option(opt_name);
         opt.set_value(opt_val);
+        
+        smatch match;
+        
+        if(regex_search(line.substr(iter->position() + iter->length()), match, end_regex))
+        {
+            line = match.suffix();
+            end_found = true;
+            break;
+        }
+    }
+    
+    if(!end_found)
+    {
+        throw string("Expected end char " + to_string(end_char) + " not found");
     }
     
     check_missing_options(options);

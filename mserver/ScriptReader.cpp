@@ -69,7 +69,7 @@ void ScriptReader::read_file(string filepath)
 				}
 			}
 
-			line = res.suffix().str(); // Skip the matched part, so the command won't need to deal with it
+			line = res.suffix(); // Skip the matched part, so the command won't need to deal with it
             commands[command_name]->interpret(line, file);
 		}
 	}

@@ -19,6 +19,10 @@ TODO:
 #include "OptionParser.hpp"
 #include "ScriptReader.h"
 
+//==========================================================================================================
+//==========================================================================================================
+const regex RecvCommand::end_regex("</recv>");
+
 
 //==========================================================================================================
 //==========================================================================================================
@@ -41,6 +45,13 @@ void RecvCommand::interpret(string &line, ifstream &file)
     {
         reader.add_message(msg);
     }
+    
+    // Look for <expect> clauses
+    while(!regex_search(line, end_regex))
+    {
+        // todo: get the expect command
+        getline(file, line);
+    }
 }
 
 
@@ -54,7 +65,7 @@ void RecvCommand::process_args(string& line, string& message_kind, bool& optiona
     options.emplace(msg_opt, Option(true, true));
     options.emplace(optional_opt, Option(false, false));
     options.emplace(timeout_opt, Option(false, true));
-    OptionParser parser(line, options);
+    OptionParser parser(line, '>', options);
     
     message_kind = options.at(msg_opt).get_value();
     optional = options.at(optional_opt).was_found();

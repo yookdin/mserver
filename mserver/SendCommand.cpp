@@ -93,7 +93,7 @@ void SendCommand::process_args(string& line)
 {
     map<string, Option> options;
     options.emplace("last", Option(false, true));
-    OptionParser parser(line, options);
+    OptionParser parser(line, '>', options);
 
     last_descriptor = options.at("last").get_value();
 }

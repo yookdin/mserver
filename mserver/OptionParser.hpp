@@ -43,7 +43,7 @@ public:
         bool multi;
     };
     
-    OptionParser(string& line, map<string, Option>& _options);
+    OptionParser(string& line, char end_char, map<string, Option>& _options);
     OptionParser(int argc, char * argv[], map<string, Option>& _options);
     
 private:
