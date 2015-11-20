@@ -50,6 +50,7 @@ class SipParser
 public:
     static SipParser& inst();
     const string method_str = "ACK|BYE|CANCEL|INFO|INVITE|MESSAGE|NOTIFY|OPTIONS|PRACK|PUBLISH|REFER|REGISTER|SUBSCRIBE|UPDATE";
+    const string header_name_str = "[[:alnum:]]+(-[[:alnum:]]+)*";
     
     bool match(SipElement elem, string line);
     string get_match(SipElement elem, string line);

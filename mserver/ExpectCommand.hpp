@@ -29,7 +29,23 @@
 class ExpectCommand: public Command
 {
 public:
+    ExpectCommand(ScriptReader &_reader): Command(_reader) {}
+    virtual void interpret(string &line, ifstream &file);
+
 private:
+    static const regex end_regex;
+    static map<string, Token*> const_tokens;
+    static map<string, Token*> init_const_tokens();
+
+    void convert_to_tokens(string &line, ifstream &file, vector<Token*> tokens);
+    void convert_to_tokens(string &line, vector<Token*> tokens);
+    
+    Token* try_const_token(string &line, int &pos);
+    Token* try_num(string &line, int &pos);
+    Token* try_string(string &line, int &pos);
+    Token* try_header_name(string &line, int &pos);
+    Token* try_var(string &line, int &pos);
+
 };
 
 #endif /* ExpectCommand_hpp */

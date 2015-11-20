@@ -16,16 +16,22 @@
 class OpenParen: public Token
 {
 public:
+    static const string str;
     OpenParen(): Token(OPEN_PAREN) {}
 };
+
+const string OpenParen::str = "(";
+
 
 //==========================================================================================================
 //==========================================================================================================
 class CloseParen: public Token
 {
 public:
-    CloseParen(): Token(OPEN_PAREN) {}
+    static const string str;
+    CloseParen(): Token(CLOSE_PAREN) {}
 };
 
+const string CloseParen::str = ")";
 
 #endif /* Paren_h */

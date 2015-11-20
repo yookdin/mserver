@@ -5,14 +5,13 @@
 #include "SendCommand.h"
 #include "RecvCommand.h"
 #include "PauseCommand.h"
-#include "AnswerCommand.h"
 #include "ExpectCommand.hpp"
 #include "MServer.hpp"
 
 //==========================================================================================================
 // Static regular expression describing commands start
 //==========================================================================================================
-const regex ScriptReader::command_start_regex("^ *<(answer)|^ *<(pause)|^ *<(recv)|^ *<(scenario)|^ *<(send)");
+const regex ScriptReader::command_start_regex("^ *<(expect)>|^ *<(pause)|^ *<(recv)|^ *<(scenario)|^ *<(send)");
 
 
 //==========================================================================================================
@@ -34,7 +33,7 @@ ScriptReader::ScriptReader(string filepath)
     commands["send"] = new SendCommand(*this);
     commands["recv"] = new RecvCommand(*this);
     commands["pause"] = new PauseCommand(*this);
-    commands["answer"] = new AnswerCommand(*this);
+    commands["expect"] = new ExpectCommand(*this);
     
     read_file(filepath);
 }

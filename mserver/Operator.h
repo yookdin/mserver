@@ -22,6 +22,7 @@
 #define Operator_h
 
 #include "Token.h"
+#include "Value.h"
 
 //==========================================================================================================
 //==========================================================================================================
@@ -31,8 +32,8 @@ public:
     enum Associativiy {LEFT, RIGHT, NONE};
     typedef Operator::Associativiy Associativity;
     
-    Operator(int _num_operands, int _precedence, Associativiy _associativiy, string _str):
-        Token(OP), num_operands(_num_operands), precedence(_precedence), associativiy(_associativiy), str(_str) {}
+    Operator(int _num_operands, int _precedence, Associativiy _associativiy):
+        Token(OP), num_operands(_num_operands), precedence(_precedence), associativiy(_associativiy) {}
 
     const int num_operands;
     const int precedence;
@@ -41,9 +42,7 @@ public:
     virtual Value* execute(vector<Value*> vals) = 0;
     
 protected:
-    const string str;
-    
-    void check_operands_num(long num)
+    void check_operands_num(long num, string str)
     {
         if(num != num_operands)
         {
@@ -57,11 +56,13 @@ protected:
 class Add: public Operator
 {
 public:
-    Add(): Operator(2, 3, LEFT, "+") {}
+    static const string str;
+    
+    Add(): Operator(2, 3, LEFT) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] + *vals[1]);
     }
 };
@@ -72,11 +73,13 @@ public:
 class Subtract: public Operator
 {
 public:
-    Subtract(): Operator(2, 3, LEFT, "-") {}
+    static const string str;
+    
+    Subtract(): Operator(2, 3, LEFT) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] - *vals[1]);
     }
 };
@@ -87,11 +90,13 @@ public:
 class Mul: public Operator
 {
 public:
-    Mul(): Operator(2, 2, LEFT, "*") {}
+    static const string str;
+    
+    Mul(): Operator(2, 2, LEFT) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] * *vals[1]);
     }
 };
@@ -102,11 +107,14 @@ public:
 class Div: public Operator
 {
 public:
-    Div(): Operator(2, 2, LEFT, "/") {}
+    static const string str;
+    
+
+    Div(): Operator(2, 2, LEFT) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] / *vals[1]);
     }
 };
@@ -117,11 +125,14 @@ public:
 class Mod: public Operator
 {
 public:
-    Mod(): Operator(2, 2, LEFT, "%") {}
+    static const string str;
+    
+
+    Mod(): Operator(2, 2, LEFT) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] % *vals[1]);
     }
 };
@@ -132,11 +143,14 @@ public:
 class Or: public Operator
 {
 public:
-    Or(): Operator(2, 8, LEFT, "||") {}
+    static const string str;
+    
+
+    Or(): Operator(2, 8, LEFT) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] || *vals[1]);
     }
 };
@@ -147,11 +161,14 @@ public:
 class And: public Operator
 {
 public:
-    And(): Operator(2, 7, LEFT, "&&") {}
+    static const string str;
+    
+
+    And(): Operator(2, 7, LEFT) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] && *vals[1]);
     }
 };
@@ -162,11 +179,14 @@ public:
 class Not: public Operator
 {
 public:
-    Not(): Operator(1, 1, RIGHT, "!") {}
+    static const string str;
+    
+
+    Not(): Operator(1, 1, RIGHT) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(!(*vals[0]));
     }
 };
@@ -177,11 +197,14 @@ public:
 class Equal: public Operator
 {
 public:
-    Equal(): Operator(2, 6, LEFT, "==") {}
+    static const string str;
+    
+
+    Equal(): Operator(2, 6, LEFT) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] == *vals[1]);
     }
 };
@@ -192,11 +215,14 @@ public:
 class NotEqual: public Operator
 {
 public:
-    NotEqual(): Operator(2, 6, LEFT, "!=") {}
+    static const string str;
+    
+
+    NotEqual(): Operator(2, 6, LEFT) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] != *vals[1]);
     }
 };
@@ -207,11 +233,14 @@ public:
 class LessThan: public Operator
 {
 public:
-    LessThan(): Operator(2, 5, NONE, "<") {}
+    static const string str;
+    
+
+    LessThan(): Operator(2, 5, NONE) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] < *vals[1]);
     }
 };
@@ -222,11 +251,14 @@ public:
 class GreaterThan: public Operator
 {
 public:
-    GreaterThan(): Operator(2, 5, NONE, ">") {}
+    static const string str;
+    
+
+    GreaterThan(): Operator(2, 5, NONE) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] > *vals[1]);
     }
 };
@@ -237,11 +269,14 @@ public:
 class LessThanEqual: public Operator
 {
 public:
-    LessThanEqual(): Operator(2, 5, NONE, "<=") {}
+    static const string str;
+    
+
+    LessThanEqual(): Operator(2, 5, NONE) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] <= *vals[1]);
     }
 };
@@ -252,25 +287,32 @@ public:
 class GreaterThanEqual: public Operator
 {
 public:
-    GreaterThanEqual(): Operator(2, 5, NONE, ">=") {}
+    static const string str;
+    
+
+    GreaterThanEqual(): Operator(2, 5, NONE) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(*vals[0] >= *vals[1]);
     }
 };
+
 
 //==========================================================================================================
 //==========================================================================================================
 class Match: public Operator
 {
 public:
-    Match(): Operator(2, 4, NONE, "~") {}
+    static const string str;
+    
+
+    Match(): Operator(2, 4, NONE) {}
 
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(vals[0]->match(*vals[1]));
     }
 };
@@ -281,11 +323,14 @@ public:
 class NotMatch: public Operator
 {
 public:
-    NotMatch(): Operator(2, 4, NONE, "!~") {}
+    static const string str;
+    
+
+    NotMatch(): Operator(2, 4, NONE) {}
     
     Value* execute(vector<Value*> vals)
     {
-        check_operands_num(vals.size());
+        check_operands_num(vals.size(), str);
         return &(vals[0]->not_match(*vals[1]));
     }
 };

@@ -45,13 +45,6 @@ void RecvCommand::interpret(string &line, ifstream &file)
     {
         reader.add_message(msg);
     }
-    
-    // Look for <expect> clauses
-    while(!regex_search(line, end_regex))
-    {
-        // todo: get the expect command
-        getline(file, line);
-    }
 }
 
 

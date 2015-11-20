@@ -50,7 +50,7 @@ SipParser::SipParser()
     ADD_ELEMENT_MATCHER(SIP_VERSION,        "SIP/2.0",                                  true);
     ADD_ELEMENT_MATCHER(PARAM,              "[^ ;=]+(=[^ ;=]+)?",                       true);
     ADD_ELEMENT_MATCHER(STATUS_CODE,        "\\d{3}",                                   true);
-    ADD_ELEMENT_MATCHER(HEADER_NAME,        "[[:alnum:]]+(-[[:alnum:]]+)*",             true);
+    ADD_ELEMENT_MATCHER(HEADER_NAME,        header_name_str,                            true);
     ADD_ELEMENT_MATCHER(HEADER_VALUE,       ".*",                                       true); // Allow anything
 
     ADD_ELEMENT_MATCHER(CSEQ_VALUE,         "(_NUM_) +(_NAME_)",                        false);

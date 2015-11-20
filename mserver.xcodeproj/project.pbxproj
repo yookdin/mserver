@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FE0ECE6C1BDF832E00958E40 /* AnswerCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE5C1BDF832E00958E40 /* AnswerCommand.cpp */; };
 		FE0ECE6D1BDF832E00958E40 /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE5E1BDF832E00958E40 /* Command.cpp */; };
 		FE0ECE6E1BDF832E00958E40 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE611BDF832E00958E40 /* main.cpp */; };
 		FE0ECE6F1BDF832E00958E40 /* PauseCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE621BDF832E00958E40 /* PauseCommand.cpp */; };
@@ -22,6 +21,7 @@
 		FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */; };
 		FE44FB881BFDCC07009C0C09 /* ExpectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE44FB861BFDCC07009C0C09 /* ExpectCommand.cpp */; };
 		FED6782F1BFF824500B739BE /* ExpEvaluator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FED6782D1BFF824500B739BE /* ExpEvaluator.cpp */; };
+		FED678321BFFD8E300B739BE /* Operator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FED678311BFFD8E300B739BE /* Operator.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,8 +38,6 @@
 
 /* Begin PBXFileReference section */
 		FE0ECE4C1BDF818E00958E40 /* mserver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mserver; sourceTree = BUILT_PRODUCTS_DIR; };
-		FE0ECE5C1BDF832E00958E40 /* AnswerCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnswerCommand.cpp; sourceTree = "<group>"; };
-		FE0ECE5D1BDF832E00958E40 /* AnswerCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswerCommand.h; sourceTree = "<group>"; };
 		FE0ECE5E1BDF832E00958E40 /* Command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Command.cpp; sourceTree = "<group>"; };
 		FE0ECE5F1BDF832E00958E40 /* Command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Command.h; sourceTree = "<group>"; };
 		FE0ECE601BDF832E00958E40 /* common_headers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common_headers.h; sourceTree = "<group>"; };
@@ -81,6 +79,7 @@
 		FED6782D1BFF824500B739BE /* ExpEvaluator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpEvaluator.cpp; sourceTree = "<group>"; };
 		FED6782E1BFF824500B739BE /* ExpEvaluator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ExpEvaluator.hpp; sourceTree = "<group>"; };
 		FED678301BFF8E1900B739BE /* Paren.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paren.h; sourceTree = "<group>"; };
+		FED678311BFFD8E300B739BE /* Operator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Operator.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,8 +137,6 @@
 			children = (
 				FE0ECE5F1BDF832E00958E40 /* Command.h */,
 				FE0ECE5E1BDF832E00958E40 /* Command.cpp */,
-				FE0ECE5D1BDF832E00958E40 /* AnswerCommand.h */,
-				FE0ECE5C1BDF832E00958E40 /* AnswerCommand.cpp */,
 				FE0ECE631BDF832E00958E40 /* PauseCommand.h */,
 				FE0ECE621BDF832E00958E40 /* PauseCommand.cpp */,
 				FE0ECE651BDF832E00958E40 /* RecvCommand.h */,
@@ -193,6 +190,7 @@
 				FE79118F1BFF280000A5DD60 /* Int.h */,
 				FE7911901BFF2A3B00A5DD60 /* String.h */,
 				FED6782C1BFF810200B739BE /* Operator.h */,
+				FED678311BFFD8E300B739BE /* Operator.cpp */,
 				FED678301BFF8E1900B739BE /* Paren.h */,
 				FED6782E1BFF824500B739BE /* ExpEvaluator.hpp */,
 				FED6782D1BFF824500B739BE /* ExpEvaluator.cpp */,
@@ -259,8 +257,8 @@
 				FED6782F1BFF824500B739BE /* ExpEvaluator.cpp in Sources */,
 				FE0ECE6E1BDF832E00958E40 /* main.cpp in Sources */,
 				FE0ECE731BDF832E00958E40 /* SendCommand.cpp in Sources */,
+				FED678321BFFD8E300B739BE /* Operator.cpp in Sources */,
 				FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */,
-				FE0ECE6C1BDF832E00958E40 /* AnswerCommand.cpp in Sources */,
 				FE2FFC671BEB79A1004E05A2 /* Connection.cpp in Sources */,
 				FE0ECE701BDF832E00958E40 /* RecvCommand.cpp in Sources */,
 				FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */,
