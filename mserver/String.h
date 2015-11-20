@@ -17,7 +17,7 @@
 class String: public Value
 {
 public:
-    String(string _val): Value(STRING), val(_val) {}
+    String(string _val = ""): Value(STRING), val(_val) {}
     string get_string() { return val; }
     
     Value& operator+ (Value& other) { return *(new String(val + other.get_string())); }

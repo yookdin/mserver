@@ -21,6 +21,7 @@
 		FE2FFC671BEB79A1004E05A2 /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC651BEB79A1004E05A2 /* Connection.cpp */; };
 		FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */; };
 		FE44FB881BFDCC07009C0C09 /* ExpectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE44FB861BFDCC07009C0C09 /* ExpectCommand.cpp */; };
+		FED6782F1BFF824500B739BE /* ExpEvaluator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FED6782D1BFF824500B739BE /* ExpEvaluator.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -75,6 +76,11 @@
 		FE79118D1BFF143300A5DD60 /* Bool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bool.h; sourceTree = "<group>"; };
 		FE79118F1BFF280000A5DD60 /* Int.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Int.h; sourceTree = "<group>"; };
 		FE7911901BFF2A3B00A5DD60 /* String.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
+		FED6782B1BFF7F9A00B739BE /* Token.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
+		FED6782C1BFF810200B739BE /* Operator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Operator.h; sourceTree = "<group>"; };
+		FED6782D1BFF824500B739BE /* ExpEvaluator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpEvaluator.cpp; sourceTree = "<group>"; };
+		FED6782E1BFF824500B739BE /* ExpEvaluator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ExpEvaluator.hpp; sourceTree = "<group>"; };
+		FED678301BFF8E1900B739BE /* Paren.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paren.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +126,7 @@
 				FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */,
 				FE0ECE7A1BDF854600958E40 /* sip */,
 				FE0ECE741BDF848600958E40 /* commands */,
-				FE7911881BFF116B00A5DD60 /* exp */,
+				FE7911881BFF116B00A5DD60 /* Expression Evaluator */,
 				FE610F101BE0D0F6002834FC /* utils */,
 				FE0ECE781BDF850E00958E40 /* Docs */,
 			);
@@ -178,15 +184,20 @@
 			name = utils;
 			sourceTree = "<group>";
 		};
-		FE7911881BFF116B00A5DD60 /* exp */ = {
+		FE7911881BFF116B00A5DD60 /* Expression Evaluator */ = {
 			isa = PBXGroup;
 			children = (
+				FED6782B1BFF7F9A00B739BE /* Token.h */,
 				FE79118A1BFF119700A5DD60 /* Value.h */,
 				FE79118D1BFF143300A5DD60 /* Bool.h */,
 				FE79118F1BFF280000A5DD60 /* Int.h */,
 				FE7911901BFF2A3B00A5DD60 /* String.h */,
+				FED6782C1BFF810200B739BE /* Operator.h */,
+				FED678301BFF8E1900B739BE /* Paren.h */,
+				FED6782E1BFF824500B739BE /* ExpEvaluator.hpp */,
+				FED6782D1BFF824500B739BE /* ExpEvaluator.cpp */,
 			);
-			name = exp;
+			name = "Expression Evaluator";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,6 +256,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FED6782F1BFF824500B739BE /* ExpEvaluator.cpp in Sources */,
 				FE0ECE6E1BDF832E00958E40 /* main.cpp in Sources */,
 				FE0ECE731BDF832E00958E40 /* SendCommand.cpp in Sources */,
 				FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */,

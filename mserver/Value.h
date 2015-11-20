@@ -10,11 +10,7 @@
 #define Value_h
 
 #include "common_headers.h"
-
-//enum OpKind {
-//    ADD, SUB, MUL, DIV, MOD, OR, AND, NOT, EQ, NOT_EQ, LESS_THAN, GREATER_THAN, LESS_EQ, GREATER_EQ, MATCH, NOT_MATCH
-//    //    Add, Sub, Mul, Div, Mod, Or, And, Not, Eq, NotEq, LessThan, GreaterThan, LessEq, GreaterEq, Match, NotMatch
-//};
+#include "Token.h"
 
 
 //==========================================================================================================
@@ -32,7 +28,7 @@ enum ValueType { STRING, INT, BOOL };
 // By default, they all throw exceptions. The derived classes will override this behavior only for the
 // methods they need.
 //==========================================================================================================
-class Value
+class Value: public Token
 {
 public:
     ValueType get_type() { return type; }
@@ -73,7 +69,7 @@ public:
     virtual void print() = 0;
     
 protected:
-    Value(ValueType _type): type(_type) {}
+    Value(ValueType _type): Token(VALUE), type(_type) {}
     ValueType type;
     
     string to_string(ValueType type)
