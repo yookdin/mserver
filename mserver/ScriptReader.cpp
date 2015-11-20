@@ -6,6 +6,7 @@
 #include "RecvCommand.h"
 #include "PauseCommand.h"
 #include "AnswerCommand.h"
+#include "ExpectCommand.hpp"
 #include "MServer.hpp"
 
 //==========================================================================================================
