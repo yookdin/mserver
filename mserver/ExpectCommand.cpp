@@ -209,8 +209,21 @@ Token* ExpectCommand::try_var(string &line, int &pos)
     if(regex_search(line, match, regex("^\\w+")))
     {
         pos += match.length();
+        string val = reader.get_value(match.str());
         
-        return new String(reader.get_value(match.str()));
+        // Guess the type of the value returned
+        if(regex_match(val, match, regex("\\d+")))
+        {
+            return new Int(stoi(val));
+        }
+        else if(regex_match(val, match, regex("true|false")))
+        {
+            return new Bool(val == "true");
+        }
+        else
+        {
+            return new String(val);
+        }
     }
 
     return nullptr;
