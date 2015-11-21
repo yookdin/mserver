@@ -36,7 +36,6 @@ bool Command::replace_vars(string &line, string last_descriptor)
     long offset = 0;
     
     for(;iter != end; ++iter) {
-        //cout << iter->position() << ": " << iter->str() << endl;
         string var = (*iter)[1].str();
 
         if(var == "len")

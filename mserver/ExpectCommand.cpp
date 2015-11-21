@@ -102,8 +102,12 @@ void ExpectCommand::convert_to_tokens(string &line, vector<Token*> tokens)
             continue;
         }
         
-        if((token = try_const_token(line, pos)) != nullptr ||
-           (token = try_num(line, pos)) != nullptr ||
+        // Note:
+        // o must try num before operator, o/w in "-3" the minus sign will be interpreted as a
+        //   subtraction operator
+        // o must try header-name before var, o/w the header name or part of it may be interpreted as var
+        if((token = try_num(line, pos)) != nullptr ||
+           (token = try_const_token(line, pos)) != nullptr ||
            (token = try_string(line, pos)) != nullptr ||
            (token = try_header_name(line, pos)) != nullptr ||
            (token = try_var(line, pos)) != nullptr)
@@ -122,13 +126,18 @@ void ExpectCommand::convert_to_tokens(string &line, vector<Token*> tokens)
 //==========================================================================================================
 Token* ExpectCommand::try_const_token(string &line, int &pos)
 {
-    string s;
-    
     // Const token (operator or parenthesis) symbol may be one or two characters
-    if(const_tokens.count(s = string(line, 0, 1)) > 0 || const_tokens.count(s = string(line, 0, 2)) > 0)
+    // Note: must check the two chars option first, because an operator can be a prefix of another operator,
+    // like < and <=
+    for(int i = 2; i > 0; --i)
     {
-        pos += s.length();
-        return const_tokens[s];
+        string s = line.substr(0, i);
+        
+        if(const_tokens.count(s) > 0)
+        {
+            pos += i;
+            return const_tokens[s];
+        }
     }
     
     return nullptr;
@@ -182,6 +191,11 @@ Token* ExpectCommand::try_string(string &line, int &pos)
 
 
 //==========================================================================================================
+// Note: it may be possible to mistake an expression containing variable and subtract operator for a header
+// name, for example:
+// "Content-Length" : this could mean either the header with that name, or an expression of two variables
+// named "Content" and "Length".
+// This scenario isn't checked and it is assumed that it will never happen!
 //==========================================================================================================
 Token* ExpectCommand::try_header_name(string &line, int &pos)
 {
@@ -195,7 +209,6 @@ Token* ExpectCommand::try_header_name(string &line, int &pos)
         return new String(reader.get_value("last_" + match.str() + "_value"));
     }
 
-    
     return nullptr;
 }
 
