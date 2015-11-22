@@ -32,7 +32,7 @@ public:
     Value& operator<=(Value& other) { return *(new Bool(val <= other.get_int())); }
     Value& operator>=(Value& other) { return *(new Bool(val >= other.get_int())); }
 
-    void print() { cout << val << endl; }
+    void print() { cout << val; }
 
 private:
     const int val;

@@ -17,12 +17,14 @@
 //
 // Associativity is more strict than C++, int and bool are not interchangable, therefore
 // (> < >= <=) cannot be contactenated. Match operators (~ !~) are also not contactenatable.
+// Note: shouldn't have operators of the same precedence with mixed associativity, can cause weird behavior
 
 #ifndef Operator_h
 #define Operator_h
 
 #include "Token.h"
 #include "Value.h"
+
 
 //==========================================================================================================
 //==========================================================================================================
@@ -39,7 +41,9 @@ public:
     const int precedence;
     const Associativiy associativiy;
     
-    virtual Value* execute(vector<Value*> vals) = 0;
+    virtual Value* execute(vector<Value*> operands) = 0;
+    virtual string get_symbol() = 0;
+    void print() { cout << get_symbol(); }
     
 protected:
     void check_operands_num(long num, string str)
@@ -60,11 +64,13 @@ public:
     
     Add(): Operator(2, 3, LEFT) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] + *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] + *operands[1]);
     }
+    
+    string get_symbol() { return str; }
 };
 
 
@@ -77,11 +83,13 @@ public:
     
     Subtract(): Operator(2, 3, LEFT) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] - *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] - *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -94,11 +102,13 @@ public:
     
     Mul(): Operator(2, 2, LEFT) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] * *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] * *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -109,14 +119,15 @@ class Div: public Operator
 public:
     static const string str;
     
-
     Div(): Operator(2, 2, LEFT) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] / *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] / *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -126,15 +137,16 @@ class Mod: public Operator
 {
 public:
     static const string str;
-    
 
     Mod(): Operator(2, 2, LEFT) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] % *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] % *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -144,15 +156,16 @@ class Or: public Operator
 {
 public:
     static const string str;
-    
 
     Or(): Operator(2, 8, LEFT) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] || *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] || *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -162,15 +175,16 @@ class And: public Operator
 {
 public:
     static const string str;
-    
 
     And(): Operator(2, 7, LEFT) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] && *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] && *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -180,15 +194,16 @@ class Not: public Operator
 {
 public:
     static const string str;
-    
 
     Not(): Operator(1, 1, RIGHT) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(!(*vals[0]));
+        check_operands_num(operands.size(), str);
+        return &(!(*operands[0]));
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -199,14 +214,15 @@ class Equal: public Operator
 public:
     static const string str;
     
-
     Equal(): Operator(2, 6, LEFT) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] == *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] == *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -217,14 +233,15 @@ class NotEqual: public Operator
 public:
     static const string str;
     
-
     NotEqual(): Operator(2, 6, LEFT) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] != *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] != *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -234,15 +251,16 @@ class LessThan: public Operator
 {
 public:
     static const string str;
-    
 
     LessThan(): Operator(2, 5, NONE) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] < *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] < *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -252,15 +270,16 @@ class GreaterThan: public Operator
 {
 public:
     static const string str;
-    
 
     GreaterThan(): Operator(2, 5, NONE) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] > *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] > *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -271,14 +290,15 @@ class LessThanEqual: public Operator
 public:
     static const string str;
     
-
     LessThanEqual(): Operator(2, 5, NONE) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] <= *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] <= *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -288,15 +308,16 @@ class GreaterThanEqual: public Operator
 {
 public:
     static const string str;
-    
 
     GreaterThanEqual(): Operator(2, 5, NONE) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(*vals[0] >= *vals[1]);
+        check_operands_num(operands.size(), str);
+        return &(*operands[0] >= *operands[1]);
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -307,14 +328,15 @@ class Match: public Operator
 public:
     static const string str;
     
-
     Match(): Operator(2, 4, NONE) {}
 
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(vals[0]->match(*vals[1]));
+        check_operands_num(operands.size(), str);
+        return &(operands[0]->match(*operands[1]));
     }
+
+    string get_symbol() { return str; }
 };
 
 
@@ -325,14 +347,15 @@ class NotMatch: public Operator
 public:
     static const string str;
     
-
     NotMatch(): Operator(2, 4, NONE) {}
     
-    Value* execute(vector<Value*> vals)
+    Value* execute(vector<Value*> operands)
     {
-        check_operands_num(vals.size(), str);
-        return &(vals[0]->not_match(*vals[1]));
+        check_operands_num(operands.size(), str);
+        return &(operands[0]->not_match(*operands[1]));
     }
+
+    string get_symbol() { return str; }
 };
 
 

@@ -50,7 +50,20 @@ class SipParser
 public:
     static SipParser& inst();
     const string method_str = "ACK|BYE|CANCEL|INFO|INVITE|MESSAGE|NOTIFY|OPTIONS|PRACK|PUBLISH|REFER|REGISTER|SUBSCRIBE|UPDATE";
-    const string header_name_str = "[[:alnum:]]+(-[[:alnum:]]+)*";
+    const string header_name_str =
+"Accept|Accept-Contact|Accept-Encoding|Accept-Language|Accept-Resource-Priority|Alert-Info|Allow|Allow-Events|Answer-Mode|\
+Authentication-Info|Authorization|Call-ID|Call-Info|Contact|Content-Disposition|Content-Encoding|Content-Language|\
+Content-Length|Content-Type|CSeq|Date|Error-Info|Event|Expires|Feature-Caps|Flow-Timer|From|Geolocation-header|\
+Geolocation-Error|Georouting-header|History-Info|Identity|Identity-Info|Info-Package|In-Reply-To|Join|Max-Breadth|Max-Forwards|\
+MIME-Version|Min-Expires|Min-SE|Organization|Path|Permission-Missing|Policy-Contact|Policy-ID|Priority|Privacy|Priv-Answer-Mode|\
+Proxy-Authenticate|Proxy-Authorization|Proxy-Require|RAck|Reason|Record-Route|Recv-Info|Refer-Sub|Refer-To|Referred-By|Reject-Contact|\
+Replaces|Reply-To|Request-Disposition|Require|Resource-Priority|Retry-After|Route|RSeq|Security-Client|Security-Server|\
+Security-Verify|Server|Service-Route|Session-Expires|SIP-ETag|SIP-If-Match|Subject|Subscription-State|Supported|Suppress-If-Match|\
+Target-Dialog|Timestamp|To|Trigger-Consent|Unsupported|User-Agent|UUI|Via|Warning|WWW-Authenticate|P-Access-Network-Info|\
+P-Answer-State|P-Asserted-Identity|P-Asserted-Service|P-Associated-URI|P-Called-Party-ID|P-Charging-Function-Addresses|\
+P-Charging-Vector|P-DCS-Billing-Info|P-DCS-LAES|P-DCS-OSPS|P-DCS-Redirect|P-DCS-Trace-Party-ID|P-Early-Media|P-Media-Authorization|\
+P-Preferred-Identity|P-Preferred-Service|P-Private-Network-Indication|P-Profile-Key|P-Refused-URI-List|P-Served-User|\
+P-User-Database|P-Visited-Network-ID";
     
     bool match(SipElement elem, string line);
     string get_match(SipElement elem, string line);

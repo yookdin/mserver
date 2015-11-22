@@ -14,15 +14,6 @@
 #include "Bool.h"
 #include "String.h"
 
-// TODO:
-// o Quote replaced values if detected as strings: containing spaces; not a number?
-// o Supported operators:
-//   o arithmetic: + - * / %
-//   o bit-operations (| & etc.)?
-//   o boolean: ||, &&, yield => ?
-//   o comparison: == != > < >= <= ~(regex match); except match all can be for numbers and strings
-// o Parentheses ()
-
 
 //==========================================================================================================
 //==========================================================================================================
@@ -37,10 +28,12 @@ private:
     static map<string, Token*> const_tokens;
     static map<string, Token*> init_const_tokens();
 
-    void convert_to_tokens(string &line, ifstream &file, vector<Token*> tokens);
-    void convert_to_tokens(string &line, vector<Token*> tokens);
-    
-    Token* try_const_token(string &line, int &pos);
+    void convert_to_tokens(string &line, ifstream &file, vector<Token*>& tokens);
+    void convert_to_tokens(string &line, vector<Token*>& tokens);
+    void convert_to_rpn(vector<Token*>& tokens, deque<Token*>& output);
+    bool eval_expression(deque<Token*>& output);
+
+    Token* try_const_token(string& line, int& pos);
     Token* try_num(string &line, int &pos);
     Token* try_string(string &line, int &pos);
     Token* try_header_name(string &line, int &pos);

@@ -18,6 +18,7 @@ class OpenParen: public Token
 public:
     static const string str;
     OpenParen(): Token(OPEN_PAREN) {}
+    void print() { cout << str; }
 };
 
 const string OpenParen::str = "(";
@@ -30,6 +31,7 @@ class CloseParen: public Token
 public:
     static const string str;
     CloseParen(): Token(CLOSE_PAREN) {}
+    void print() { cout << str; }
 };
 
 const string CloseParen::str = ")";

@@ -37,7 +37,7 @@ public:
         return v;
     }
     
-    void print() { cout << val << endl; }
+    void print() { cout << '"' << val << '"'; }
 
 private:
     const string val;

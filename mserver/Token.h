@@ -20,6 +20,7 @@ class Token
 public:
     Token(TokenKind _kind): kind(_kind) {}
     const TokenKind kind;
+    virtual void print() = 0;
 };
 
 #endif /* Token_h */

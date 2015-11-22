@@ -36,12 +36,12 @@ public:
     //------------------------------------------------------------------------------------------------------
     // Get value methods; derived classes will override only the one appropriate for them
     //------------------------------------------------------------------------------------------------------
-    virtual int get_int() { throw string("Can't call get_int() for type " + to_string(type)); }
-    virtual string get_string() { throw string("Can't call get_string() for type " + to_string(type)); }
-    virtual bool get_bool() { throw string("Can't call get_bool() for type " + to_string(type)); }
+    virtual int get_int() { throw string("Can't call get_int() for type " + get_type_name()); }
+    virtual string get_string() { throw string("Can't call get_string() for type " + get_type_name()); }
+    virtual bool get_bool() { throw string("Can't call get_bool() for type " + get_type_name()); }
 
 private:
-    Value& throw_wrong_op(string op) { throw string("Operator " + op + " not supported by type " + to_string(type)); }
+    Value& throw_wrong_op(string op) { throw string("Operator " + op + " not supported by type " + get_type_name()); }
     
 public:
     
@@ -66,13 +66,7 @@ public:
     virtual Value& match     (Value& other) { return throw_wrong_op("~");  }
     virtual Value& not_match (Value& other) { return throw_wrong_op("!~"); }
     
-    virtual void print() = 0;
-    
-protected:
-    Value(ValueType _type): Token(VALUE), type(_type) {}
-    ValueType type;
-    
-    string to_string(ValueType type)
+    string get_type_name()
     {
         switch(type)
         {
@@ -82,6 +76,9 @@ protected:
         }
     }
     
+protected:
+    Value(ValueType _type): Token(VALUE), type(_type) {}
+    ValueType type;
 };
 
 #endif /* Value_h */
