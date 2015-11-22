@@ -27,7 +27,7 @@ public:
     Value& operator!=(Value& other) { return *(new Bool(val != other.get_bool())); }
 
     void flip() { val = !val; }
-    void print() { cout << (val ? "true" : "false") << endl; }
+    string to_string() { return (val ? "true" : "false"); }
     
 private:
     bool val;

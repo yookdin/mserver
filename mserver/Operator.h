@@ -42,15 +42,13 @@ public:
     const Associativiy associativiy;
     
     virtual Value* execute(vector<Value*> operands) = 0;
-    virtual string get_symbol() = 0;
-    void print() { cout << get_symbol(); }
     
 protected:
     void check_operands_num(long num, string str)
     {
         if(num != num_operands)
         {
-            throw string("Wrong num of operands for " + str + ", expected " + to_string(num_operands) + ", got " + to_string(num));
+            throw string("Wrong num of operands for " + str + ", expected " + std::to_string(num_operands) + ", got " + std::to_string(num));
         }
     }
 };
@@ -70,7 +68,7 @@ public:
         return &(*operands[0] + *operands[1]);
     }
     
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -89,7 +87,7 @@ public:
         return &(*operands[0] - *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -108,7 +106,7 @@ public:
         return &(*operands[0] * *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -127,7 +125,7 @@ public:
         return &(*operands[0] / *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -146,7 +144,7 @@ public:
         return &(*operands[0] % *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -165,7 +163,7 @@ public:
         return &(*operands[0] || *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -184,7 +182,7 @@ public:
         return &(*operands[0] && *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -203,7 +201,7 @@ public:
         return &(!(*operands[0]));
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -222,7 +220,7 @@ public:
         return &(*operands[0] == *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -241,7 +239,7 @@ public:
         return &(*operands[0] != *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -260,7 +258,7 @@ public:
         return &(*operands[0] < *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -279,7 +277,7 @@ public:
         return &(*operands[0] > *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -298,7 +296,7 @@ public:
         return &(*operands[0] <= *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -317,7 +315,7 @@ public:
         return &(*operands[0] >= *operands[1]);
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -336,7 +334,7 @@ public:
         return &(operands[0]->match(*operands[1]));
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 
@@ -355,7 +353,7 @@ public:
         return &(operands[0]->not_match(*operands[1]));
     }
 
-    string get_symbol() { return str; }
+    string to_string() { return str; }
 };
 
 

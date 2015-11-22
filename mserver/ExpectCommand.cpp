@@ -103,8 +103,7 @@ void ExpectCommand::convert_to_tokens(string &line, ifstream &file, vector<Token
     
     for(auto token: tokens)
     {
-        token->print();
-        cout << " ";
+        cout << token->to_string() << " ";
     }
     cout << endl;
 }
@@ -359,8 +358,7 @@ void ExpectCommand::convert_to_rpn(vector<Token*>& tokens, deque<Token*>& output
     
     for(auto token: output)
     {
-        token->print();
-        cout << " ";
+        cout << token->to_string() << " ";
     }
     cout << endl;
 
@@ -387,7 +385,7 @@ bool ExpectCommand::eval_expression(deque<Token*>& output)
             
             if(values.size() < op->num_operands)
             {
-                throw string("Not enough operands for operator " + op->get_symbol());
+                throw string("Not enough operands for operator " + op->to_string());
             }
             
             vector<Value*> operands;

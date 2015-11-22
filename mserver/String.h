@@ -37,7 +37,7 @@ public:
         return v;
     }
     
-    void print() { cout << '"' << val << '"'; }
+    string to_string() { return '"' + val + '"'; }
 
 private:
     const string val;
