@@ -20,7 +20,7 @@ void ScenarioCommand::interpret(string &line, ifstream &file)
     
     try
     {
-        ScriptReader nested_reader(scenario_file);
+        ScriptReader nested_reader(scenario_file, false);
         reader.add_messages(nested_reader.get_messages());
     } catch (string err) {
         cout << err << endl;

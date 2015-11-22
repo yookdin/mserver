@@ -6,7 +6,11 @@
 class ScriptReader
 {
 public:
-	ScriptReader(string filepath);
+	ScriptReader(string filepath, bool root = true);
+    ~ScriptReader();
+    
+    static regex last_desc_regex;
+
     string get_value(string var, string last_descriptor = "");
     void add_message(SipMessage*);
     void add_messages(vector<SipMessage*>& messages);
@@ -14,8 +18,8 @@ public:
     
 private:
     static const regex command_start_regex;
-    static regex last_desc_regex;
     
+    bool root;
     map<string, Command*> commands;
     map<string, string> vars; // Map of var names and their values
 

@@ -19,6 +19,8 @@ class Token
 {
 public:
     Token(TokenKind _kind): kind(_kind) {}
+    virtual ~Token() = default; // Not really needed, supresses warning when deleting
+    
     const TokenKind kind;
     virtual string to_string() = 0;
 };

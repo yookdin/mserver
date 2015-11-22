@@ -8,6 +8,8 @@ class Command
 {
 public:
     Command(ScriptReader &_reader): reader(_reader) {}
+    virtual ~Command() = default;
+    
 	virtual void interpret(string &line, ifstream &file) = 0;
 
 protected:

@@ -94,8 +94,12 @@ void SendCommand::process_args(string& line)
     map<string, Option> options;
     options.emplace("last", Option(false, true));
     OptionParser parser(line, '>', options);
-
     last_descriptor = options.at("last").get_value();
+    
+    if(!last_descriptor.empty() && !regex_match(last_descriptor, ScriptReader::last_desc_regex))
+    {
+        throw string("Wrong last descriptor format: \"" + last_descriptor + "\"");
+    }
 }
 
 

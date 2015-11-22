@@ -19,7 +19,7 @@ const regex SipMessage::value_regex("([-[:alnum:]]+)(_value)?");
 //==========================================================================================================
 // Construct message from a vector of strings, received from script file.
 //==========================================================================================================
-SipMessage::SipMessage(vector<string> &_lines): lines(_lines), dir(OUT)
+SipMessage::SipMessage(vector<string>& _lines): lines(_lines), dir(OUT)
 {
     parse(true);
 }
@@ -37,23 +37,23 @@ SipMessage::SipMessage(char *buf, long &offset, long num_bytes): dir(IN)
     
     while(remaining_bytes > 0)
     {
-        string * p_cur_line = get_sip_line(cur_buf, remaining_bytes);
+        string cur_line;
+        get_sip_line(cur_buf, remaining_bytes, cur_line);
         
-        if(p_cur_line == nullptr)
+        if(cur_line.empty())
         {
             throw string("No SIP message found in buffer");
         }
         
         // Check if this line is not a start of a new message. If at least one line added and the current line
         // is a start line it belongs to the next message
-        if(!lines.empty() && SipParser::inst().match(START_LINE, *p_cur_line))
+        if(!lines.empty() && SipParser::inst().match(START_LINE, cur_line))
         {
-            cur_buf -= p_cur_line->length(); // We read one line too many, roll back cur_buf
-            delete p_cur_line;
+            cur_buf -= cur_line.length(); // We read one line too many, roll back cur_buf
             break;
         }
         
-        lines.push_back(*p_cur_line);
+        lines.push_back(cur_line); // cur_line copied to lines
     }
     
     offset = cur_buf - buf;
@@ -64,22 +64,20 @@ SipMessage::SipMessage(char *buf, long &offset, long num_bytes): dir(IN)
 //==========================================================================================================
 // Get a line ending with CRLF and adjust parameters accordingly
 //==========================================================================================================
-string* SipMessage::get_sip_line(char*& cur_buf, long& remaining_bytes)
+void SipMessage::get_sip_line(char*& cur_buf, long& remaining_bytes, string& line)
 {
     for(int i = 0; i < remaining_bytes - 1; ++i)
     {
         if(cur_buf[i] == '\r' && cur_buf[i+1] == '\n')
         {
             int len = i+2;
-            string* res = new string(cur_buf, len);
+            line = string(cur_buf, len);
             remaining_bytes -= len;
             cur_buf += len;
 
-            return res;
+            return;
         }
     }
-    
-    return nullptr; // No SIP line delimiter (CRLF) found
 }
 
 //==========================================================================================================

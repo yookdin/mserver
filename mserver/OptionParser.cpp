@@ -96,14 +96,21 @@ const regex OptionParser::eq_pair_regex("(\\w+)( *= *(\\w+|\"([^\"]+)\"))?");
 const regex OptionParser::cmd_line_eq_pair_regex("(\\w+)=(.*)");
 
 //==========================================================================================================
-// Parse options received in a string, of type: opt=val
+// Parse options received in a string, of type: opt=val, but only look at the portion of the line before
+// end_char. Set the line the everything after the end_char.
+// This means that options are not supposed to contain the end_char. If this is not the case need to fix
+// this function.
 //==========================================================================================================
 OptionParser::OptionParser(string& line, char end_char, map<string, Option>& _options): options(_options) {
-    sregex_iterator iter(line.begin(), line.end(), eq_pair_regex);
-    sregex_iterator end;
-    regex end_regex(string("^ *") + end_char);
-    bool end_found = false;
+    long end_pos = line.find_first_of(end_char);
+
+    if(end_pos == string::npos)
+    {
+        throw string("Expected end char " + string(1, end_char) + " not found");
+    }
     
+    sregex_iterator iter(line.begin(), line.begin() + end_pos, eq_pair_regex);
+    sregex_iterator end;
     set_option_names(options);
     
     for(;iter != end; ++iter)
@@ -118,22 +125,9 @@ OptionParser::OptionParser(string& line, char end_char, map<string, Option>& _op
         
         Option& opt = check_option(opt_name);
         opt.set_value(opt_val);
-        
-        smatch match;
-        
-        if(regex_search(line.substr(iter->position() + iter->length()), match, end_regex))
-        {
-            line = match.suffix();
-            end_found = true;
-            break;
-        }
     }
-    
-    if(!end_found)
-    {
-        throw string("Expected end char " + to_string(end_char) + " not found");
-    }
-    
+
+    line = line.substr(end_pos + 1);
     check_missing_options(options);
 }
     

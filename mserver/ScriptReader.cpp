@@ -28,7 +28,7 @@ regex ScriptReader::last_desc_regex("((\\d+)[[:alpha:]]{2}|last)( +(in|out))?( +
 //==========================================================================================================
 // Init command map, read and execute file.
 //==========================================================================================================
-ScriptReader::ScriptReader(string filepath)
+ScriptReader::ScriptReader(string filepath, bool _root): root(_root)
 {
     commands["scenario"] = new ScenarioCommand(*this);
     commands["send"] = new SendCommand(*this);
@@ -39,6 +39,24 @@ ScriptReader::ScriptReader(string filepath)
     read_file(filepath);
 }
 
+
+//==========================================================================================================
+//==========================================================================================================
+ScriptReader::~ScriptReader()
+{
+    for(auto pair: commands)
+    {
+        delete pair.second;
+    }
+    
+    if(root)
+    {
+        for(auto msg: messages)
+        {
+            delete msg;
+        }
+    }
+}
 
 //==========================================================================================================
 //==========================================================================================================
@@ -252,7 +270,7 @@ SipMessage& ScriptReader::get_last_message(string& last_descriptor)
 
     smatch match;
     
-    if(!regex_search(last_descriptor, match, last_desc_regex))
+    if(!regex_match(last_descriptor, match, last_desc_regex))
     {
         throw string("Wrong last descriptor format: \"" + last_descriptor + "\"");
     }

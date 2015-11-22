@@ -13,7 +13,7 @@
 
 class SipMessage {
 public:
-    SipMessage(vector<string> &lines);
+    SipMessage(vector<string>& lines);
     SipMessage(char *buf, long &offset, long num_bytes);
     
     enum Direction {IN, OUT, ANY};
@@ -34,7 +34,7 @@ private:
     int size = 0;
     
     void parse(bool from_script);
-    string* get_sip_line(char*& cur_buf, long& remaining_bytes);
+    void get_sip_line(char*& cur_buf, long& remaining_bytes, string& line);
     string get_cseq(string header_value);
 };
 

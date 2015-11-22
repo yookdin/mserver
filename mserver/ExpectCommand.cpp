@@ -64,11 +64,6 @@ void ExpectCommand::interpret(string &line, ifstream &file)
     {
         throw string("Expected condition didn't occur");
     }
-    
-//    for(auto token: tokens)
-//    {
-//        delete token;
-//    }
 }
 
 
@@ -334,7 +329,7 @@ void ExpectCommand::convert_to_rpn(vector<Token*>& tokens, deque<Token*>& output
                     throw string("Missing open parenthesis");
                 }
                 
-                ops.pop(); // Pop the left-paren that's at the top
+                ops.pop(); // Pop the left-paren that's at the top (the ops stack contains only operators and left-paren tokens)
                 break;
             }
         } // switch token->kind
@@ -368,6 +363,14 @@ void ExpectCommand::convert_to_rpn(vector<Token*>& tokens, deque<Token*>& output
 
 //==========================================================================================================
 // Expression is expected to be boolean, evaluate it and return its value.
+// The output queue contains the tokens in reverse polish notation (operator follows its operands - "3 4 +")
+// The algorithm for evalutating it:
+// o Read a token from the queue
+// o If it's a value: push it on a temp stack
+// o If it's an operator: pop as many values as the operator needs out of stack, apply the operator on them,
+//   and return the result to the stack (for use by other operators not applied yet)
+// o After reading all the tokens from the output a single value should remain in the stack, which is the
+//   the result of the entire expression
 //==========================================================================================================
 bool ExpectCommand::eval_expression(deque<Token*>& output)
 {
@@ -375,11 +378,11 @@ bool ExpectCommand::eval_expression(deque<Token*>& output)
     
     for(; !output.empty(); output.pop_front())
     {
-        if(output.front()->kind == VALUE)
+        if(output.front()->kind == VALUE) // Add to stack
         {
             values.push((Value*)output.front());
         }
-        else // Token is an operator
+        else // Token is an operator: pop operands from stack, apply operator on them, return value to the stack
         {
             Operator* op = (Operator*)output.front();
             
@@ -397,6 +400,13 @@ bool ExpectCommand::eval_expression(deque<Token*>& output)
             }
             
             values.push(op->execute(operands)); // Return the value of the operation to the stack
+            
+            // Here is where the operands have been used and are no longer needed, delete them;
+            // Note: don't delete ops - they're static and will be reused
+            for(auto val: operands)
+            {
+                delete val;
+            }
         }
     } // for token in output
     
@@ -410,7 +420,9 @@ bool ExpectCommand::eval_expression(deque<Token*>& output)
         throw string("Expression type should be BOOL and not " + values.top()->get_type_name());
     }
     
-    return values.top()->get_bool();
+    bool result = values.top()->get_bool();
+    delete values.top();
+    return result;
 }
 
 
