@@ -18,6 +18,17 @@ class Bool: public Value
 {
 public:
     Bool(bool _val = false): Value(BOOL), val(_val) {}
+
+    Bool(string val_str): Value(BOOL)
+    {
+        if(val_str != "true" && val_str != "false")
+        {
+            throw string("Invalid string given to Bool(): " + val_str);
+        }
+        
+        val = (val_str == "true");
+    }
+
     bool get_bool() { return val; }
 
     Value& operator||(Value& other) { return *(new Bool(val || other.get_bool())); }

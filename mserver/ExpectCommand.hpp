@@ -27,6 +27,10 @@ private:
     static const regex end_regex;
     static map<string, Token*> const_tokens;
     static map<string, Token*> init_const_tokens();
+    static const regex num_regex;
+    static const regex str_regex;
+    static const regex var_regex;
+    static const regex bool_regex;
 
     void convert_to_tokens(string &line, ifstream &file, vector<Token*>& tokens);
     void convert_to_tokens(string &line, vector<Token*>& tokens);

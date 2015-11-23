@@ -15,6 +15,13 @@
 //==========================================================================================================
 //==========================================================================================================
 const regex ExpectCommand::end_regex("</expect>");
+const regex ExpectCommand::num_regex("^-?\\d+");
+const regex ExpectCommand::var_regex("^\\w+");
+const regex ExpectCommand::bool_regex("^true|false");
+
+// Yes, all these backslashes are needed, because after the normal replacement, the regex does another one it seems.
+const regex ExpectCommand::str_regex("^\"(\\\\\"|[^\"])*\"");
+
 
 //==========================================================================================================
 // Map of static tokens (ones without values)
@@ -172,7 +179,7 @@ Token* ExpectCommand::try_num(string &line, int &pos)
 {
     smatch match;
     
-    if(regex_search(line.substr(pos), match, regex("^-?\\d+")))
+    if(regex_search(line.substr(pos), match, num_regex))
     {
         pos += match.length();
         return new Int(stoi(match.str()));
@@ -187,26 +194,15 @@ Token* ExpectCommand::try_num(string &line, int &pos)
 //==========================================================================================================
 Token* ExpectCommand::try_string(string &line, int &pos)
 {
-    int start = pos + 1;
-    
-    if(line[pos] == '"')
+    smatch match;
+
+    if(regex_search(line.substr(pos), match, str_regex))
     {
-        for(++pos; pos < line.length(); ++pos)
-        {
-            if(line[pos] == '"' && line[pos-1] != '\\')
-            {
-                break;
-            }
-        }
+        pos += match.length();
         
-        if(line[pos] != '"')
-        {
-            throw string("Unterminated string");
-        }
-        
-        Token* res = new String(line.substr(start, pos - start));
-        pos++; // Skip over last "
-        return res;
+        // Get the string without the " at the beginning and end
+        string full = match.str();
+        return new String(string(full.begin() + 1, full.end() - 1));
     }
     
     return nullptr;
@@ -243,19 +239,19 @@ Token* ExpectCommand::try_var(string &line, int &pos)
 {
     smatch match;
     
-    if(regex_search(line.substr(pos), match, regex("^\\w+")))
+    if(regex_search(line.substr(pos), match, var_regex))
     {
         pos += match.length();
         string val = reader.get_value(match.str());
         
         // Guess the type of the value returned
-        if(regex_match(val, match, regex("\\d+")))
+        if(regex_match(val, match, num_regex))
         {
             return new Int(stoi(val));
         }
-        else if(regex_match(val, match, regex("true|false")))
+        else if(regex_match(val, match, bool_regex))
         {
-            return new Bool(val == "true");
+            return new Bool(match.str());
         }
         else
         {

@@ -52,8 +52,7 @@
 		FE0ECE6A1BDF832E00958E40 /* SendCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendCommand.cpp; sourceTree = "<group>"; };
 		FE0ECE6B1BDF832E00958E40 /* SendCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendCommand.h; sourceTree = "<group>"; };
 		FE0ECE751BDF850100958E40 /* mserver.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mserver.txt; sourceTree = "<group>"; };
-		FE0ECE761BDF850100958E40 /* register.scr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = register.scr; sourceTree = "<group>"; };
-		FE0ECE7B1BDF863300958E40 /* todo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo; sourceTree = "<group>"; };
+		FE0ECE7B1BDF863300958E40 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		FE0ECE7C1BDF875000958E40 /* script.scr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = script.scr; sourceTree = "<group>"; };
 		FE0ECE7D1BDF882B00958E40 /* MServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MServer.cpp; sourceTree = "<group>"; };
 		FE0ECE7E1BDF882B00958E40 /* MServer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MServer.hpp; sourceTree = "<group>"; };
@@ -153,10 +152,9 @@
 			isa = PBXGroup;
 			children = (
 				FE0ECE7C1BDF875000958E40 /* script.scr */,
-				FE0ECE7B1BDF863300958E40 /* todo */,
+				FE0ECE7B1BDF863300958E40 /* todo.txt */,
 				FE5C5F4E1C01D4E200A773C0 /* scenario.txt */,
 				FE0ECE751BDF850100958E40 /* mserver.txt */,
-				FE0ECE761BDF850100958E40 /* register.scr */,
 			);
 			name = Docs;
 			sourceTree = "<group>";
