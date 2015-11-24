@@ -232,7 +232,7 @@ vector<SipMessage*>& ScriptReader::get_messages()
 //==========================================================================================================
 bool ScriptReader::is_last_var(string& var)
 {
-    return regex_match(var, regex("last_\\w+"));
+    return regex_match(var, regex("last_[-\\w]+"));
 }
 
 

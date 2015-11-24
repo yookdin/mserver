@@ -63,7 +63,7 @@ Target-Dialog|Timestamp|To|Trigger-Consent|Unsupported|User-Agent|UUI|Via|Warnin
 P-Answer-State|P-Asserted-Identity|P-Asserted-Service|P-Associated-URI|P-Called-Party-ID|P-Charging-Function-Addresses|\
 P-Charging-Vector|P-DCS-Billing-Info|P-DCS-LAES|P-DCS-OSPS|P-DCS-Redirect|P-DCS-Trace-Party-ID|P-Early-Media|P-Media-Authorization|\
 P-Preferred-Identity|P-Preferred-Service|P-Private-Network-Indication|P-Profile-Key|P-Refused-URI-List|P-Served-User|\
-P-User-Database|P-Visited-Network-ID";
+P-User-Database|P-Visited-Network-ID|X-Connect-Type|X-notify|X-Von-BackgroundReg|X-Carrier-ID|X-vonage-push";
     
     bool match(SipElement elem, string line);
     string get_match(SipElement elem, string line);

@@ -112,7 +112,7 @@ void SipMessage::parse(bool from_script)
     }
     
     bool in_header = true;
-    int header_size = 0;
+    long header_size = lines[0].length();
     int found_len = -1;
     
     for(int i = 1; i < lines.size(); ++i)
@@ -163,7 +163,7 @@ void SipMessage::parse(bool from_script)
     
     if(found_len != -1 && !from_script)
     {
-        int len = size - header_size;
+        long len = size - header_size;
         
         if(len != found_len)
         {

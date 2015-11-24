@@ -33,7 +33,6 @@ void SendCommand::interpret(string &line, ifstream &file)
     }
     
     SipMessage* message = new SipMessage(msg_lines);
-    message->print();
     MServer::inst.send_message(*message);
     reader.add_message(message);
 }
