@@ -31,8 +31,7 @@ bool Command::replace_vars(string &line, string last_descriptor)
 {
     bool contains_len = false;
     string line2 = line;
-    regex var_re("\\[([-\\w]+)\\]");
-    sregex_iterator iter(line.begin(), line.end(), var_re);
+    sregex_iterator iter(line.begin(), line.end(), ScriptReader::script_var_regex);
     sregex_iterator end;
     long offset = 0;
     

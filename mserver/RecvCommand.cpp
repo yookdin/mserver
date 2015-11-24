@@ -9,7 +9,6 @@ Default values:
  
 TODO:
  o Add regex in message name?
- o Add checks in command body (on expected values of headers, etc.)?
  
 */
 

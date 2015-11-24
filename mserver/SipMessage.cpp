@@ -13,7 +13,7 @@
 //==========================================================================================================
 // Regular expression describing a get_value() var format
 //==========================================================================================================
-const regex SipMessage::value_regex("([-[:alnum:]]+)(_value)?");
+const regex SipMessage::query_regex("([-[:alnum:]]+)(_value)?");
 
 
 //==========================================================================================================
@@ -232,10 +232,9 @@ void SipMessage::write_to_buffer(char buf[], long &num_to_write)
 //==========================================================================================================
 string SipMessage::get_value(string& var)
 {
-    regex re("([-[:alnum:]]+)(_value)?");
     smatch match;
     
-    if(!regex_match(var, match, re))
+    if(!regex_match(var, match, query_regex))
     {
         throw string("SipMessage::get_value(): wrong format of var: " + var);
     }

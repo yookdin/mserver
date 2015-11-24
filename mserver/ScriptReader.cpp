@@ -22,7 +22,13 @@ const regex ScriptReader::command_start_regex("^ *<(expect)>|^ *<(pause)|^ *<(re
 // 4: in/out
 // 6: message kind (Method/status-code)
 //==========================================================================================================
-regex ScriptReader::last_desc_regex("((\\d+)[[:alpha:]]{2}|last)( +(in|out))?( +(" + SipParser::inst().method_str + "|\\d{3}))?$");
+const regex ScriptReader::last_desc_regex("((\\d+)[[:alpha:]]{2}|last)( +(in|out))?( +(" + SipParser::inst().method_str + "|\\d{3}))?$");
+
+//==========================================================================================================
+//==========================================================================================================
+const string ScriptReader::query_str("[-\\w]+");
+const regex ScriptReader::last_query_regex("last_" + ScriptReader::query_str);
+const regex ScriptReader::script_var_regex("\\[(" + ScriptReader::query_str + ")\\]");
 
 
 //==========================================================================================================
@@ -232,7 +238,7 @@ vector<SipMessage*>& ScriptReader::get_messages()
 //==========================================================================================================
 bool ScriptReader::is_last_var(string& var)
 {
-    return regex_match(var, regex("last_[-\\w]+"));
+    return regex_match(var, last_query_regex);
 }
 
 

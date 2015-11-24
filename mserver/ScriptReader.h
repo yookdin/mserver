@@ -9,7 +9,10 @@ public:
 	ScriptReader(string filepath, map<string, string> vars, bool root = true);
     ~ScriptReader();
     
-    static regex last_desc_regex;
+    static const regex last_desc_regex;
+    static const string query_str;
+    static const regex last_query_regex;
+    static const regex script_var_regex;
 
     string get_value(string var, string last_descriptor = "");
     void add_message(SipMessage*);

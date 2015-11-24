@@ -25,7 +25,7 @@ public:
     void print();
     
 private:
-    static const regex value_regex;
+    static const regex query_regex;
     
     const Direction dir;
     vector<string> lines;
