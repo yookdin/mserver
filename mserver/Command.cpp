@@ -5,19 +5,20 @@
 
 
 //==========================================================================================================
-// Remove leading white spaces and tabs. Remove new line char at the end.
+// Remove leading and trailing spaces. Remove C++ style comment: //...
 //==========================================================================================================
 void Command::trim(string &line)
 {
-    string spaces = " \t";
+    string spaces = " \t\n\r";
     line.erase(0, line.find_first_not_of(spaces));
-    line.erase(line.find_last_not_of(spaces) + 1);
     
-    // Don't count on input script to contain correct end of line. Strip it, and later if needed CRLF will be appended
-    if(line.back() == '\r' || line.back() == '\n')
+    size_t pos = line.find("//");
+    if(pos != string::npos)
     {
-        line.pop_back();
+        line.erase(pos);
     }
+    
+    line.erase(line.find_last_not_of(spaces) + 1);
 }
 
 

@@ -5,69 +5,38 @@ Commands
 ----------------------------------------------------------------------------------------------------
 secnario
 ----------------------------------------------------------------------------------------------------
-<scenario "file-name">
-</scenario>
-
-May want to add parameter passing:
-
-<scenario "file-name">
-	<param name = value/>  // name is a place holder in original file
-</scenario>
-
-The origianl will be executed with given params. Can be done either by rewriting the file,
-or replacing on-the-fly the parameter inside the file with given values
-If not using params syntax can be:
-<scenario "file-name"/> or
-<scenario "file-name">
-
+<scenario file="file-name" (param=value)*/>
 
 ----------------------------------------------------------------------------------------------------
 recv
 ----------------------------------------------------------------------------------------------------
-<recv message="msg-name">
-	Header: expectation
+<recv message="msg-name" [optional] [timeout=NUM]>
+	Header: expectation // should this be supported on just use expect command?
 </recv>
 
-expectation:
-- literal string, possibly containing place holders of values (like last-something)
-- expression: val >= 700
-
-How differentiate: perhaps expression will be inside parentheses and use some default names like 'val',
-it seems that there are never parentheses in sip headers
+message must be the first parameter
 
 ----------------------------------------------------------------------------------------------------
-send 1
+expect
 ----------------------------------------------------------------------------------------------------
-<send>
+<expect>
+    boolean-expression
+</expect>
+
+----------------------------------------------------------------------------------------------------
+send
+----------------------------------------------------------------------------------------------------
+<send [last="<last-descriptor"]>
 	Literal stuff containing place-holders
 </send>
 
 ----------------------------------------------------------------------------------------------------
-send 2 or answer
-----------------------------------------------------------------------------------------------------
-Not sure this is needed. Has two purposes:
-- shorter send command by using defaults
-- enable answering a previous request (not the last one); this is for scenarios with multiple transactions
-
-<answer message="name"[for-specifier]>
-	Optional literal stuff?
-	Should enable some parameters?
-</answer>
-
-for-specifier: TBD
-
-
-----------------------------------------------------------------------------------------------------
 pause
 ----------------------------------------------------------------------------------------------------
-<pause milliseconds="1000"/>
+<pause milliseconds=1000/>
+
 
 Can be exactly like in sipp
-
-
-TODO:
-- Enable var definition?
-- Enable actions?
 
 
 ====================================================================================================
@@ -76,21 +45,6 @@ place-holders/keywords
 [last_<Header>] 			like sipp
 [last_<Header>_value] 		not containing the header
 [(remote/loacl)_(ip/port)]	like sipp
-
-Some way to take values from specific message. Maybe
-
-[<cardinality>_<message-name>_<header-name>[_value]]
-
-e.g:
-[first_INVITE_Call-ID_value]
-
-Hmm... maybe use functional form instead:
-
-get(INVITE, 1, "Call-ID")
-
-perhaps all this won't be needed, if specifying for which message is this a response,
-the last_* keywords will refer to it and not the real last
-
 
 [other-name] : if other-name is not a known keyword, it is a place holder for a parameterized scenario
 
