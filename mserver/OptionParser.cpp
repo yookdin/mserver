@@ -38,7 +38,7 @@ Option::Option(bool _mandatory, bool _need_arg, bool _multi, string default_val)
     }
 }
 
-
+               
 //==========================================================================================================
 //==========================================================================================================
 void Option::set_found()
@@ -58,6 +58,8 @@ void Option::set_found()
 //==========================================================================================================
 bool Option::set_value(string& val)
 {
+    set_found();
+    
     if(need_arg)
     {
         // Multi opt must have an arg each time it appears. Single opt must have an arg if no default value was provided
@@ -77,6 +79,21 @@ bool Option::set_value(string& val)
 }
 
 
+//==========================================================================================================
+// A special option that allows parameters to be passed without providing the option name! For example:
+// "var1=val1 var2=val2 ..."
+// This enables to pass arbitary number of pairs like these, without preceding them with an option like:
+// "-var var1=val1 -var var1=val1..."
+// Or worse, in commands parameter string:
+// "var=var1=val1 var=var2=val2..."
+// You can still use this option with an actual option name by specifying a name other than "*"
+//==========================================================================================================
+ParamValOption::ParamValOption(): Option(false, true, true)
+{
+    param_val_opt = true;
+}
+
+
 /***********************************************************************************************************
  *                                                                                                         *
  *                                  CLASS OptionParser                                                     *
@@ -85,15 +102,16 @@ bool Option::set_value(string& val)
 
 //==========================================================================================================
 // A regex for opt[=val] appearing in a script file. May be opt = "val with spaces", and may be just opt.
+// This is used when searching for such pairs within a line.
 //==========================================================================================================
 const regex OptionParser::eq_pair_regex("(\\w+)( *= *(\\w+|\"([^\"]+)\"))?");
 
 
 //==========================================================================================================
-// A regex for opt=val from the command line. This is used when it's already known that a value exists.
-// Any ", if existed, were already stripped, since this is what happens on the command line.
+// This is used on a string that was already extracted from its context, which can either be the command
+// line or a file, and we parse the var=val pair separately.
 //==========================================================================================================
-const regex OptionParser::cmd_line_eq_pair_regex("(\\w+)=(.*)");
+const regex OptionParser::naked_eq_pair_regex("(\\w+)=(.*)");
 
 //==========================================================================================================
 // Parse options received in a string, of type: opt=val, but only look at the portion of the line before
@@ -123,8 +141,7 @@ OptionParser::OptionParser(string& line, char end_char, map<string, Option>& _op
             opt_val = (*iter)[4];
         }
         
-        Option& opt = check_option(opt_name);
-        opt.set_value(opt_val);
+        set_value(opt_name, opt_val, false);
     }
 
     line = line.substr(end_pos + 1);
@@ -143,14 +160,13 @@ OptionParser::OptionParser(int argc, char * argv[], map<string, Option>& _option
         string opt_name = argv[i];
         opt_name.erase(0, 1); // Remove leading '-'
         string opt_val;
-        Option& opt = check_option(opt_name);
         
         if(i < argc - 1 && argv[i+1][0] != '-') // Next arg can be considered option-value
         {
             opt_val = argv[i+1];
         }
-        
-        if(opt.set_value(opt_val))
+
+        if(set_value(opt_name, opt_val, true))
         {
             ++i; // Skip the next argument which is the option value
         }
@@ -161,29 +177,65 @@ OptionParser::OptionParser(int argc, char * argv[], map<string, Option>& _option
 
 
 //==========================================================================================================
+// Set the option value.
 //==========================================================================================================
-void OptionParser::set_option_names(map<string, Option>& opts)
+bool OptionParser::set_value(string& opt_name, string& val, bool from_cmd_line)
 {
-    for(auto& opt: opts)
-    {
-        opt.second.name = opt.first;
-    }
-}
+    Option *opt = get_opt(opt_name);
 
-
-//==========================================================================================================
-// Check that the option exists and was not found yet
-//==========================================================================================================
-OptionParser::Option& OptionParser::check_option(string& opt_name)
-{
-    if(options.count(opt_name) == 0)
+    if(opt == nullptr)
     {
         throw string("Option " + opt_name + " doesn't exist");
     }
     
-    Option &opt = options.at(opt_name);
-    opt.set_found();
-    return opt;
+    if(!opt->is_param_val_opt()) // Normal option
+    {
+        return opt->set_value(val);
+    }
+    
+    // Option is a param-val option. If its name is the same as the given name, it means that the name
+    // appeared in the input, and the value (var=val) was NOT parsed - parse it.
+    // If the names are different, it means that there was no option provided, the var=val pair was already parsed
+    // and it is now in opt_name and val
+    if(opt->name == opt_name)
+    {
+        parse_eq_pair(val, opt_name, val, from_cmd_line);
+    }
+    
+    // Add an option for the given name, and set its value with the given value
+    options.emplace(opt_name, Option(false, !val.empty()));
+    options.at(opt_name).name = opt_name;
+    return options.at(opt_name).set_value(val);
+}
+
+
+//==========================================================================================================
+// Returned an option for the given name. If it doesn't exist and a default param-value option exists,
+// return that one.
+//==========================================================================================================
+Option* OptionParser::get_opt(string& opt_name)
+{
+    if(options.count(opt_name) != 0)
+    {
+        return &options.at(opt_name);
+    }
+    else if(options.count(DEFAULT_PV_NAME) != 0)
+    {
+        return &options.at(DEFAULT_PV_NAME);
+    }
+    
+    return nullptr;
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+void OptionParser::set_option_names(map<string, Option>& opts)
+{
+    for(auto& pair: opts)
+    {
+        pair.second.name = pair.first;
+    }
 }
 
 
@@ -210,15 +262,30 @@ void OptionParser::check_missing_options(map<string, Option>& options)
 
 
 //==========================================================================================================
+// Parse a pair string var=val into its part. If comming from the command line there are no extra " around
+// the value. If coming from a file, there could be, so strip them.
 //==========================================================================================================
-void OptionParser::parse_cmd_line_eq_pair(string& pair, string& name, string& val)
+void OptionParser::parse_eq_pair(string& pair, string& name, string& val, bool from_cmd_line)
 {
     smatch match;
     
-    if(regex_search(pair, match, cmd_line_eq_pair_regex))
+    if(regex_search(pair, match, naked_eq_pair_regex))
     {
         name = match[1];
         val = match[2];
+    }
+    else
+    {
+        throw string("Expected value format to be var=val, but received " + pair);
+    }
+    
+    if(!from_cmd_line)
+    {
+        if(val[0] == '"') // If starting with ", must end with it too
+        {
+            val.erase(0,1);
+            val.erase(val.length() - 1);
+        }
     }
 }
 

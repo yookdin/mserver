@@ -9,6 +9,9 @@ public:
     virtual void interpret(string &line, ifstream &file);
 
 private:
-    static const regex param_regex;
+    string scenario_file;
+    map<string, string> args;
+    
+    void process_args(string& line);
 };
 

@@ -6,7 +6,7 @@
 class ScriptReader
 {
 public:
-	ScriptReader(string filepath, bool root = true);
+	ScriptReader(string filepath, map<string, string> vars, bool root = true);
     ~ScriptReader();
     
     static regex last_desc_regex;

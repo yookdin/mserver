@@ -28,7 +28,7 @@ regex ScriptReader::last_desc_regex("((\\d+)[[:alpha:]]{2}|last)( +(in|out))?( +
 //==========================================================================================================
 // Init command map, read and execute file.
 //==========================================================================================================
-ScriptReader::ScriptReader(string filepath, bool _root): root(_root)
+ScriptReader::ScriptReader(string filepath, map<string, string> _vars, bool _root): vars(_vars), root(_root)
 {
     commands["scenario"] = new ScenarioCommand(*this);
     commands["send"] = new SendCommand(*this);

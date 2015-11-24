@@ -11,11 +11,12 @@
 
 #include "common_headers.h"
 
+#define DEFAULT_PV_NAME "*"
+
 //==========================================================================================================
 //==========================================================================================================
 class OptionParser {
 public:
-    static void parse_cmd_line_eq_pair(string& pair, string& name, string& val);
     
     //======================================================================================================
     //======================================================================================================
@@ -23,17 +24,21 @@ public:
     {
     public:
         Option(bool _mandatory, bool _need_arg, bool _multi = false, string default_val = "");
-        void set_found();
         bool set_value(string& val);
-
+        
         string get_value()           { return (values.empty() ? "" : values[0]); }
         vector<string>& get_values() { return values;              }
         bool was_found()             { return found;               }
         bool missing()               { return mandatory && !found; }
+        bool is_param_val_opt()      { return param_val_opt;       }
         
         string name;
+
+    protected:
+        bool param_val_opt = false;
         
     private:
+        void set_found();
         
         // If initiated to non-empty, this is considered its default value and the option is allowed w/o an arg
         vector<string> values;
@@ -43,20 +48,33 @@ public:
         bool multi;
     };
     
+    //======================================================================================================
+    //======================================================================================================
+    class ParamValOption: public Option
+    {
+    public:
+        ParamValOption();
+    };
+    
+    
     OptionParser(string& line, char end_char, map<string, Option>& _options);
     OptionParser(int argc, char * argv[], map<string, Option>& _options);
     
 private:
     static const regex eq_pair_regex;
-    static const regex cmd_line_eq_pair_regex;
+    static const regex naked_eq_pair_regex;
 
     map<string, Option>& options;
     
-    Option& check_option(string& opt_name);
+    bool set_value(string& opt_name, string& val, bool from_cmd_line);
     void check_missing_options(map<string, Option>& options);
     void set_option_names(map<string, Option>&);
+    Option* get_opt(string& opt_name);
+    void parse_eq_pair(string& pair, string& name, string& val, bool from_cmd_line);
+
 };
 
 typedef OptionParser::Option Option;
+typedef OptionParser::ParamValOption ParamValOption;
 
 #endif /* OptionParser_hpp */

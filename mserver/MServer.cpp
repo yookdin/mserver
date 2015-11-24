@@ -36,7 +36,8 @@ void MServer::run(int argc, char * argv[])
     {
         process_args(argc, argv);
         connection.setup(vars[SERVER_IP], stoi(vars[SERVER_PORT]));
-        ScriptReader reader(get_value("scenario"));
+        map<string, string> dummy; // TODO: remove this when test runs will not be done from here
+        ScriptReader reader(get_value("scenario"), dummy);
     }
     catch (string err)
     {
@@ -75,7 +76,7 @@ void MServer::process_args(int argc, char * argv[])
     options.emplace(SCENARIO, Option(true, true));
     options.emplace("call_id_min", Option(false, false));
     options.emplace("call_id_max", Option(false, false));
-    options.emplace("var", Option(false, true, true)); // -var name=value
+    options.emplace("var", ParamValOption()); // -var name=value
 
     OptionParser parser(argc, argv, options); // Parse command line option and put values in the map
     
@@ -85,37 +86,12 @@ void MServer::process_args(int argc, char * argv[])
     //------------------------------------------------------------------------------------------------------
     for(auto pair: options)
     {
-        if(pair.first == "call_id_min" || pair.first == "call_id_max")
+        if(pair.first == "call_id_min" || pair.first == "call_id_max" || pair.first == "var")
         {
             continue;
         }
         
-        string var_name = pair.first;
-    
-        if(var_name != "var")
-        {
-            // With "normal" options, the var name is the option name and the value is the option value
-            vars[var_name] = pair.second.get_value();
-        }
-        else
-        {
-            // -var option is of the form: -var name=value, and can appear multiple times. So need to further
-            // parse each 'name=value' string, and set vars[name] = value.
-            vector<string>& vals = pair.second.get_values();
-            
-            for(auto& pair_str: vals)
-            {
-                string name, val;
-                OptionParser::parse_cmd_line_eq_pair(pair_str, name, val);
-                
-                if(name.empty() || val.empty())
-                {
-                    throw string("Wrong format for -var option: " + pair_str);
-                }
-                
-                vars[name] = val;
-            }
-        }
+        vars[pair.first] = pair.second.get_value();
     }
     
     if(options.at("call_id_min").was_found())
