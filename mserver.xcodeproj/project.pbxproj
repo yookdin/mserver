@@ -370,7 +370,7 @@
 				FE0ECE521BDF818E00958E40 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		FE0ECE531BDF818E00958E40 /* Build configuration list for PBXNativeTarget "mserver" */ = {
 			isa = XCConfigurationList;
@@ -379,7 +379,7 @@
 				FE0ECE551BDF818E00958E40 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

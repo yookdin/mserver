@@ -37,6 +37,7 @@ private:
     
     void process_args(int argc, char * argv[]);
     void error(string msg);
+    void set_scenario_dir(char *argv_0);
 };
 
 #endif /* MServer_hpp */

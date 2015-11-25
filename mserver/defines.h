@@ -23,6 +23,7 @@
 #define LEN             "len"
 #define TEST_DIR        "test_dir"
 #define SCENARIO        "scenario"
+#define SCENARIO_DIR    "scenarios_dir"
 #define TAG             "tag"
 #define CSEQ            "cseq"
 #define SIP_IP_TYPE     "sip_ip_type"

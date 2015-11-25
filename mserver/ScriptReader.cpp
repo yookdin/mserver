@@ -66,14 +66,14 @@ ScriptReader::~ScriptReader()
 
 //==========================================================================================================
 //==========================================================================================================
-void ScriptReader::read_file(string filepath)
+void ScriptReader::read_file(string filename)
 {
+    string filepath = MServer::inst.get_value(SCENARIO_DIR) + "/" + filename;
 	ifstream file(filepath);
 
 	if(!file.is_open())
 	{
-		cout << "File " << filepath << " not found" << endl;
-		return;
+        throw string("File " + filepath + " not found");
 	}
 
 	for(string line; getline(file, line);)

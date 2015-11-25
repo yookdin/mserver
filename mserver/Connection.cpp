@@ -158,7 +158,7 @@ int Connection::connect()
         }
         else // Successful
         {
-            cout << "Connected to client" << endl;
+            cout << "Connected to client" << endl << endl;
             break;
         }
     }

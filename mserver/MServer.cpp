@@ -53,7 +53,7 @@ void MServer::run(int argc, char * argv[])
 //==========================================================================================================
 void MServer::error(string msg)
 {
-    cout << endl << msg << endl;
+    cout << msg << endl;
     exit(-1);
 }
 
@@ -78,6 +78,7 @@ void MServer::process_args(int argc, char * argv[])
     options.emplace(SERVER_PORT, Option(true, true));
     options.emplace(TEST_DIR, Option(true, true));
     options.emplace(SCENARIO, Option(true, true));
+    options.emplace(SCENARIO_DIR, Option(false, true));
     options.emplace("call_id_min", Option(false, false));
     options.emplace("call_id_max", Option(false, false));
     options.emplace("var", ParamValOption()); // -var name=value
@@ -98,6 +99,14 @@ void MServer::process_args(int argc, char * argv[])
         vars[pair.first] = pair.second.get_value();
     }
     
+    // -scenario_dir option should be given only in developing phase because xcode puts exe in weird places.
+    // in "production", the exe will be in a default location relative to voxip root, and will resolve the
+    // scenario dir location automatically.
+    if(vars[SCENARIO_DIR].empty())
+    {
+        set_scenario_dir(argv[0]);
+    }
+    
     if(options.at("call_id_min").was_found())
     {
         call_id_kind = MIN;
@@ -110,14 +119,14 @@ void MServer::process_args(int argc, char * argv[])
     //------------------------------------------------------------------------------------------------------
     // Check validity of given parameters
     //------------------------------------------------------------------------------------------------------
-    if(!ifstream(get_value("test_dir")))
+    if(!ifstream(get_value(TEST_DIR)))
     {
-        error("Dir " + get_value("test_dir") + " doesn't exist");
+        error("Dir " + get_value(TEST_DIR) + " doesn't exist");
     }
 
-    if(!ifstream(get_value("scenario")))
+    if(!ifstream(get_value(SCENARIO_DIR)))
     {
-        error("File " + get_value("scenario") + " doesn't exist");
+        error("Dir " + get_value(SCENARIO_DIR) + " doesn't exist");
     }
 }
 
@@ -168,6 +177,42 @@ void MServer::print_vars()
 }
 
 
+//==========================================================================================================
+// Find scenario dir automatically.
+// Note: this will not work if the executable was found through a PATH env variable search.
+//==========================================================================================================
+void MServer::set_scenario_dir(char *argv_0)
+{
+    string path = argv_0;
+    
+    if(path[0] != '/') // Not full path
+    {
+        char cwd[200];
+        getcwd(cwd, 200); // The directory from which the program was invoked
+        path = cwd + ("/" + path); // path is now absolute
+    }
+    
+    // Clean path:
+    // 1. replace "/./" with "/"
+    // 2. remove "dir/../" recursively
+    path = regex_replace(path, regex("/\\./"), "/");
+    
+    while(path.find("..") != string::npos) // Remove "dir/../" occurences
+    {
+        path = regex_replace(path, regex("[^/]+/../"), "");
+    }
+    
+    size_t pos = path.find("build/Debug");
+
+    if(pos != string::npos)
+    {
+        vars[SCENARIO_DIR] = path.substr(0, pos) + "scenarios";
+    }
+    else
+    {
+        throw string("Failed resolving the scenarios dir. path = " + path);
+    }
+}
 
 
 
