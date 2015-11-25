@@ -1,7 +1,7 @@
 
 Recive an audio call
   
-<scenario file="register.scr"/>
+<scenario file="register.scr"/>   Run the registration scenario
 
 <recv message=INVITE>
 </recv>
@@ -95,4 +95,6 @@ Recive an audio call
     Content-Type: application/sdp
     Content-Length: 0
 </send>
+
+<scenario file="unregister.scr"/>   Run the unregistration scenario
 
