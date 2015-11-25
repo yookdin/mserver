@@ -134,7 +134,8 @@ void SipMessage::parse(bool from_script)
         {
             if(!parser.match(HEADER_LINE, lines[i]))
             {
-                throw string("SIP message contains non header line in header section line " + to_string(i) + ":\n" + lines[i]);
+                string dir = (from_script ? "Outgoing" : "Incoming");
+                throw string(dir + " " + kind + " SIP message contains non header line in header section line " + to_string(i) + ":\n" + lines[i]);
             }
             
             string header_name = parser.get_sub_match(HEADER_NAME);

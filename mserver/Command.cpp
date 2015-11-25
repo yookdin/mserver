@@ -5,14 +5,15 @@
 
 
 //==========================================================================================================
-// Remove leading and trailing spaces. Remove C++ style comment: //...
+// Remove leading and trailing spaces. Remove C++ style comment: //... but only if preceded by space, o/w it
+// may be part of SIP
 //==========================================================================================================
 void Command::trim(string &line)
 {
     string spaces = " \t\n\r";
     line.erase(0, line.find_first_not_of(spaces));
     
-    size_t pos = line.find("//");
+    size_t pos = line.find(" //");
     if(pos != string::npos)
     {
         line.erase(pos);

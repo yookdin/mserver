@@ -21,11 +21,15 @@ MServer MServer::inst;
 MServer::MServer(): call_id_kind(NONE)
 {
     vars[PID] = to_string(getpid());
-    vars[TRANSPORT] = "tcp"; // Currently supporting only TCP
+    vars[TRANSPORT] = "TCP"; // Currently supporting only TCP
 
     // Not sure these actually need real values
     vars[CLIENT_IP] = "10.0.0.116";
     vars[CLIENT_PORT] = "5060";
+    vars[SIP_IP_TYPE] = "4";
+    vars[MEDIA_IP_TYPE] = "4";
+    vars[MEDIA_IP] = "127.0.0.1";
+    vars[MEDIA_PORT] = "2000";
 }
 
 //==========================================================================================================
@@ -49,7 +53,7 @@ void MServer::run(int argc, char * argv[])
 //==========================================================================================================
 void MServer::error(string msg)
 {
-    cout << msg << endl;
+    cout << endl << msg << endl;
     exit(-1);
 }
 

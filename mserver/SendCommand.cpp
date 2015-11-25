@@ -47,7 +47,7 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
 {
     bool calc_len = false;
     int len = 0;
-    vector<string*> len_lines; // Lines containins [len]
+    vector<long> len_lines_indices; // Lines containins [len]
     
     for(string line; getline(file, line);)
     {
@@ -62,7 +62,7 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
         
         if(contains_len)
         {
-            len_lines.push_back(&msg_lines.back());
+            len_lines_indices.push_back(msg_lines.size() - 1);
         }
         
         if(calc_len)
@@ -79,9 +79,9 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
     // Replace [len] in all the lines that contain it; can it really be more than one line?
     string len_str = to_string(len);
     
-    for(auto pline: len_lines)
+    for(auto index: len_lines_indices)
     {
-        replace_len(*pline, len_str);
+        replace_len(msg_lines[index], len_str);
     }
 }
 
