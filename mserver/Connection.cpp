@@ -60,8 +60,8 @@ SipMessage* Connection::get_message(string kind, int timeout)
             {
                 buf[num_bytes] = '\0'; // Make buf a null-terminated string to enable printing etc.
                 
-                cout << endl << "Incoming message:";
-                cout << endl << "-----------------" << endl << buf;
+                cout << "Incoming message:" << endl;
+                cout << "-----------------" << endl << buf;
             
                 // The buffer might contain more than one sip message, extract all of them into the messages queue
                 for(long offset = 0; num_bytes > 0; num_bytes -= offset)
@@ -114,8 +114,8 @@ bool Connection::send_message(SipMessage &message)
                 throw string("write() error");
             }
             
-            cout << endl << "Outgoing message:";
-            cout << endl << "-----------------" << endl << buf;
+            cout << "Outgoing message:" << endl;
+            cout << "-----------------" << endl << buf;
             
             return true;
         }

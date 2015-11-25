@@ -276,7 +276,7 @@ void OptionParser::parse_eq_pair(string& pair, string& name, string& val, bool f
     }
     else
     {
-        throw string("Expected value format to be var=val, but received " + pair);
+        throw string("Expected value format to be: var=val, but received: " + pair);
     }
     
     if(!from_cmd_line)

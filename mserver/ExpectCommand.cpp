@@ -71,6 +71,8 @@ void ExpectCommand::interpret(string &line, ifstream &file)
     {
         throw string("Expected condition didn't occur");
     }
+//    cout << "expression:" << endl << expression << endl;
+//    cout << "expression_rpn:" << endl << expression_rpn << endl;
 }
 
 
@@ -105,9 +107,8 @@ void ExpectCommand::convert_to_tokens(string &line, ifstream &file, vector<Token
     
     for(auto token: tokens)
     {
-        cout << token->to_string() << " ";
+        expression += token->to_string() + " ";
     }
-    cout << endl;
 }
 
 
@@ -225,7 +226,8 @@ Token* ExpectCommand::try_header_name(string &line, int &pos)
         pos += match.length();
         
         // Format for query is last_<header-name>_value
-        return new String(reader.get_value("last_" + match.str() + "_value"));
+        string val = reader.get_value("last_" + match.str() + "_value");
+        return interpret_value(val);
     }
 
     return nullptr;
@@ -243,23 +245,31 @@ Token* ExpectCommand::try_var(string &line, int &pos)
     {
         pos += match.length();
         string val = reader.get_value(match.str());
-        
-        // Guess the type of the value returned
-        if(regex_match(val, match, num_regex))
-        {
-            return new Int(stoi(val));
-        }
-        else if(regex_match(val, match, bool_regex))
-        {
-            return new Bool(match.str());
-        }
-        else
-        {
-            return new String(val);
-        }
+        return interpret_value(val);
     }
 
     return nullptr;
+}
+
+
+//==========================================================================================================
+// Figure out the type of a value returned from a variable or header replacement and return appropriate
+// token.
+//==========================================================================================================
+Token* ExpectCommand::interpret_value(string& val)
+{
+    if(regex_match(val, num_regex))
+    {
+        return new Int(stoi(val));
+    }
+    else if(regex_match(val, bool_regex))
+    {
+        return new Bool(val);
+    }
+    else
+    {
+        return new String(val);
+    }
 }
 
 
@@ -349,10 +359,8 @@ void ExpectCommand::convert_to_rpn(vector<Token*>& tokens, deque<Token*>& output
     
     for(auto token: output)
     {
-        cout << token->to_string() << " ";
+        expression_rpn += token->to_string() + " ";
     }
-    cout << endl;
-
     
 } // convert_to_rpn()
 

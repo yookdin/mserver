@@ -32,6 +32,9 @@ private:
     static const regex var_regex;
     static const regex bool_regex;
 
+    string expression;
+    string expression_rpn;
+    
     void convert_to_tokens(string &line, ifstream &file, vector<Token*>& tokens);
     void convert_to_tokens(string &line, vector<Token*>& tokens);
     void convert_to_rpn(vector<Token*>& tokens, deque<Token*>& output);
@@ -42,7 +45,7 @@ private:
     Token* try_string(string &line, int &pos);
     Token* try_header_name(string &line, int &pos);
     Token* try_var(string &line, int &pos);
-
+    Token* interpret_value(string& val);
 };
 
 #endif /* ExpectCommand_hpp */

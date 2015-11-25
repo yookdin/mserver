@@ -25,11 +25,16 @@ const regex ScriptReader::command_start_regex("^ *<(expect)>|^ *<(pause)|^ *<(re
 const regex ScriptReader::last_desc_regex("((\\d+)[[:alpha:]]{2}|last)( +(in|out))?( +(" + SipParser::inst().method_str + "|\\d{3}))?$");
 
 //==========================================================================================================
+// Some commong regular expressions for identifying variable in script
 //==========================================================================================================
 const string ScriptReader::query_str("[-\\w]+");
 const regex ScriptReader::last_query_regex("last_" + ScriptReader::query_str);
 const regex ScriptReader::script_var_regex("\\[(" + ScriptReader::query_str + ")\\]");
 
+//==========================================================================================================
+// A set of characters allowed in SIP protocol for element 'token'
+//==========================================================================================================
+const string ScriptReader::sip_token_chars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.!%*_+`'~");
 
 //==========================================================================================================
 // Init command map, read and execute file.
@@ -176,15 +181,16 @@ string ScriptReader::gen_call_id()
 string ScriptReader::gen_tag()
 {
     string res;
-    gen_random_string(res, 4); // Must be at least 32-bits long
+    gen_random_string(res, 4, &sip_token_chars); // Must be at least 32-bits long
     return res;
 }
 
 
 //==========================================================================================================
 // Generate a random string, no smaller than min_len. If input str isn't empty append generated chars.
+// If char_set isn't null, use it to choose the chars from.
 //==========================================================================================================
-void ScriptReader::gen_random_string(string& str, int min_len)
+void ScriptReader::gen_random_string(string& str, int min_len, const string* char_set)
 {
     int max_len = 30; // Arbitrary
 
@@ -197,12 +203,19 @@ void ScriptReader::gen_random_string(string& str, int min_len)
     int len_range = max_len - min_len + 1;  // Number of values from min_len to max_len
     int len = rand() % len_range + min_len; // add min_len because [rand() % x] is [0..x-1]
     
-    int char_range = (126-33+1); // ASCII table printables are between 33 and 126
-    
     for(int i = 0; i < len; ++i)
     {
-        char c = rand() % char_range + 33;
-        str += c;
+        if(char_set != nullptr)
+        {
+            int index = rand() % char_set->length();
+            str += (*char_set)[index];
+        }
+        else
+        {
+            int char_range = (126-33+1); // ASCII table printables are between 33 and 126
+            char c = rand() % char_range + 33;
+            str += c;
+        }
     }
 }
 
