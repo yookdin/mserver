@@ -49,7 +49,9 @@ class SipParser
 {
 public:
     static SipParser& inst();
+    
     const string method_str = "ACK|BYE|CANCEL|INFO|INVITE|MESSAGE|NOTIFY|OPTIONS|PRACK|PUBLISH|REFER|REGISTER|SUBSCRIBE|UPDATE";
+    
     const string header_name_str =
 "Accept|Accept-Contact|Accept-Encoding|Accept-Language|Accept-Resource-Priority|Alert-Info|Allow|Allow-Events|Answer-Mode|\
 Authentication-Info|Authorization|Call-ID|Call-Info|Contact|Content-Disposition|Content-Encoding|Content-Language|\
@@ -64,6 +66,9 @@ P-Answer-State|P-Asserted-Identity|P-Asserted-Service|P-Associated-URI|P-Called-
 P-Charging-Vector|P-DCS-Billing-Info|P-DCS-LAES|P-DCS-OSPS|P-DCS-Redirect|P-DCS-Trace-Party-ID|P-Early-Media|P-Media-Authorization|\
 P-Preferred-Identity|P-Preferred-Service|P-Private-Network-Indication|P-Profile-Key|P-Refused-URI-List|P-Served-User|\
 P-User-Database|P-Visited-Network-ID|X-Connect-Type|X-notify|X-Von-BackgroundReg|X-Carrier-ID|X-vonage-push|X-Social-Network";
+    
+    const string sip_token_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.!%*_+`'~";    
+    const regex to_tag_regex;
     
     bool match(SipElement elem, string line);
     string get_match(SipElement elem, string line);

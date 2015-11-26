@@ -225,8 +225,8 @@ Token* ExpectCommand::try_header_name(string &line, int &pos)
     {
         pos += match.length();
         
-        // Format for query is last_<header-name>_value
-        string val = reader.get_value("last_" + match.str() + "_value");
+        // Format for query is last_<header-name>:value
+        string val = reader.get_value("last_" + match.str() + ":value");
         return interpret_value(val);
     }
 

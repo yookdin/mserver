@@ -31,8 +31,6 @@ public:
     void print();
     
 private:
-    static const regex query_regex;
-    
     const Direction dir;
     vector<string> lines;
     string kind;    // INVITE, 200, etc.

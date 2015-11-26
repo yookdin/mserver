@@ -18,7 +18,7 @@ MServer MServer::inst;
 
 //==========================================================================================================
 //==========================================================================================================
-MServer::MServer(): call_id_kind(NONE)
+MServer::MServer()
 {
     vars[PID] = to_string(getpid());
     vars[TRANSPORT] = "TCP"; // Currently supporting only TCP
@@ -79,8 +79,6 @@ void MServer::process_args(int argc, char * argv[])
     options.emplace(TEST_DIR, Option(true, true));
     options.emplace(SCENARIO, Option(true, true));
     options.emplace(SCENARIO_DIR, Option(false, true));
-    options.emplace("call_id_min", Option(false, false));
-    options.emplace("call_id_max", Option(false, false));
     options.emplace("var", ParamValOption()); // -var name=value
 
     OptionParser parser(argc, argv, options); // Parse command line option and put values in the map
@@ -91,12 +89,10 @@ void MServer::process_args(int argc, char * argv[])
     //------------------------------------------------------------------------------------------------------
     for(auto pair: options)
     {
-        if(pair.first == "call_id_min" || pair.first == "call_id_max" || pair.first == "var")
+        if(pair.first != "var")
         {
-            continue;
+            vars[pair.first] = pair.second.get_value();
         }
-        
-        vars[pair.first] = pair.second.get_value();
     }
     
     // -scenario_dir option should be given only in developing phase because xcode puts exe in weird places.
@@ -105,15 +101,6 @@ void MServer::process_args(int argc, char * argv[])
     if(vars[SCENARIO_DIR].empty())
     {
         set_scenario_dir(argv[0]);
-    }
-    
-    if(options.at("call_id_min").was_found())
-    {
-        call_id_kind = MIN;
-    }
-    else if(options.at("call_id_max").was_found())
-    {
-        call_id_kind = MAX;
     }
     
     //------------------------------------------------------------------------------------------------------
@@ -159,12 +146,6 @@ bool MServer::send_message(SipMessage &message)
     return connection.send_message(message);
 }
 
-//==========================================================================================================
-//==========================================================================================================
-MServer::CallIDKind MServer::get_call_id_kind()
-{
-    return call_id_kind;
-}
 
 //==========================================================================================================
 //==========================================================================================================

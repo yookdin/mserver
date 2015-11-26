@@ -11,9 +11,7 @@ public:
 	ScriptReader(string filename, map<string, string> vars, ScriptReader* parent = nullptr);
     ~ScriptReader();
     
-    static const regex last_desc_regex;
-    static const string query_str;
-    static const regex last_query_regex;
+    static const regex query_regex;
     static const regex script_var_regex;
 
     string get_value(string var, int call_number = -1);
@@ -23,8 +21,17 @@ public:
     SipMessage* get_last_message(int call_number = -1);
     
 private:
+    // Controls the generation of call id
+    enum CallIDKind
+    {
+        RANDOM, // Genrate random string
+        MIN,    // Generate lexicographically minimal call id
+        MAX,    // Generate lexicographically maximal call id
+        NONE
+    };
+
+    static const string query_str;
     static const regex command_start_regex;
-    static const string sip_token_chars;
     
     bool root;
     map<string, Command*> commands;
@@ -35,9 +42,10 @@ private:
     void read_file(string filepath);
     
     string gen_branch();
-    string gen_call_id();
+    string gen_call_id(CallIDKind kind);
     string gen_tag();
     void gen_random_string(string& str, int min_length = 1, const string* char_set = nullptr);
+    CallIDKind string_to_call_id_kind(string str);
     
     bool is_last_var(string&);
     string get_last_value(string& var, int call_number = -1);

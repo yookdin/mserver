@@ -19,6 +19,8 @@
 #define BRANCH          "branch"
 #define TRANSPORT       "transport"
 #define CALL_ID         "call_id"
+#define MIN_CALL_ID     "min_call_id"
+#define MAX_CALL_ID     "max_call_id"
 #define PID             "pid"
 #define LEN             "len"
 #define TEST_DIR        "test_dir"

@@ -12,12 +12,6 @@
 
 
 //==========================================================================================================
-// Regular expression describing a get_value() var format
-//==========================================================================================================
-const regex SipMessage::query_regex("([-[:alnum:]]+)(_value)?");
-
-
-//==========================================================================================================
 // Construct message from a vector of strings, received from script file.
 //==========================================================================================================
 SipMessage::SipMessage(vector<string>& _lines): lines(_lines), dir(OUT)
@@ -248,28 +242,39 @@ void SipMessage::write_to_buffer(char buf[], long &num_to_write)
 
 //==========================================================================================================
 // Get a value from the current message according to the var string. The var can represent an entire header,
-// just the header value, or other data.
+// just the header value, or other data (if var starts with "last_", that part is ignored).
 // var = <header-name>          :   the entire header line will be returned (not including CRLF)
-// var = <header-name>_value    :   only the value part of the header line
+// var = <header-name>:value    :   only the value part of the header line
+// Special vars:
 // var = cseq                   :   the numerical part of CSeq header
+// var = To_no_tag              :   "To" header without the tag part
 //==========================================================================================================
 string SipMessage::get_value(string& var)
 {
     smatch match;
     
-    if(!regex_match(var, match, query_regex))
+    if(!regex_match(var, match, ScriptReader::query_regex))
     {
         throw string("SipMessage::get_value(): wrong format of var: " + var);
     }
     
-    string name = match[1];
+    string name = match[2];
     
     if(name == CSEQ)
     {
         return cseq;
     }
     
-    bool entire_hdr = match[2].str().empty();
+    bool to_no_tag = false;
+    
+    if(name == "To_no_tag")
+    {
+        name = "To";
+        to_no_tag = true;
+    }
+    
+    bool entire_hdr = match[3].str().empty(); // No ":value" in query string
+    string result;
     
     for(int i = 1; i < lines.size() && !lines[i].empty(); ++i)
     {
@@ -277,8 +282,20 @@ string SipMessage::get_value(string& var)
 
         if(name == SipParser::inst().get_sub_match(HEADER_NAME))
         {
-            return (entire_hdr ? (name + ": ") : "") + SipParser::inst().get_sub_match(HEADER_VALUE);
+            result = (entire_hdr ? (name + ": ") : "") + SipParser::inst().get_sub_match(HEADER_VALUE);
+            break;
         }
+    }
+    
+    if(!result.empty())
+    {
+        if(to_no_tag)
+        {
+            // Remove the to-tag from the header
+            result = regex_replace(result, SipParser::inst().to_tag_regex, "");
+        }
+        
+        return result;
     }
     
     throw string("SipMessage::get_value(): header " + name + " not found");

@@ -15,26 +15,12 @@ const regex ScriptReader::command_start_regex("^ *<(expect)>|^ *<(pause)|^ *<(re
 
 
 //==========================================================================================================
-// Last message descriptor regular expression
-// Interesting submatches:
-// 1: Ordinal or 'last'
-// 2: Numerical part of ordinal
-// 4: in/out
-// 6: message kind (Method/status-code)
-//==========================================================================================================
-const regex ScriptReader::last_desc_regex("((\\d+)[[:alpha:]]{2}|last)( +(in|out))?( +(" + SipParser::inst().method_str + "|\\d{3}))?$");
-
-//==========================================================================================================
 // Some commong regular expressions for identifying variable in script
 //==========================================================================================================
-const string ScriptReader::query_str("[-\\w]+");
-const regex ScriptReader::last_query_regex("last_" + ScriptReader::query_str);
+const string ScriptReader::query_str("(last_)?([-\\w]+)(:value)?");
+const regex ScriptReader::query_regex(ScriptReader::query_str);
 const regex ScriptReader::script_var_regex("\\[(" + ScriptReader::query_str + ")\\]");
 
-//==========================================================================================================
-// A set of characters allowed in SIP protocol for element 'token'
-//==========================================================================================================
-const string ScriptReader::sip_token_chars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.!%*_+`'~");
 
 //==========================================================================================================
 // Init command map, read and execute file.
@@ -130,9 +116,11 @@ string ScriptReader::get_value(string var, int call_number)
         return gen_branch();
     }
     
-    if(var == CALL_ID)
+    CallIDKind cid_kind = string_to_call_id_kind(var);
+    
+    if(cid_kind != NONE)
     {
-        return gen_call_id();
+        return gen_call_id(cid_kind);
     }
     
     if(var == TAG)
@@ -168,24 +156,51 @@ string ScriptReader::gen_branch()
 //==========================================================================================================
 // Generate the call-id string
 //==========================================================================================================
-string ScriptReader::gen_call_id()
+string ScriptReader::gen_call_id(CallIDKind kind)
 {
-    switch(MServer::inst.get_call_id_kind())
+    switch(kind)
     {
-        case MServer::NONE: {
+        case RANDOM:
+        {
             string res;
             gen_random_string(res);
             return res;
         }
-        case MServer::MIN: {
+        case MIN:
+        {
             return "!";
         }
-        case MServer::MAX: {
+        case MAX:
+        {
             return string(50, '~');
         }
+        default:
+            throw string("ScriptReader::gen_call_id() called with NONE");
     }
 }
 
+
+//==========================================================================================================
+//==========================================================================================================
+ScriptReader::CallIDKind ScriptReader::string_to_call_id_kind(string str)
+{
+    if(str == CALL_ID)
+    {
+        return RANDOM;
+    }
+    
+    if(str == MIN_CALL_ID)
+    {
+        return MIN;
+    }
+    
+    if(str == MAX_CALL_ID)
+    {
+        return MAX;
+    }
+
+    return NONE;
+}
 
 //==========================================================================================================
 // Generate a random tag string, at least 4 bytes long
@@ -193,7 +208,7 @@ string ScriptReader::gen_call_id()
 string ScriptReader::gen_tag()
 {
     string res;
-    gen_random_string(res, 4, &sip_token_chars); // Must be at least 32-bits long
+    gen_random_string(res, 4, &SipParser::inst().sip_token_chars); // Must be at least 32-bits long
     return res;
 }
 
@@ -265,10 +280,18 @@ vector<SipMessage*>& ScriptReader::get_messages()
 
 
 //==========================================================================================================
+// Return true if var is a valid query string starting with "last_"
 //==========================================================================================================
 bool ScriptReader::is_last_var(string& var)
 {
-    return regex_match(var, last_query_regex);
+    smatch match;
+
+    if(regex_match(var, match, query_regex))
+    {
+        return !(match[1].str().empty());
+    }
+    
+    return false;
 }
 
 
