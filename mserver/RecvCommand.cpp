@@ -1,6 +1,6 @@
 /*
  
-<recv message=NAME[ optional][ timeout=NUM]>
+<recv message=NAME [call_number=NUM] [optional] [timeout=NUM]>
 </recv>
  
 Default values:
@@ -30,7 +30,8 @@ void RecvCommand::interpret(string &line, ifstream &file)
     string message_kind; // Either a METHOD name of status code
     bool optional = false;
     int timeout = 2; // In seconds
-    process_args(line, message_kind, optional, timeout);
+    int call_number =  -1;
+    process_args(line, message_kind, optional, timeout, call_number);
     
     SipMessage* msg = MServer::inst.get_message(message_kind, timeout);
     
@@ -42,6 +43,13 @@ void RecvCommand::interpret(string &line, ifstream &file)
     
     if(msg != nullptr)
     {
+        // INVITE starts a new call. Otherwise, the message belongs to a previous call and should check that its parameters (such as call-id)
+        // match that call.
+        if(message_kind != "INVITE")
+        {
+            msg->check_call_params(call_number, reader); // Must call this before adding the messagae, o/w it, the message, will become the last of its call
+        }
+        
         reader.add_message(msg);
     }
 }
@@ -49,14 +57,15 @@ void RecvCommand::interpret(string &line, ifstream &file)
 
 //==========================================================================================================
 //==========================================================================================================
-void RecvCommand::process_args(string& line, string& message_kind, bool& optional, int& timeout)
+void RecvCommand::process_args(string& line, string& message_kind, bool& optional, int& timeout, int& call_number)
 {
-    string msg_opt = "message", optional_opt = "optional", timeout_opt = "timeout";
+    string msg_opt = "message", optional_opt = "optional", timeout_opt = "timeout", call_number_opt = "call_number";
     
     map<string, Option> options;
     options.emplace(msg_opt, Option(true, true));
     options.emplace(optional_opt, Option(false, false));
     options.emplace(timeout_opt, Option(false, true));
+    options.emplace(call_number_opt, Option(false, true));
     OptionParser parser(line, '>', options);
     
     message_kind = options.at(msg_opt).get_value();
@@ -65,6 +74,11 @@ void RecvCommand::process_args(string& line, string& message_kind, bool& optiona
     if(options.at(timeout_opt).was_found())
     {
         timeout = stoi(options.at(timeout_opt).get_value());
+    }
+    
+    if(options.at(call_number_opt).was_found())
+    {
+        call_number = stoi(options.at(call_number_opt).get_value());
     }
 }
 

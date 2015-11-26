@@ -39,8 +39,18 @@ const string ScriptReader::sip_token_chars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJ
 //==========================================================================================================
 // Init command map, read and execute file.
 //==========================================================================================================
-ScriptReader::ScriptReader(string filepath, map<string, string> _vars, bool _root): vars(_vars), root(_root)
+ScriptReader::ScriptReader(string filepath, map<string, string> _vars, ScriptReader* parent):
+    vars(_vars), root(parent == nullptr)
 {
+    if(root)
+    {
+        calls_num_map = new CallsNumMap;
+    }
+    else
+    {
+        calls_num_map = parent->calls_num_map;
+    }
+    
     commands["scenario"] = new ScenarioCommand(*this);
     commands["send"] = new SendCommand(*this);
     commands["recv"] = new RecvCommand(*this);
@@ -66,6 +76,8 @@ ScriptReader::~ScriptReader()
         {
             delete msg;
         }
+        
+        delete calls_num_map;
     }
 }
 
@@ -111,7 +123,7 @@ void ScriptReader::read_file(string filename)
 // Get the value for a variable that appear in the script in brackets (like [call_id]). Some are static to
 // the test (received from MServer), some generated, some stored from previous messages.
 //==========================================================================================================
-string ScriptReader::get_value(string var, string last_descriptor)
+string ScriptReader::get_value(string var, int call_number)
 {
     if(var == BRANCH)
     {
@@ -130,7 +142,7 @@ string ScriptReader::get_value(string var, string last_descriptor)
     
     if(is_last_var(var))
     {
-        return get_last_value(var, last_descriptor);
+        return get_last_value(var, call_number);
     }
     
     if(vars.count(var) == 0)
@@ -222,9 +234,14 @@ void ScriptReader::gen_random_string(string& str, int min_len, const string* cha
 
 //==========================================================================================================
 //==========================================================================================================
-void ScriptReader::add_message(SipMessage* msg)
+void ScriptReader::add_message(SipMessage* msg, bool from_child_script)
 {
     messages.push_back(msg);
+    
+    if(!from_child_script) // o/w call number already set in child script
+    {
+        msg->set_call_number(calls_num_map->get_call_num(msg->get_call_id()));
+    }
 }
 
 
@@ -234,7 +251,7 @@ void ScriptReader::add_messages(vector<SipMessage*>& _messages)
 {
     for(auto m: _messages)
     {
-        messages.push_back(m);
+        add_message(m, true);
     }
 }
 
@@ -258,102 +275,84 @@ bool ScriptReader::is_last_var(string& var)
 //==========================================================================================================
 // Return the value of last_* variable
 //==========================================================================================================
-string ScriptReader::get_last_value(string& var, string& last_descriptor)
+string ScriptReader::get_last_value(string& var, int call_number)
 {
-    SipMessage& last_msg = get_last_message(last_descriptor);
-    string short_var = var.substr(5); // without the "last_"
-    return last_msg.get_value(short_var);
-}
-
-
-//==========================================================================================================
-// Return a message from which the values of last_* params will be taken, according the last_descriptor
-// string, which format is:
-// <ordinal>|last [in|out] [Method|status-code]
-// For example:
-// "2nd in INVITE"  - return the second incoming INVITE
-// "last 183"       - return the last 183 response, no matter if it was incoming or outgoing
-// If last_descriptor is empty, return the last message.
-//==========================================================================================================
-SipMessage& ScriptReader::get_last_message(string& last_descriptor)
-{
-    if(messages.empty())
+    SipMessage* last_msg = get_last_message(call_number);
+    
+    if(last_msg == nullptr)
     {
         throw string("Can't use last_*, no previous messages");
     }
     
-    if(last_descriptor.empty()) // Default is the last message
+    string short_var = var.substr(5); // without the "last_"
+    return last_msg->get_value(short_var);
+}
+
+
+//==========================================================================================================
+// Return the last message of the given call number. If the the call_number is -1, return the last message.
+//==========================================================================================================
+SipMessage* ScriptReader::get_last_message(int call_number)
+{
+    if(messages.empty())
     {
-        return *messages.back();
+        return nullptr;
+    }
+    
+    if(call_number == -1) // Default is the last message
+    {
+        return messages.back();
     }
 
-    smatch match;
-    
-    if(!regex_match(last_descriptor, match, last_desc_regex))
+    // Go over messages in reverse order
+    for(long i = messages.size() - 1; i >= 0; --i)
     {
-        throw string("Wrong last descriptor format: \"" + last_descriptor + "\"");
-    }
-    
-    //------------------------------------------------------------------------------------------------------
-    // Get values for the search from the submatches:
-    // 1: Ordinal or 'last'
-    // 2: Numerical part of ordinal
-    // 4: in|out
-    // 6: message kind (Method|status-code)
-    //------------------------------------------------------------------------------------------------------
-    int num = -1;
-    SipMessage::Direction dir = SipMessage::ANY;
-    string kind = match[6];
-    
-    if(!match[2].str().empty())
-    {
-        num = stoi(match[2]);
-        
-        if(num <= 0)
+        if(messages[i]->get_call_number() == call_number)
         {
-            throw string("Ordinal of last_descriptor must be positive");
+            return messages[i];
         }
     }
-    
-    if(!match[4].str().empty())
-    {
-        if(match[4] == "in")
-        {
-            dir = SipMessage::IN;
-        }
-        else
-        {
-            dir = SipMessage::OUT;
-        }
-    }
-    
-    // If 'last', go over messages from the end and return the first that matches
-    if(num == -1)
-    {
-        for(long i = messages.size() - 1; i >= 0; --i)
-        {
-            if(messages[i]->match(dir, kind))
-            {
-                return *messages[i];
-            }
-        }
-    }
-    else // If a number specified, go over messages from the begining and count until you reach the requested number
-    {
-        int cur_num = 0;
-        
-        for(auto msg: messages)
-        {
-            if(msg->match(dir, kind) && ++cur_num == num)
-            {
-                return *msg;
-            }
-        }
-    }
-    
+
     // This is reached only if no matching message found
-    throw string("No message matches last descriptor \"" + last_descriptor + "\"");
+    throw string("ScriptReader::get_last_message(): call number " + to_string(call_number) + " doesn't exist");
 }
+
+
+
+//==========================================================================================================
+//==========================================================================================================
+int ScriptReader::CallsNumMap::get_call_num(string call_id)
+{
+    if(id_num_map.count(call_id) != 0)
+    {
+        return id_num_map[call_id];
+    }
+    
+    id_num_map[call_id] = ++last_call_num;
+    return last_call_num;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

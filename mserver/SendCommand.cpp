@@ -1,7 +1,7 @@
 
 /*
  
- <send [last="last-descriptor"]>
+ <send [call_number=NUM]>
     SIP-MESSAGE
  </send>
  
@@ -57,7 +57,7 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
         }
         
         trim(line); // Remove leading white spaces and tabs, final newline
-        bool contains_len = replace_vars(line, last_descriptor); // replace_vars() return true if it sees "[len]"
+        bool contains_len = replace_vars(line, call_number); // replace_vars() return true if it sees "[len]"
         msg_lines.push_back(line);
         
         if(contains_len)
@@ -90,14 +90,14 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
 //==========================================================================================================
 void SendCommand::process_args(string& line)
 {
+    string opt = "call_number";
     map<string, Option> options;
-    options.emplace("last", Option(false, true));
+    options.emplace(opt, Option(false, true));
     OptionParser parser(line, '>', options);
-    last_descriptor = options.at("last").get_value();
-    
-    if(!last_descriptor.empty() && !regex_match(last_descriptor, ScriptReader::last_desc_regex))
+
+    if(options.at(opt).was_found())
     {
-        throw string("Wrong last descriptor format: \"" + last_descriptor + "\"");
+        call_number = stoi(options.at(opt).get_value());
     }
 }
 

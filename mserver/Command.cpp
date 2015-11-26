@@ -28,7 +28,7 @@ void Command::trim(string &line)
 // containing script reader.
 // Return true if the special var [len] is seen, since it is not yet known and will be replaced later.
 //==========================================================================================================
-bool Command::replace_vars(string &line, string last_descriptor)
+bool Command::replace_vars(string &line, int call_number)
 {
     bool contains_len = false;
     string line2 = line;
@@ -45,7 +45,7 @@ bool Command::replace_vars(string &line, string last_descriptor)
             continue; // [len] is not yet known, it should be replaced after reading entire message and knowing its length
         }
         
-        string value = reader.get_value(var, last_descriptor);
+        string value = reader.get_value(var, call_number);
         line2.replace(iter->position() + offset, iter->length(), value);
         offset += value.length() - iter->length();
     }

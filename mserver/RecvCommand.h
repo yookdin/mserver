@@ -11,6 +11,6 @@ public:
 private:
     static const regex end_regex;
 
-    void process_args(string& line, string& message_kind, bool& optional, int& timeout);
+    void process_args(string& line, string& message_kind, bool& optional, int& timeout, int& call_number);
 };
 

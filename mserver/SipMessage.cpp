@@ -8,6 +8,7 @@
 
 #include "SipMessage.hpp"
 #include "SipParser.hpp"
+#include "ScriptReader.h"
 
 
 //==========================================================================================================
@@ -142,7 +143,11 @@ void SipMessage::parse(bool from_script)
             
             if(header_name == "CSeq")
             {
-                cseq = get_cseq(parser.get_sub_match(HEADER_VALUE));
+                cseq = extract_cseq(parser.get_sub_match(HEADER_VALUE));
+            }
+            else if(header_name == "Call-ID")
+            {
+                call_id = parser.get_sub_match(HEADER_VALUE);
             }
             
             // Need to check the Content-Length header only for incoming messages, not ones read from script
@@ -176,12 +181,38 @@ void SipMessage::parse(bool from_script)
     {
         throw string("No CSeq header in message!");
     }
+    
+    if(call_id.empty())
+    {
+        throw string("No Call-ID header in message");
+    }
+} // parse()
+
+
+//==========================================================================================================
+// Check that the received message parameters match those of the call it belongs to
+//==========================================================================================================
+void SipMessage::check_call_params(int call_number, ScriptReader& reader)
+{
+    SipMessage* last = reader.get_last_message(call_number);
+    
+    if(last == nullptr)
+    {
+        return;
+    }
+    
+    if(call_id != last->get_call_id())
+    {
+        throw string("Received message " + kind + " call-id is different than the call call-id");
+    }
+    
+    // TODO: add checks on other headers?
 }
 
 
 //==========================================================================================================
 //==========================================================================================================
-string SipMessage::get_cseq(string header_value)
+string SipMessage::extract_cseq(string header_value)
 {
     if(!SipParser::inst().match(CSEQ_VALUE, header_value))
     {
@@ -189,15 +220,6 @@ string SipMessage::get_cseq(string header_value)
     }
     
     return SipParser::inst().get_sub_match(NUM);
-}
-
-
-//==========================================================================================================
-// Kind is either a method (INVITE, ACK, etc.) or a status-code (200, 183, etc.)
-//==========================================================================================================
-string SipMessage::get_kind()
-{
-    return kind;
 }
 
 
@@ -265,10 +287,16 @@ string SipMessage::get_value(string& var)
 
 //==========================================================================================================
 //==========================================================================================================
-bool SipMessage::match(Direction _dir, string _kind)
+void SipMessage::set_call_number(int call_num)
 {
-    return (_dir == ANY || dir == _dir) && (_kind.empty() || kind == _kind);
+    if(call_number != -1)
+    {
+        throw string("Call number already set!");
+    }
+    
+    call_number = call_num;
 }
+
 
 //==========================================================================================================
 //==========================================================================================================
