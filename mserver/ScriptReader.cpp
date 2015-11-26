@@ -148,7 +148,7 @@ string ScriptReader::get_value(string var, int call_number)
 string ScriptReader::gen_branch()
 {
     string res = "z9hG4bK"; // Must start with this
-    gen_random_string(res);
+    gen_random_string(res, 1, &SipParser::inst().sip_token_chars);
     return res;
 }
 
@@ -163,7 +163,7 @@ string ScriptReader::gen_call_id(CallIDKind kind)
         case RANDOM:
         {
             string res;
-            gen_random_string(res);
+            gen_random_string(res, 1, &SipParser::inst().sip_word_chars);
             return res;
         }
         case MIN:
@@ -306,9 +306,7 @@ string ScriptReader::get_last_value(string& var, int call_number)
     {
         throw string("Can't use last_*, no previous messages");
     }
-    
-    string short_var = var.substr(5); // without the "last_"
-    return last_msg->get_value(short_var);
+    return last_msg->get_value(var);
 }
 
 

@@ -23,7 +23,7 @@ private:
     string ip;
     int port;
     int traffic_socket = -1;
-    queue<SipMessage*> msg_queue;
+    deque<SipMessage*> msg_queue;
     char buf[CONNECTION_BUFFER_SIZE+1]; // Add a place for null terminating
     pollfd pfd;
     

@@ -29,6 +29,7 @@
 #define TAG             "tag"
 #define CSEQ            "cseq"
 #define SIP_IP_TYPE     "sip_ip_type"
+#define CLIENT_IP_TYPE   "client_ip_type"
 #define MEDIA_IP_TYPE   "media_ip_type"
 #define MEDIA_IP        "media_ip"
 #define MEDIA_PORT      "media_port"

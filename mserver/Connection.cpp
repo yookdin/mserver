@@ -38,6 +38,8 @@ SipMessage* Connection::get_message(string kind, int timeout)
 {
     time_t start_time = time(nullptr);
     
+    long old_size = msg_queue.size();
+    
     while(msg_queue.empty() && time(nullptr) <= start_time + timeout)
     {
         try_poll(); // Check that there are no errors on the socket
@@ -60,13 +62,10 @@ SipMessage* Connection::get_message(string kind, int timeout)
             {
                 buf[num_bytes] = '\0'; // Make buf a null-terminated string to enable printing etc.
                 
-                cout << endl << "Incoming message:";
-                cout << endl << "-----------------" << endl << buf;
-            
                 // The buffer might contain more than one sip message, extract all of them into the messages queue
                 for(long offset = 0; num_bytes > 0; num_bytes -= offset)
                 {
-                    msg_queue.push(new SipMessage(buf + offset, offset, num_bytes));
+                    msg_queue.push_back(new SipMessage(buf + offset, offset, num_bytes));
                 }
 
                 break;
@@ -78,10 +77,15 @@ SipMessage* Connection::get_message(string kind, int timeout)
     
     if(!msg_queue.empty())
     {
+        for(long i = old_size; i < msg_queue.size(); ++i)
+        {
+            msg_queue[i]->print();
+        }
+
         SipMessage* front = msg_queue.front();
         if(front->get_kind() == kind)
         {
-            msg_queue.pop();
+            msg_queue.pop_front();
             return front;
         }
     }
@@ -114,8 +118,7 @@ bool Connection::send_message(SipMessage &message)
                 throw string("write() error");
             }
             
-            cout << endl << "Outgoing message:";
-            cout << endl << "-----------------" << endl << buf;
+            message.print();
             
             return true;
         }

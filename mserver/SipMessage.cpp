@@ -319,6 +319,10 @@ void SipMessage::set_call_number(int call_num)
 //==========================================================================================================
 void SipMessage::print()
 {
+    string dir_str = (dir == IN ? "Incoming" : "Outgoing");
+    cout << endl << dir_str << " message";
+    cout << endl << "----------------" << endl;
+
     for(auto s: lines)
     {
         cout << s;

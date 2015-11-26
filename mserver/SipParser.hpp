@@ -68,6 +68,7 @@ P-Preferred-Identity|P-Preferred-Service|P-Private-Network-Indication|P-Profile-
 P-User-Database|P-Visited-Network-ID|X-Connect-Type|X-notify|X-Von-BackgroundReg|X-Carrier-ID|X-vonage-push|X-Social-Network";
     
     const string sip_token_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.!%*_+`'~";    
+    const string sip_word_chars = sip_token_chars + "()<>:\\\"/[]?{}";
     const regex to_tag_regex;
     
     bool match(SipElement elem, string line);
