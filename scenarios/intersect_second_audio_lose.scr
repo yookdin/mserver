@@ -1,0 +1,102 @@
+
+
+<scenario file="register.scr"/>
+
+----------------------------------------------------------------------------------------------------
+Initiate the first call; call_number = 1
+----------------------------------------------------------------------------------------------------
+<send>
+  INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
+  Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
+  From: sipp <sip:12345678900@[client_ip]:[client_port]>;tag=[tag]
+  To: <sip:1800707070@[server_ip]>
+  Call-ID: [max_call_id]  // Generate a call id that will be lexicographically bigger than voxip generated call-id
+  CSeq: 1 INVITE
+  Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
+  Max-Forwards: 70
+  Subject: Incoming Call
+  Content-Type: application/sdp
+  Content-Length: [len]
+
+  v=0
+  o=- 3607660610 3607660611 IN IP[client_ip_type] [client_ip]
+  s=voxip_media
+  c=IN IP[media_ip_type] [media_ip]
+  b=AS:174
+  t=0 0
+  a=X-nat:0
+  m=audio [media_port] RTP/AVP 104 101
+  b=TIAS:150000
+  a=sendrecv
+  a=rtpmap:104 ISAC/16000
+  a=rtpmap:101 telephone-event/8000
+  a=fmtp:101 0-15
+</send>
+
+<recv message=100>          </recv>
+<recv message=180 optional> </recv>
+<recv message=183>          </recv>
+
+
+----------------------------------------------------------------------------------------------------
+Second call is coming in before first call got connected
+----------------------------------------------------------------------------------------------------
+<recv message=INVITE></recv>
+  
+<send>
+  SIP/2.0 100 Trying
+  [last_Via]
+  [last_From]
+  [last_To]
+  [last_Call-ID]
+  [last_CSeq]
+  Content-Length: 0
+</send>
+
+
+----------------------------------------------------------------------------------------------------
+voxip should send an OK for the first invite, because it has a higher call-id.
+call_number = 1 indicates that this is expected to be for the first call
+----------------------------------------------------------------------------------------------------
+<recv message=200 call_number = 1>
+</recv>
+
+<send>
+  ACK sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
+  [last_Via]
+  [last_From]
+  [last_To]
+  [last_Call-ID]
+  CSeq: 1 ACK
+  Content-Length: 0
+</send>
+
+
+----------------------------------------------------------------------------------------------------
+CANCEL of the second call
+----------------------------------------------------------------------------------------------------
+<recv message=CANCEL call_number = 2>
+</recv>
+
+<send>
+  SIP/2.0 200 OK
+  [last_Via]
+  [last_From]
+  [last_To];tag=[tag]
+  [last_Call-ID]
+  [last_CSeq]
+  Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
+  Content-Length: 0
+</send>
+
+<send>
+  SIP/2.0 487 Request Terminated
+  [last_Via]
+  [last_From]
+  [last_To]
+  [last_Call-ID]
+  CSeq: [last_cseq] INVITE
+  Content-Length: 0
+</send>
+
+<recv message=ACK></recv>
