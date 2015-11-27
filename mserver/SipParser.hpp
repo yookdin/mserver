@@ -24,7 +24,7 @@ enum SipElement
     URI,
     HOST,
     IP,
-    DOMAIN,
+    DOMAIN_NAME,
     PORT,
     METHOD,
     REQUEST_LINE,

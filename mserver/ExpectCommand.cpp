@@ -69,15 +69,13 @@ void ExpectCommand::interpret(string &line, ifstream &file)
     
     if(!eval_expression(output))
     {
-        throw string("Expected condition didn't occur");
+        throw string("Expected condition: (" + expression + ") didn't occur");
     }
-//    cout << "expression:" << endl << expression << endl;
-//    cout << "expression_rpn:" << endl << expression_rpn << endl;
 }
 
 
 //==========================================================================================================
-// Convert text to tokens object for the evaluation process
+// Convert text to tokens objects for the evaluation process
 //==========================================================================================================
 void ExpectCommand::convert_to_tokens(string &line, ifstream &file, vector<Token*>& tokens)
 {
@@ -107,7 +105,7 @@ void ExpectCommand::convert_to_tokens(string &line, ifstream &file, vector<Token
     
     for(auto token: tokens)
     {
-        expression += token->to_string() + " ";
+        expression += token->to_string() + " "; // For printing
     }
 }
 
@@ -134,44 +132,23 @@ void ExpectCommand::convert_to_tokens(string &line, vector<Token*>& tokens)
         // Note:
         // o must try num before operator, o/w in "-3" the minus sign will be interpreted as a
         //   subtraction operator
+        // o must try bool before var, o/w true|false will be interpreted as var
         // o must try header-name before var, o/w the header name or part of it may be interpreted as var
-        if((token = try_num(line, pos)) != nullptr ||
-           (token = try_const_token(line, pos)) != nullptr ||
-           (token = try_string(line, pos)) != nullptr ||
-           (token = try_header_name(line, pos)) != nullptr ||
-           (token = try_var(line, pos)) != nullptr)
+        if((token = try_num         (line, pos)) != nullptr ||
+           (token = try_const_token (line, pos)) != nullptr ||
+           (token = try_bool        (line, pos)) != nullptr ||
+           (token = try_string      (line, pos)) != nullptr ||
+           (token = try_header_name (line, pos)) != nullptr ||
+           (token = try_var         (line, pos)) != nullptr)
         {
             tokens.push_back(token);
         }
         else
         {
-            throw string("Unknown element: " + line.substr(pos));
+            throw string("Unknown element at: " + line.substr(pos));
         }
     }
 }
-
-//==========================================================================================================
-// Const tokens are operators (+, -, ==, etc.) of parentheses
-//==========================================================================================================
-Token* ExpectCommand::try_const_token(string &line, int &pos)
-{
-    // Const token (operator or parenthesis) symbol may be one or two characters
-    // Note: must check the two chars option first, because an operator can be a prefix of another operator,
-    // like < and <=
-    for(int i = 2; i > 0; --i)
-    {
-        string s = line.substr(pos, i);
-        
-        if(const_tokens.count(s) > 0)
-        {
-            pos += i;
-            return const_tokens[s];
-        }
-    }
-    
-    return nullptr;
-}
-
 
 //==========================================================================================================
 // Try interpreting the current element as a number
@@ -184,6 +161,44 @@ Token* ExpectCommand::try_num(string &line, int &pos)
     {
         pos += match.length();
         return new Int(stoi(match.str()));
+    }
+    
+    return nullptr;
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+Token* ExpectCommand::try_bool(string& line, int& pos)
+{
+    smatch match;
+    
+    if(regex_search(line.substr(pos), match, bool_regex))
+    {
+        pos += match.length();
+        return new Bool(match.str());
+    }
+    
+    return nullptr;
+}
+
+//==========================================================================================================
+// Const tokens are operators (+, -, ==, etc.) or parentheses
+//==========================================================================================================
+Token* ExpectCommand::try_const_token(string &line, int &pos)
+{
+    // Const token symbol may be one or two characters
+    // Note: must check the two chars option first, because an operator can be a prefix of another operator,
+    // like < and <=
+    for(int i = 2; i > 0; --i)
+    {
+        string s = line.substr(pos, i);
+        
+        if(const_tokens.count(s) > 0)
+        {
+            pos += i;
+            return const_tokens[s];
+        }
     }
     
     return nullptr;

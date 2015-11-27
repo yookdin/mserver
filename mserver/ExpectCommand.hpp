@@ -40,12 +40,13 @@ private:
     void convert_to_rpn(vector<Token*>& tokens, deque<Token*>& output);
     bool eval_expression(deque<Token*>& output);
 
-    Token* try_const_token(string& line, int& pos);
-    Token* try_num(string &line, int &pos);
-    Token* try_string(string &line, int &pos);
-    Token* try_header_name(string &line, int &pos);
-    Token* try_var(string &line, int &pos);
-    Token* interpret_value(string& val);
+    Token* try_const_token  (string& line, int& pos);
+    Token* try_num          (string& line, int& pos);
+    Token* try_bool         (string& line, int& pos);
+    Token* try_string       (string& line, int& pos);
+    Token* try_header_name  (string& line, int& pos);
+    Token* try_var          (string& line, int& pos);
+    Token* interpret_value (string& val);
 };
 
 #endif /* ExpectCommand_hpp */

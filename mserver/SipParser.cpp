@@ -62,8 +62,8 @@ SipParser::SipParser(): to_tag_regex(";tag=[" + sip_token_chars + "]+")
     
     ADD_ELEMENT_MATCHER(PORT,               "_NUM_",                                    false);
     ADD_ELEMENT_MATCHER(USER,               "_USER_NAME_|_PHONE_NUM_",                  false);
-    ADD_ELEMENT_MATCHER(HOST,               "_IP_|_DOMAIN_",                            false);
-    ADD_ELEMENT_MATCHER(DOMAIN,             "_NAME_\\._NAME_",                          false);
+    ADD_ELEMENT_MATCHER(HOST,               "_IP_|_DOMAIN_NAME_",                            false);
+    ADD_ELEMENT_MATCHER(DOMAIN_NAME,        "_NAME_\\._NAME_",                          false);
     ADD_ELEMENT_MATCHER(REQUEST_LINE,       "(_METHOD_) (_URI_) (_SIP_VERSION_)" CRLF,  false);
     
     // Don't care about the reason phrase (everything after the status code)

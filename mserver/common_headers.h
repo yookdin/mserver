@@ -7,6 +7,7 @@
 #include <regex>
 #include <queue>
 #include <poll.h>
+#include <cmath>
 
 #include "bimap.h"
 #include "defines.h"
