@@ -14,6 +14,7 @@
 //==========================================================================================================
 #define SERVER_IP       "server_ip"
 #define SERVER_PORT     "server_port"
+#define CONTROL_PORT    "control_port"
 #define CLIENT_IP       "client_ip"
 #define CLIENT_PORT     "client_port"
 #define BRANCH          "branch"
@@ -35,6 +36,7 @@
 #define MEDIA_PORT      "media_port"
 
 #define CONNECTION_BUFFER_SIZE 5000
+#define CONTROL_BUFFER_SIZE 500
 
 #define CRLF "\r\n"
 

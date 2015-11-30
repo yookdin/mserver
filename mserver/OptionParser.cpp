@@ -119,12 +119,18 @@ const regex OptionParser::naked_eq_pair_regex("(\\w+)=(.*)");
 // This means that options are not supposed to contain the end_char. If this is not the case need to fix
 // this function.
 //==========================================================================================================
-OptionParser::OptionParser(string& line, char end_char, map<string, Option>& _options): options(_options) {
-    long end_pos = line.find_first_of(end_char);
+OptionParser::OptionParser(string& line, map<string, Option>& _options, char end_char): options(_options) {
 
-    if(end_pos == string::npos)
+    long end_pos = line.length();
+    
+    if(end_char != 0) // If end_char == 0, entire line is searched
     {
-        throw string("Expected end char " + string(1, end_char) + " not found");
+        end_pos = line.find_first_of(end_char);
+        
+        if(end_pos == string::npos)
+        {
+            throw string("Expected end char " + string(1, end_char) + " not found");
+        }
     }
     
     sregex_iterator iter(line.begin(), line.begin() + end_pos, eq_pair_regex);
@@ -144,7 +150,15 @@ OptionParser::OptionParser(string& line, char end_char, map<string, Option>& _op
         set_value(opt_name, opt_val, false);
     }
 
-    line = line.substr(end_pos + 1);
+    if(end_char != 0)
+    {
+        line = line.substr(end_pos + 1);
+    }
+    else
+    {
+        line.clear();
+    }
+    
     check_missing_options(options);
 }
     

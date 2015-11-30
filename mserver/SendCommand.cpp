@@ -33,7 +33,7 @@ void SendCommand::interpret(string &line, ifstream &file)
     }
     
     SipMessage* message = new SipMessage(msg_lines);
-    MServer::inst.send_message(*message);
+    MServer::inst.send_sip_message(*message);
     reader.add_message(message);
 }
 
@@ -93,7 +93,7 @@ void SendCommand::process_args(string& line)
     string opt = "call_number";
     map<string, Option> options;
     options.emplace(opt, Option(false, true));
-    OptionParser parser(line, '>', options);
+    OptionParser parser(line, options, '>');
 
     if(options.at(opt).was_found())
     {

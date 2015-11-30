@@ -57,7 +57,7 @@ public:
     };
     
     
-    OptionParser(string& line, char end_char, map<string, Option>& _options);
+    OptionParser(string& line, map<string, Option>& _options, char end_char = 0);
     OptionParser(int argc, char * argv[], map<string, Option>& _options);
     
 private:

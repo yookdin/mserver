@@ -8,6 +8,12 @@
 #include <queue>
 #include <poll.h>
 #include <cmath>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include "bimap.h"
 #include "defines.h"

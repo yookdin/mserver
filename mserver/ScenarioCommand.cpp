@@ -30,7 +30,7 @@ void ScenarioCommand::process_args(string& line)
     options.emplace("file", Option(true, true));
     options.emplace(DEFAULT_PV_NAME, ParamValOption()); // Will match any var=val and put it as a new option in the map
     
-    OptionParser parser(line, '>', options);
+    OptionParser parser(line, options, '>');
     
     for(auto pair: options)
     {
@@ -38,11 +38,7 @@ void ScenarioCommand::process_args(string& line)
         {
             scenario_file = pair.second.get_value();
         }
-        else if(pair.first == DEFAULT_PV_NAME)
-        {
-            continue;
-        }
-        else
+        else if(pair.first != DEFAULT_PV_NAME)
         {
             args[pair.first] = pair.second.get_value();
         }

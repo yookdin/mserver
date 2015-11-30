@@ -17,9 +17,11 @@
 		FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE7D1BDF882B00958E40 /* MServer.cpp */; };
 		FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE961BE0B76400958E40 /* SipParser.cpp */; };
 		FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */; };
-		FE2FFC671BEB79A1004E05A2 /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC651BEB79A1004E05A2 /* Connection.cpp */; };
+		FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC651BEB79A1004E05A2 /* SipConnection.cpp */; };
 		FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */; };
 		FE44FB881BFDCC07009C0C09 /* ExpectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE44FB861BFDCC07009C0C09 /* ExpectCommand.cpp */; };
+		FE88A6BD1C091DCD00AB68A2 /* ControlConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE88A6BB1C091DCD00AB68A2 /* ControlConnection.cpp */; };
+		FE924AA51C0C823D00769C34 /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE924AA31C0C823D00769C34 /* Connection.cpp */; };
 		FED678321BFFD8E300B739BE /* Operator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FED678311BFFD8E300B739BE /* Operator.cpp */; };
 /* End PBXBuildFile section */
 
@@ -61,8 +63,8 @@
 		FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipMessage.cpp; sourceTree = "<group>"; };
 		FE2FFC501BE76B3E004E05A2 /* SipMessage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipMessage.hpp; sourceTree = "<group>"; };
 		FE2FFC641BEB59C9004E05A2 /* defines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = defines.h; sourceTree = "<group>"; };
-		FE2FFC651BEB79A1004E05A2 /* Connection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Connection.cpp; sourceTree = "<group>"; };
-		FE2FFC661BEB79A1004E05A2 /* Connection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Connection.hpp; sourceTree = "<group>"; };
+		FE2FFC651BEB79A1004E05A2 /* SipConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipConnection.cpp; sourceTree = "<group>"; };
+		FE2FFC661BEB79A1004E05A2 /* SipConnection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipConnection.hpp; sourceTree = "<group>"; };
 		FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OptionParser.cpp; sourceTree = "<group>"; };
 		FE2FFC6F1BEF89E5004E05A2 /* OptionParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OptionParser.hpp; sourceTree = "<group>"; };
 		FE44FB861BFDCC07009C0C09 /* ExpectCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpectCommand.cpp; sourceTree = "<group>"; };
@@ -73,6 +75,10 @@
 		FE79118D1BFF143300A5DD60 /* Bool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bool.h; sourceTree = "<group>"; };
 		FE79118F1BFF280000A5DD60 /* Int.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Int.h; sourceTree = "<group>"; };
 		FE7911901BFF2A3B00A5DD60 /* String.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
+		FE88A6BB1C091DCD00AB68A2 /* ControlConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlConnection.cpp; sourceTree = "<group>"; };
+		FE88A6BC1C091DCD00AB68A2 /* ControlConnection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ControlConnection.hpp; sourceTree = "<group>"; };
+		FE924AA31C0C823D00769C34 /* Connection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Connection.cpp; sourceTree = "<group>"; };
+		FE924AA41C0C823D00769C34 /* Connection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Connection.hpp; sourceTree = "<group>"; };
 		FED6782B1BFF7F9A00B739BE /* Token.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		FED6782C1BFF810200B739BE /* Operator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Operator.h; sourceTree = "<group>"; };
 		FED678301BFF8E1900B739BE /* Paren.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paren.h; sourceTree = "<group>"; };
@@ -114,12 +120,9 @@
 				FE0ECE611BDF832E00958E40 /* main.cpp */,
 				FE0ECE7E1BDF882B00958E40 /* MServer.hpp */,
 				FE0ECE7D1BDF882B00958E40 /* MServer.cpp */,
-				FE2FFC661BEB79A1004E05A2 /* Connection.hpp */,
-				FE2FFC651BEB79A1004E05A2 /* Connection.cpp */,
 				FE0ECE691BDF832E00958E40 /* ScriptReader.h */,
 				FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */,
-				FE2FFC6F1BEF89E5004E05A2 /* OptionParser.hpp */,
-				FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */,
+				FE88A6BE1C0C65DC00AB68A2 /* connections */,
 				FE0ECE7A1BDF854600958E40 /* sip */,
 				FE0ECE741BDF848600958E40 /* commands */,
 				FE7911881BFF116B00A5DD60 /* Expression Evaluation */,
@@ -173,6 +176,8 @@
 		FE610F101BE0D0F6002834FC /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				FE2FFC6F1BEF89E5004E05A2 /* OptionParser.hpp */,
+				FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */,
 				FE610F111BE0D126002834FC /* bimap.h */,
 			);
 			name = utils;
@@ -191,6 +196,19 @@
 				FED678301BFF8E1900B739BE /* Paren.h */,
 			);
 			name = "Expression Evaluation";
+			sourceTree = "<group>";
+		};
+		FE88A6BE1C0C65DC00AB68A2 /* connections */ = {
+			isa = PBXGroup;
+			children = (
+				FE924AA41C0C823D00769C34 /* Connection.hpp */,
+				FE924AA31C0C823D00769C34 /* Connection.cpp */,
+				FE2FFC661BEB79A1004E05A2 /* SipConnection.hpp */,
+				FE2FFC651BEB79A1004E05A2 /* SipConnection.cpp */,
+				FE88A6BC1C091DCD00AB68A2 /* ControlConnection.hpp */,
+				FE88A6BB1C091DCD00AB68A2 /* ControlConnection.cpp */,
+			);
+			name = connections;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -253,7 +271,7 @@
 				FE0ECE731BDF832E00958E40 /* SendCommand.cpp in Sources */,
 				FED678321BFFD8E300B739BE /* Operator.cpp in Sources */,
 				FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */,
-				FE2FFC671BEB79A1004E05A2 /* Connection.cpp in Sources */,
+				FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */,
 				FE0ECE701BDF832E00958E40 /* RecvCommand.cpp in Sources */,
 				FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */,
 				FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */,
@@ -262,7 +280,9 @@
 				FE44FB881BFDCC07009C0C09 /* ExpectCommand.cpp in Sources */,
 				FE0ECE6F1BDF832E00958E40 /* PauseCommand.cpp in Sources */,
 				FE0ECE6D1BDF832E00958E40 /* Command.cpp in Sources */,
+				FE88A6BD1C091DCD00AB68A2 /* ControlConnection.cpp in Sources */,
 				FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */,
+				FE924AA51C0C823D00769C34 /* Connection.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

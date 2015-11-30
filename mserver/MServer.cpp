@@ -34,21 +34,73 @@ MServer::MServer()
 }
 
 //==========================================================================================================
+// Run multiple tests. Control messagaes are sent to tell mserver which scenario to run. After the run a
+// message is sent back to indicate success or failure.
+// Special message "bye" tells mserver to quit.
 //==========================================================================================================
 void MServer::run(int argc, char * argv[])
 {
     try
     {
         process_args(argc, argv);
-        connection.setup(vars[SERVER_IP], stoi(vars[SERVER_PORT]));
-        map<string, string> dummy; // TODO: remove this when test runs will not be done from here
-        ScriptReader reader(get_value("scenario"), dummy);
+        sip_connection = new SipConnection(vars[SERVER_IP], stoi(vars[SERVER_PORT]));
+        
+        if(! get_value(SCENARIO).empty())
+        {
+            single_run();
+            return;
+        }
+        
+        ctrl_connection = new ControlConnection(vars[SERVER_IP], stoi(vars[CONTROL_PORT]));
+        
+        while(true)
+        {
+            string ctrl_msg = ctrl_connection->get_message();
+            
+            if(ctrl_msg == "bye")
+            {
+                break;
+            }
+            
+        	map<string, string> script_vars;
+            process_control_message(ctrl_msg, script_vars);
+            
+            try
+            {
+                ScriptReader reader(get_value(SCENARIO), script_vars);
+            }
+            catch(string err) // Error caught here is a test error: report it and continue
+            {
+                cout << endl << err << endl;
+                ctrl_connection->send_message(err);
+                continue;
+            }
+            
+            ctrl_connection->send_message("success"); // Test succeeded as far as mserver is concerned
+        }
     }
-    catch (string err)
+    catch (string err) // Error caught here is fatal, and mserver can't run anymore
     {
         error(err);
     }
 }
+
+
+//==========================================================================================================
+// TMP. remove this later
+//==========================================================================================================
+void MServer::single_run()
+{
+    try
+    {
+        ScriptReader reader(get_value(SCENARIO), {});
+    }
+    catch(string err)
+    {
+        error(err);
+    }
+}
+
 
 //==========================================================================================================
 //==========================================================================================================
@@ -134,17 +186,17 @@ string& MServer::get_value(string var)
 
 //==========================================================================================================
 //==========================================================================================================
-SipMessage* MServer::get_message(string kind, int timeout)
+SipMessage* MServer::get_sip_message(string kind, int timeout)
 {
-    return connection.get_message(kind, timeout);
+    return sip_connection->get_message(kind, timeout);
 }
 
 
 //==========================================================================================================
 //==========================================================================================================
-bool MServer::send_message(SipMessage &message)
+bool MServer::send_sip_message(SipMessage &message)
 {
-    return connection.send_message(message);
+    return sip_connection->send_message(message);
 }
 
 
@@ -155,6 +207,34 @@ void MServer::print_vars()
     for(auto& pair: vars)
     {
         cout << pair.first << " = " << pair.second << endl;
+    }
+}
+
+
+//==========================================================================================================
+// Process a control message, that is sent for specifying what and how to run a scenario for a single test.
+// TODO: should enable overriding global vars here?
+//==========================================================================================================
+void MServer::process_control_message(string& ctrl_msg, map<string, string>& script_vars)
+{
+    map<string, Option> options;
+    
+    options.emplace(SCENARIO, Option(true, true));
+    options.emplace(DEFAULT_PV_NAME, ParamValOption()); // Will match any var=val and put it as a new option in the map
+    
+    OptionParser parser(ctrl_msg, options);
+    
+    // Scenario option is the name of scenario file to run. All other options are passed to the scenario.
+    for(auto pair: options)
+    {
+        if(pair.first ==  SCENARIO)
+        {
+            vars[SCENARIO] = pair.second.get_value();
+        }
+        else if(pair.first != DEFAULT_PV_NAME)
+        {
+            script_vars[pair.first] = pair.second.get_value();
+        }
     }
 }
 
