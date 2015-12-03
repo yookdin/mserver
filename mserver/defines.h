@@ -12,9 +12,15 @@
 //==========================================================================================================
 // Keywords/vars names
 //==========================================================================================================
+#define RUN_DIR         "run_dir"
+#define SCENARIO_DIR    "scenarios_dir"
 #define SERVER_IP       "server_ip"
 #define SERVER_PORT     "server_port"
 #define CONTROL_PORT    "control_port"
+
+#define TEST_DIR        "test_dir"
+#define SCENARIO        "scenario"
+
 #define CLIENT_IP       "client_ip"
 #define CLIENT_PORT     "client_port"
 #define BRANCH          "branch"
@@ -24,9 +30,6 @@
 #define MAX_CALL_ID     "max_call_id"
 #define PID             "pid"
 #define LEN             "len"
-#define TEST_DIR        "test_dir"
-#define SCENARIO        "scenario"
-#define SCENARIO_DIR    "scenarios_dir"
 #define TAG             "tag"
 #define CSEQ            "cseq"
 #define SIP_IP_TYPE     "sip_ip_type"

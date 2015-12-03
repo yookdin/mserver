@@ -160,6 +160,7 @@ OptionParser::OptionParser(string& line, map<string, Option>& _options, char end
     }
     
     check_missing_options(options);
+    remove_param_val_opts();
 }
     
 //==========================================================================================================
@@ -187,6 +188,7 @@ OptionParser::OptionParser(int argc, char * argv[], map<string, Option>& _option
     }
     
     check_missing_options(options);
+    remove_param_val_opts();
 }
 
 
@@ -199,7 +201,7 @@ bool OptionParser::set_value(string& opt_name, string& val, bool from_cmd_line)
 
     if(opt == nullptr)
     {
-        throw string("Option " + opt_name + " doesn't exist");
+        throw string("Option \"" + opt_name + "\" doesn't exist");
     }
     
     if(!opt->is_param_val_opt()) // Normal option
@@ -271,6 +273,26 @@ void OptionParser::check_missing_options(map<string, Option>& options)
     if(!missing_opts.empty())
     {
         throw string("Missing options: " + missing_opts);
+    }
+}
+
+
+//==========================================================================================================
+// Remove the param-val "meta" options - they are not real options and have finished their job after parsing
+// is done.
+//==========================================================================================================
+void OptionParser::remove_param_val_opts()
+{
+    for(auto iter = options.begin(); iter != options.end();)
+    {
+        if(iter->second.is_param_val_opt())
+        {
+            iter = options.erase(iter);
+        }
+        else
+        {
+            iter++;
+        }
     }
 }
 

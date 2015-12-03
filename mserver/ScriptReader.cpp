@@ -79,6 +79,8 @@ void ScriptReader::read_file(string filename)
         throw string("File " + filepath + " not found");
 	}
 
+    cout << "Running scenario " << filepath << endl;
+    
 	for(string line; getline(file, line);)
 	{
 		smatch res;

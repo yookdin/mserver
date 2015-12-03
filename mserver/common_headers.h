@@ -14,6 +14,7 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <signal.h>
 
 #include "bimap.h"
 #include "defines.h"

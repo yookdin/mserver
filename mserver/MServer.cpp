@@ -44,13 +44,6 @@ void MServer::run(int argc, char * argv[])
     {
         process_args(argc, argv);
         sip_connection = new SipConnection(vars[SERVER_IP], stoi(vars[SERVER_PORT]));
-        
-        if(! get_value(SCENARIO).empty())
-        {
-            single_run();
-            return;
-        }
-        
         ctrl_connection = new ControlConnection(vars[SERVER_IP], stoi(vars[CONTROL_PORT]));
         
         while(true)
@@ -77,38 +70,23 @@ void MServer::run(int argc, char * argv[])
             }
             
             ctrl_connection->send_message("success"); // Test succeeded as far as mserver is concerned
+            set_log_file(get_value(RUN_DIR) + "/mserver.log"); // Set the log file back to the global log file between tests
         }
     }
     catch (string err) // Error caught here is fatal, and mserver can't run anymore
     {
-        error(err);
+        if(!log_file_set)
+        {
+            // This will be in the directory from which the executable was run. This is to catch any messages that
+            // occur before the run dir is known
+            set_log_file("mserver.log");
+        }
+        
+        cout << endl << err << endl;
+        exit(-1);
     }
 }
 
-
-//==========================================================================================================
-// TMP. remove this later
-//==========================================================================================================
-void MServer::single_run()
-{
-    try
-    {
-        ScriptReader reader(get_value(SCENARIO), {});
-    }
-    catch(string err)
-    {
-        error(err);
-    }
-}
-
-
-//==========================================================================================================
-//==========================================================================================================
-void MServer::error(string msg)
-{
-    cout << endl << msg << endl;
-    exit(-1);
-}
 
 //==========================================================================================================
 // Mandatory options:
@@ -129,9 +107,9 @@ void MServer::process_args(int argc, char * argv[])
 
     options.emplace(SERVER_IP, Option(true, true));
     options.emplace(SERVER_PORT, Option(true, true));
-    options.emplace(TEST_DIR, Option(true, true));
-    options.emplace(SCENARIO, Option(true, true));
+    options.emplace(CONTROL_PORT, Option(true, true));
     options.emplace(SCENARIO_DIR, Option(false, true));
+    options.emplace(RUN_DIR, Option(true, true));
     options.emplace("var", ParamValOption()); // -var name=value
 
     OptionParser parser(argc, argv, options); // Parse command line option and put values in the map
@@ -142,14 +120,11 @@ void MServer::process_args(int argc, char * argv[])
     //------------------------------------------------------------------------------------------------------
     for(auto pair: options)
     {
-        if(pair.first != "var")
-        {
-            vars[pair.first] = pair.second.get_value();
-        }
+        vars[pair.first] = pair.second.get_value();
     }
     
     // -scenario_dir option should be given only in developing phase because xcode puts exe in weird places.
-    // in "production", the exe will be in a default location relative to voxip root, and will resolve the
+    // in "production", the exe will be in a default location relative to voxip root, and we'll resolve the
     // scenario dir location automatically.
     if(vars[SCENARIO_DIR].empty())
     {
@@ -159,15 +134,57 @@ void MServer::process_args(int argc, char * argv[])
     //------------------------------------------------------------------------------------------------------
     // Check validity of given parameters
     //------------------------------------------------------------------------------------------------------
-    if(!ifstream(get_value(TEST_DIR)))
+    if(!ifstream(get_value(RUN_DIR)))
     {
-        error("Dir " + get_value(TEST_DIR) + " doesn't exist");
+        throw string("Dir " + get_value(RUN_DIR) + " doesn't exist");
     }
+
+    // Once the run dir is known, direct messages there
+    set_log_file(get_value(RUN_DIR) + "/mserver.log");
+    log_file_set = true;
 
     if(!ifstream(get_value(SCENARIO_DIR)))
     {
-        error("Dir " + get_value(SCENARIO_DIR) + " doesn't exist");
+        throw string("Dir " + get_value(SCENARIO_DIR) + " doesn't exist");
     }
+}
+
+
+//==========================================================================================================
+// Process a control message, that is sent for specifying what and how to run a scenario for a single test.
+// TODO: should enable overriding global vars here?
+//==========================================================================================================
+void MServer::process_control_message(string& ctrl_msg, map<string, string>& script_vars)
+{
+    cout << "Got control message: " << ctrl_msg << endl;
+    map<string, Option> options;
+    
+    options.emplace(SCENARIO, Option(true, true));
+    options.emplace(TEST_DIR, Option(true, true));
+    options.emplace(DEFAULT_PV_NAME, ParamValOption()); // Will match any var=val and put it as a new option in the map
+    
+    OptionParser parser(ctrl_msg, options);
+    
+    // Mandatory options are scenario to run and test dir. All others are parameters to the scenario.
+    for(auto pair: options)
+    {
+        if(pair.first == SCENARIO || pair.first == TEST_DIR)
+        {
+            vars[pair.first] = pair.second.get_value();
+        }
+        else
+        {
+            script_vars[pair.first] = pair.second.get_value();
+        }
+    }
+    
+    if(!ifstream(get_value(TEST_DIR)))
+    {
+        throw string("Dir " + get_value(TEST_DIR) + " doesn't exist");
+    }
+    
+    ctrl_connection->send_message("ok"); // Notify sender that the message was received
+    set_log_file(get_value(TEST_DIR) + "/mserver.log");
 }
 
 
@@ -211,30 +228,15 @@ void MServer::print_vars()
 }
 
 
-//==========================================================================================================
-// Process a control message, that is sent for specifying what and how to run a scenario for a single test.
-// TODO: should enable overriding global vars here?
-//==========================================================================================================
-void MServer::process_control_message(string& ctrl_msg, map<string, string>& script_vars)
+//======================================================================================================================
+// Redirect stdout and stderr to a log file
+//======================================================================================================================
+void MServer::set_log_file(string filepath)
 {
-    map<string, Option> options;
-    
-    options.emplace(SCENARIO, Option(true, true));
-    options.emplace(DEFAULT_PV_NAME, ParamValOption()); // Will match any var=val and put it as a new option in the map
-    
-    OptionParser parser(ctrl_msg, options);
-    
-    // Scenario option is the name of scenario file to run. All other options are passed to the scenario.
-    for(auto pair: options)
+    // Redirect both stdout and stderr to file
+    if(freopen(filepath.c_str(), "a", stdout) == nullptr || freopen(filepath.c_str(), "a", stderr) == nullptr)
     {
-        if(pair.first ==  SCENARIO)
-        {
-            vars[SCENARIO] = pair.second.get_value();
-        }
-        else if(pair.first != DEFAULT_PV_NAME)
-        {
-            script_vars[pair.first] = pair.second.get_value();
-        }
+        throw string("freopen Failed [" + to_string(errno) + ":" + strerror(errno) + "]");
     }
 }
 

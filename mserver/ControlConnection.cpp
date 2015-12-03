@@ -14,6 +14,12 @@
 string ControlConnection::get_message()
 {
     long num_bytes = recvfrom(bounded_socket, buf, CONTROL_BUFFER_SIZE, 0, (sockaddr *)&client_addr, &addr_len); // This is blocking
+    
+    if(num_bytes < 0)
+    {
+        throw string("recvfrom() failed");
+    }
+
     return string(buf, num_bytes);
 }
 

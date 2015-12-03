@@ -38,7 +38,7 @@ void ScenarioCommand::process_args(string& line)
         {
             scenario_file = pair.second.get_value();
         }
-        else if(pair.first != DEFAULT_PV_NAME)
+        else
         {
             args[pair.first] = pair.second.get_value();
         }

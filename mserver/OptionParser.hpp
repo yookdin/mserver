@@ -71,6 +71,7 @@ private:
     void set_option_names(map<string, Option>&);
     Option* get_opt(string& opt_name);
     void parse_eq_pair(string& pair, string& name, string& val, bool from_cmd_line);
+    void remove_param_val_opts();
 
 };
 
