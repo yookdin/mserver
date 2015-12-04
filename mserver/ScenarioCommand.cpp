@@ -6,7 +6,7 @@
 
 //==========================================================================================================
 //==========================================================================================================
-void ScenarioCommand::interpret(string &line, ifstream &file)
+void ScenarioCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
     process_args(line);
     
@@ -25,6 +25,7 @@ void ScenarioCommand::interpret(string &line, ifstream &file)
 //==========================================================================================================
 void ScenarioCommand::process_args(string& line)
 {
+    scenario_file.clear();
     args.clear();
     map<string, Option> options;
     options.emplace("file", Option(true, true));
@@ -43,4 +44,12 @@ void ScenarioCommand::process_args(string& line)
             args[pair.first] = pair.second.get_value();
         }
     }
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+string ScenarioCommand::get_start_regex_str()
+{
+    return "<(scenario)";
 }

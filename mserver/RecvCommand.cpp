@@ -32,14 +32,9 @@ TODO:
 // There is no difference between nesting the expects and writing them after the recv command, it just seems
 // more clear in the nested syntax.
 //==========================================================================================================
-void RecvCommand::interpret(string &line, ifstream &file)
+void RecvCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
-    string message_kind; // Either a METHOD name of status code
-    bool optional = false;
-    int timeout = 2; // In seconds
-    int call_number =  -1;
-    process_args(line, message_kind, optional, timeout, call_number);
-    
+    process_args(line);
     SipMessage* msg = MServer::inst.get_sip_message(message_kind, timeout);
     
     if(msg == nullptr && !optional)
@@ -64,8 +59,13 @@ void RecvCommand::interpret(string &line, ifstream &file)
 
 //==========================================================================================================
 //==========================================================================================================
-void RecvCommand::process_args(string& line, string& message_kind, bool& optional, int& timeout, int& call_number)
+void RecvCommand::process_args(string& line)
 {
+    message_kind.clear();
+    optional = false;
+    timeout = 2;
+    call_number =  -1;
+
     string msg_opt = "message", optional_opt = "optional", timeout_opt = "timeout", call_number_opt = "call_number";
     
     map<string, Option> options;
@@ -90,7 +90,12 @@ void RecvCommand::process_args(string& line, string& message_kind, bool& optiona
 }
 
 
-
+//==========================================================================================================
+//==========================================================================================================
+string RecvCommand::get_start_regex_str()
+{
+    return "<(recv)";
+}
 
 
 

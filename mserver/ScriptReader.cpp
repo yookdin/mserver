@@ -8,10 +8,49 @@
 #include "ExpectCommand.hpp"
 #include "MServer.hpp"
 
+
 //==========================================================================================================
-// Static regular expression describing commands start
+// Static commands, shared by all script readers
 //==========================================================================================================
-const regex ScriptReader::command_start_regex("^ *<(expect)>|^ *<(pause)|^ *<(recv)|^ *<(scenario)|^ *<(send)");
+map<string, Command*> ScriptReader::commands = init_commands();
+
+
+//==========================================================================================================
+// Static regular expression describing commands start. Must initialize it after commands initialization
+//==========================================================================================================
+const regex ScriptReader::command_start_regex = ScriptReader::init_command_start_regex();
+
+
+//==========================================================================================================
+// Initialize the commands map and calculate the commands start regex
+//==========================================================================================================
+map<string, Command*> ScriptReader::init_commands()
+{
+    map<string, Command*> local_commands;
+    local_commands["scenario"] = new ScenarioCommand();
+    local_commands["send"] = new SendCommand();
+    local_commands["recv"] = new RecvCommand();
+    local_commands["pause"] = new PauseCommand();
+    local_commands["expect"] = new ExpectCommand();
+
+    return local_commands;
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+regex ScriptReader::init_command_start_regex()
+{
+    string command_start_str;
+    
+    for(auto com: commands)
+    {
+        command_start_str += "^ *" + com.second->get_start_regex_str() + "|";
+    }
+    
+    command_start_str.erase(command_start_str.length() - 1); // Remove the last '|'
+    return regex(command_start_str);
+}
 
 
 //==========================================================================================================
@@ -37,12 +76,6 @@ ScriptReader::ScriptReader(string filepath, map<string, string> _vars, ScriptRea
         calls_num_map = parent->calls_num_map;
     }
     
-    commands["scenario"] = new ScenarioCommand(*this);
-    commands["send"] = new SendCommand(*this);
-    commands["recv"] = new RecvCommand(*this);
-    commands["pause"] = new PauseCommand(*this);
-    commands["expect"] = new ExpectCommand(*this);
-    
     read_file(filepath);
 }
 
@@ -51,11 +84,6 @@ ScriptReader::ScriptReader(string filepath, map<string, string> _vars, ScriptRea
 //==========================================================================================================
 ScriptReader::~ScriptReader()
 {
-    for(auto pair: commands)
-    {
-        delete pair.second;
-    }
-    
     if(root)
     {
         for(auto msg: messages)
@@ -101,7 +129,7 @@ void ScriptReader::read_file(string filename)
 			}
 
 			line = res.suffix(); // Skip the matched part, so the command won't need to deal with it
-            commands[command_name]->interpret(line, file);
+            commands[command_name]->interpret(line, file, *this);
 		}
 	}
 }

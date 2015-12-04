@@ -4,11 +4,12 @@
 class PauseCommand : public Command
 {
 public:
-    PauseCommand(ScriptReader &_reader): Command(_reader) {}
-	virtual void interpret(string &line, ifstream &file);
+    PauseCommand();
+	virtual void interpret(string &line, ifstream &file, ScriptReader &reader);
+    virtual string get_start_regex_str();
     
 private:
-    static const regex params_regex;
+    const regex params_regex;
     
     int get_factor_for_units(string untis);
 };

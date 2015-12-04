@@ -60,8 +60,9 @@ map<string, Token*> ExpectCommand::init_const_tokens()
 //==========================================================================================================
 // Parse and evaluate the given expression. If it evaluates to false throw an error
 //==========================================================================================================
-void ExpectCommand::interpret(string &line, ifstream &file)
+void ExpectCommand::interpret(string &line, ifstream &file, ScriptReader &_reader)
 {
+    reader = &_reader;
     vector<Token*> tokens;
     deque<Token*> output;
     convert_to_tokens(line, file, tokens);
@@ -241,7 +242,7 @@ Token* ExpectCommand::try_header_name(string &line, int &pos)
         pos += match.length();
         
         // Format for query is last_<header-name>:value
-        string val = reader.get_value("last_" + match.str() + ":value");
+        string val = reader->get_value("last_" + match.str() + ":value");
         return interpret_value(val);
     }
 
@@ -259,7 +260,7 @@ Token* ExpectCommand::try_var(string &line, int &pos)
     if(regex_search(line.substr(pos), match, var_regex))
     {
         pos += match.length();
-        string val = reader.get_value(match.str());
+        string val = reader->get_value(match.str());
         return interpret_value(val);
     }
 
@@ -445,6 +446,12 @@ bool ExpectCommand::eval_expression(deque<Token*>& output)
 }
 
 
+//==========================================================================================================
+//==========================================================================================================
+string ExpectCommand::get_start_regex_str()
+{
+    return "<(expect)>";
+}
 
 
 

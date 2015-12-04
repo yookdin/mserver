@@ -9,19 +9,19 @@
 /* Begin PBXBuildFile section */
 		FE0ECE6D1BDF832E00958E40 /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE5E1BDF832E00958E40 /* Command.cpp */; };
 		FE0ECE6E1BDF832E00958E40 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE611BDF832E00958E40 /* main.cpp */; };
-		FE0ECE6F1BDF832E00958E40 /* PauseCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE621BDF832E00958E40 /* PauseCommand.cpp */; };
-		FE0ECE701BDF832E00958E40 /* RecvCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE641BDF832E00958E40 /* RecvCommand.cpp */; };
-		FE0ECE711BDF832E00958E40 /* ScenarioCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE661BDF832E00958E40 /* ScenarioCommand.cpp */; };
 		FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */; };
-		FE0ECE731BDF832E00958E40 /* SendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE6A1BDF832E00958E40 /* SendCommand.cpp */; };
 		FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE7D1BDF882B00958E40 /* MServer.cpp */; };
 		FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE961BE0B76400958E40 /* SipParser.cpp */; };
 		FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */; };
 		FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC651BEB79A1004E05A2 /* SipConnection.cpp */; };
 		FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */; };
-		FE44FB881BFDCC07009C0C09 /* ExpectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE44FB861BFDCC07009C0C09 /* ExpectCommand.cpp */; };
 		FE88A6BD1C091DCD00AB68A2 /* ControlConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE88A6BB1C091DCD00AB68A2 /* ControlConnection.cpp */; };
 		FE924AA51C0C823D00769C34 /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE924AA31C0C823D00769C34 /* Connection.cpp */; };
+		FE9B0B981C11FBB0005FCE06 /* PauseCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B961C11FBB0005FCE06 /* PauseCommand.cpp */; };
+		FE9B0BA11C11FCE0005FCE06 /* ExpectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B991C11FCE0005FCE06 /* ExpectCommand.cpp */; };
+		FE9B0BA21C11FCE0005FCE06 /* RecvCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B9B1C11FCE0005FCE06 /* RecvCommand.cpp */; };
+		FE9B0BA31C11FCE0005FCE06 /* ScenarioCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B9D1C11FCE0005FCE06 /* ScenarioCommand.cpp */; };
+		FE9B0BA41C11FCE0005FCE06 /* SendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B9F1C11FCE0005FCE06 /* SendCommand.cpp */; };
 		FED678321BFFD8E300B739BE /* Operator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FED678311BFFD8E300B739BE /* Operator.cpp */; };
 /* End PBXBuildFile section */
 
@@ -43,16 +43,8 @@
 		FE0ECE5F1BDF832E00958E40 /* Command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Command.h; sourceTree = "<group>"; };
 		FE0ECE601BDF832E00958E40 /* common_headers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common_headers.h; sourceTree = "<group>"; };
 		FE0ECE611BDF832E00958E40 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		FE0ECE621BDF832E00958E40 /* PauseCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PauseCommand.cpp; sourceTree = "<group>"; };
-		FE0ECE631BDF832E00958E40 /* PauseCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseCommand.h; sourceTree = "<group>"; };
-		FE0ECE641BDF832E00958E40 /* RecvCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvCommand.cpp; sourceTree = "<group>"; };
-		FE0ECE651BDF832E00958E40 /* RecvCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvCommand.h; sourceTree = "<group>"; };
-		FE0ECE661BDF832E00958E40 /* ScenarioCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScenarioCommand.cpp; sourceTree = "<group>"; };
-		FE0ECE671BDF832E00958E40 /* ScenarioCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScenarioCommand.h; sourceTree = "<group>"; };
 		FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptReader.cpp; sourceTree = "<group>"; };
 		FE0ECE691BDF832E00958E40 /* ScriptReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptReader.h; sourceTree = "<group>"; };
-		FE0ECE6A1BDF832E00958E40 /* SendCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendCommand.cpp; sourceTree = "<group>"; };
-		FE0ECE6B1BDF832E00958E40 /* SendCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendCommand.h; sourceTree = "<group>"; };
 		FE0ECE751BDF850100958E40 /* mserver.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mserver.txt; sourceTree = "<group>"; };
 		FE0ECE7B1BDF863300958E40 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		FE0ECE7C1BDF875000958E40 /* script.scr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = script.scr; sourceTree = "<group>"; };
@@ -67,8 +59,6 @@
 		FE2FFC661BEB79A1004E05A2 /* SipConnection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipConnection.hpp; sourceTree = "<group>"; };
 		FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OptionParser.cpp; sourceTree = "<group>"; };
 		FE2FFC6F1BEF89E5004E05A2 /* OptionParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OptionParser.hpp; sourceTree = "<group>"; };
-		FE44FB861BFDCC07009C0C09 /* ExpectCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpectCommand.cpp; sourceTree = "<group>"; };
-		FE44FB871BFDCC07009C0C09 /* ExpectCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ExpectCommand.hpp; sourceTree = "<group>"; };
 		FE5C5F4E1C01D4E200A773C0 /* scenario.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scenario.txt; sourceTree = "<group>"; };
 		FE610F111BE0D126002834FC /* bimap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bimap.h; sourceTree = "<group>"; };
 		FE79118A1BFF119700A5DD60 /* Value.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Value.h; sourceTree = "<group>"; };
@@ -79,6 +69,16 @@
 		FE88A6BC1C091DCD00AB68A2 /* ControlConnection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ControlConnection.hpp; sourceTree = "<group>"; };
 		FE924AA31C0C823D00769C34 /* Connection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Connection.cpp; sourceTree = "<group>"; };
 		FE924AA41C0C823D00769C34 /* Connection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Connection.hpp; sourceTree = "<group>"; };
+		FE9B0B961C11FBB0005FCE06 /* PauseCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PauseCommand.cpp; sourceTree = "<group>"; };
+		FE9B0B971C11FBB0005FCE06 /* PauseCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseCommand.h; sourceTree = "<group>"; };
+		FE9B0B991C11FCE0005FCE06 /* ExpectCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpectCommand.cpp; sourceTree = "<group>"; };
+		FE9B0B9A1C11FCE0005FCE06 /* ExpectCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ExpectCommand.hpp; sourceTree = "<group>"; };
+		FE9B0B9B1C11FCE0005FCE06 /* RecvCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvCommand.cpp; sourceTree = "<group>"; };
+		FE9B0B9C1C11FCE0005FCE06 /* RecvCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvCommand.h; sourceTree = "<group>"; };
+		FE9B0B9D1C11FCE0005FCE06 /* ScenarioCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScenarioCommand.cpp; sourceTree = "<group>"; };
+		FE9B0B9E1C11FCE0005FCE06 /* ScenarioCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScenarioCommand.h; sourceTree = "<group>"; };
+		FE9B0B9F1C11FCE0005FCE06 /* SendCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendCommand.cpp; sourceTree = "<group>"; };
+		FE9B0BA01C11FCE0005FCE06 /* SendCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendCommand.h; sourceTree = "<group>"; };
 		FED6782B1BFF7F9A00B739BE /* Token.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		FED6782C1BFF810200B739BE /* Operator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Operator.h; sourceTree = "<group>"; };
 		FED678301BFF8E1900B739BE /* Paren.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paren.h; sourceTree = "<group>"; };
@@ -137,16 +137,16 @@
 			children = (
 				FE0ECE5F1BDF832E00958E40 /* Command.h */,
 				FE0ECE5E1BDF832E00958E40 /* Command.cpp */,
-				FE0ECE631BDF832E00958E40 /* PauseCommand.h */,
-				FE0ECE621BDF832E00958E40 /* PauseCommand.cpp */,
-				FE0ECE651BDF832E00958E40 /* RecvCommand.h */,
-				FE0ECE641BDF832E00958E40 /* RecvCommand.cpp */,
-				FE0ECE671BDF832E00958E40 /* ScenarioCommand.h */,
-				FE0ECE661BDF832E00958E40 /* ScenarioCommand.cpp */,
-				FE0ECE6B1BDF832E00958E40 /* SendCommand.h */,
-				FE0ECE6A1BDF832E00958E40 /* SendCommand.cpp */,
-				FE44FB871BFDCC07009C0C09 /* ExpectCommand.hpp */,
-				FE44FB861BFDCC07009C0C09 /* ExpectCommand.cpp */,
+				FE9B0B9C1C11FCE0005FCE06 /* RecvCommand.h */,
+				FE9B0B9B1C11FCE0005FCE06 /* RecvCommand.cpp */,
+				FE9B0BA01C11FCE0005FCE06 /* SendCommand.h */,
+				FE9B0B9F1C11FCE0005FCE06 /* SendCommand.cpp */,
+				FE9B0B9E1C11FCE0005FCE06 /* ScenarioCommand.h */,
+				FE9B0B9D1C11FCE0005FCE06 /* ScenarioCommand.cpp */,
+				FE9B0B9A1C11FCE0005FCE06 /* ExpectCommand.hpp */,
+				FE9B0B991C11FCE0005FCE06 /* ExpectCommand.cpp */,
+				FE9B0B971C11FBB0005FCE06 /* PauseCommand.h */,
+				FE9B0B961C11FBB0005FCE06 /* PauseCommand.cpp */,
 			);
 			name = commands;
 			sourceTree = "<group>";
@@ -267,20 +267,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE9B0BA11C11FCE0005FCE06 /* ExpectCommand.cpp in Sources */,
 				FE0ECE6E1BDF832E00958E40 /* main.cpp in Sources */,
-				FE0ECE731BDF832E00958E40 /* SendCommand.cpp in Sources */,
 				FED678321BFFD8E300B739BE /* Operator.cpp in Sources */,
+				FE9B0BA31C11FCE0005FCE06 /* ScenarioCommand.cpp in Sources */,
 				FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */,
 				FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */,
-				FE0ECE701BDF832E00958E40 /* RecvCommand.cpp in Sources */,
 				FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */,
 				FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */,
+				FE9B0B981C11FBB0005FCE06 /* PauseCommand.cpp in Sources */,
+				FE9B0BA41C11FCE0005FCE06 /* SendCommand.cpp in Sources */,
 				FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */,
-				FE0ECE711BDF832E00958E40 /* ScenarioCommand.cpp in Sources */,
-				FE44FB881BFDCC07009C0C09 /* ExpectCommand.cpp in Sources */,
-				FE0ECE6F1BDF832E00958E40 /* PauseCommand.cpp in Sources */,
 				FE0ECE6D1BDF832E00958E40 /* Command.cpp in Sources */,
 				FE88A6BD1C091DCD00AB68A2 /* ControlConnection.cpp in Sources */,
+				FE9B0BA21C11FCE0005FCE06 /* RecvCommand.cpp in Sources */,
 				FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */,
 				FE924AA51C0C823D00769C34 /* Connection.cpp in Sources */,
 			);

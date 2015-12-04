@@ -16,16 +16,16 @@
 
 //==========================================================================================================
 //==========================================================================================================
-const regex SendCommand::end_regex("</send>");
+SendCommand::SendCommand(): end_regex("</send>") {}
 
 
 //==========================================================================================================
 //==========================================================================================================
-void SendCommand::interpret(string &line, ifstream &file)
+void SendCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
     process_args(line);
     vector<string> msg_lines;
-    replcae_vars(file, msg_lines);
+    replcae_vars(file, msg_lines, reader);
     
     if(msg_lines.empty())
     {
@@ -43,7 +43,7 @@ void SendCommand::interpret(string &line, ifstream &file)
 // in input vector.
 // Calculate [len] field - the lenght of the body section.
 //==========================================================================================================
-void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
+void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines, ScriptReader &reader)
 {
     bool calc_len = false;
     int len = 0;
@@ -57,7 +57,7 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
         }
         
         trim(line); // Remove leading white spaces and tabs, final newline
-        bool contains_len = replace_vars(line, call_number); // replace_vars() return true if it sees "[len]"
+        bool contains_len = replace_vars(line, reader, call_number); // replace_vars() return true if it sees "[len]"
         msg_lines.push_back(line);
         
         if(contains_len)
@@ -90,6 +90,7 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines)
 //==========================================================================================================
 void SendCommand::process_args(string& line)
 {
+    call_number = -1;
     string opt = "call_number";
     map<string, Option> options;
     options.emplace(opt, Option(false, true));
@@ -102,6 +103,12 @@ void SendCommand::process_args(string& line)
 }
 
 
+//==========================================================================================================
+//==========================================================================================================
+string SendCommand::get_start_regex_str()
+{
+    return "<(send)";
+}
 
 
 

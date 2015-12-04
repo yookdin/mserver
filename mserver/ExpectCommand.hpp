@@ -20,8 +20,9 @@
 class ExpectCommand: public Command
 {
 public:
-    ExpectCommand(ScriptReader &_reader): Command(_reader) {}
-    virtual void interpret(string &line, ifstream &file);
+    ExpectCommand(){}
+    virtual void interpret(string &line, ifstream &file, ScriptReader &reader);
+    virtual string get_start_regex_str();
 
 private:
     static const regex end_regex;
@@ -32,6 +33,7 @@ private:
     static const regex var_regex;
     static const regex bool_regex;
 
+    ScriptReader* reader = nullptr;
     string expression;
     string expression_rpn;
     

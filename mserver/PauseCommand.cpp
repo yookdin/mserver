@@ -5,17 +5,17 @@
 
 
 //==========================================================================================================
-// The parameter string of the command.
-// Examples: 1.5 seconds, 3 milliseconds, 1s, 1 second, 0.4 ms, etc.
+// Parameter string of the command is for example:
+// 1.5 seconds, 3 milliseconds, 1s, 1 second, 0.4 ms, etc.
 //==========================================================================================================
-const regex PauseCommand::params_regex("(\\d+(\\.\\d+)?) *(\\w+) */>");
+PauseCommand::PauseCommand(): params_regex("(\\d+(\\.\\d+)?) *(\\w+) */>") {}
 
 
 //==========================================================================================================
 // Pause for the given amount of time. The amount and the units are converted to micro-seconds, and then
 // usleep() is called.
 //==========================================================================================================
-void PauseCommand::interpret(string &line, ifstream &file)
+void PauseCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
     smatch match;
     
@@ -57,7 +57,12 @@ int PauseCommand::get_factor_for_units(string units)
 }
 
 
-
+//==========================================================================================================
+//==========================================================================================================
+string PauseCommand::get_start_regex_str()
+{
+    return "<(pause)";
+}
 
 
 

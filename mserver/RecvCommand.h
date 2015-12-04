@@ -4,11 +4,17 @@
 class RecvCommand :	public Command
 {
 public:
-    RecvCommand(ScriptReader &_reader): Command(_reader) {}
+    RecvCommand(){}
 
-	virtual void interpret(string &line, ifstream &file);
-    
+	virtual void interpret(string &line, ifstream &file, ScriptReader &reader);
+    virtual string get_start_regex_str();
+
 private:
-    void process_args(string& line, string& message_kind, bool& optional, int& timeout, int& call_number);
+    string message_kind; // Either a METHOD name of status code
+    bool optional;
+    int timeout; // In seconds
+    int call_number;
+
+    void process_args(string& line);
 };
 

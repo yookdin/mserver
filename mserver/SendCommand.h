@@ -4,15 +4,16 @@
 class SendCommand :	public Command
 {
 public:
-    SendCommand(ScriptReader &_reader): Command(_reader) {}
+    SendCommand();
 
-	virtual void interpret(string &line, ifstream &file);
+	virtual void interpret(string &line, ifstream &file, ScriptReader &reader);
+    virtual string get_start_regex_str();
 
 private:
-    static const regex end_regex;
-    int call_number = -1;
+    const regex end_regex;
+    int call_number;
     
     void process_args(string& line);
-    void replcae_vars(ifstream &file, vector<string>& msg_lines);
+    void replcae_vars(ifstream &file, vector<string>& msg_lines, ScriptReader &reader);
 };
 

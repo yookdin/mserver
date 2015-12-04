@@ -28,7 +28,7 @@ void Command::trim(string &line)
 // containing script reader.
 // Return true if the special var [len] is seen, since it is not yet known and will be replaced later.
 //==========================================================================================================
-bool Command::replace_vars(string &line, int call_number)
+bool Command::replace_vars(string &line, ScriptReader &reader, int call_number)
 {
     bool contains_len = false;
     string line2 = line;
