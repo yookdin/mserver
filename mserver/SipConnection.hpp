@@ -32,6 +32,7 @@ private:
 
     deque<SipMessage*> msg_queue;
     
+    void reconnect();
     void connect();
     void try_poll();
 };

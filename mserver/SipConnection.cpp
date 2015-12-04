@@ -69,7 +69,10 @@ SipMessage* SipConnection::get_message(string kind, int timeout)
             }
             else if(num_bytes == 0) // Other side issued a close of the TCP connection
             {
-                return nullptr;
+                // This might be the close of the connection from a previous test, because get_message() is called
+                // on demand only. So reconnect and continue to try and receive a message.
+                reconnect();
+                continue;
             }
             else // Successful read
             {
@@ -85,7 +88,7 @@ SipMessage* SipConnection::get_message(string kind, int timeout)
             }
         }
         
-        usleep(10000);
+        usleep(1000);
     }
     
     if(!msg_queue.empty())
@@ -141,7 +144,7 @@ bool SipConnection::send_message(SipMessage &message)
             return true;
         }
         
-        usleep(10000);
+        usleep(1000);
     }
     
     return false;
@@ -186,6 +189,17 @@ void SipConnection::connect()
     {
         throw string("Client failed to connect for " + to_string(CONNECT_TIMEOUT) + " second" + (CONNECT_TIMEOUT > 1 ?   "s" : ""));
     }
+}
+
+
+//======================================================================================================================
+// After a connection is closed, try connecting to a client again
+//======================================================================================================================
+void SipConnection::reconnect()
+{
+    close(pfd.fd);
+    pfd.fd = -1;
+    connect();
 }
 
 

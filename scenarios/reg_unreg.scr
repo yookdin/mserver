@@ -1,0 +1,2 @@
+<scenario file="register.scr"/>   Run the registration scenario
+<scenario file="unregister.scr"/> Run the unregistration scenario
