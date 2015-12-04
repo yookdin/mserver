@@ -18,10 +18,10 @@ The next register should contain Expires value >= min_exp_val
     Content-Length: 0
 </send>
 
-Check that the value of the 'Expires' field is greater or equal to <min_exp_val>, o/w fail the test
 <recv message=REGISTER>
+  Check that the value of the 'Expires' field is greater or equal to <min_exp_val>, o/w fail the test
   <expect>
-    Expires >= (400 + 2*150)
+    Expires >= min_exp_val
   </expect>
 </recv>
 
@@ -49,3 +49,5 @@ Check that the value of the 'Expires' field is greater or equal to <min_exp_val>
     Contact: <sip:[server_ip]:[server_port];transport=[transport]>;expires=300
     Content-Length: 0
 </send>
+
+<scenario file="unregister.scr"/>
