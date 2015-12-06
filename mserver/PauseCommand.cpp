@@ -3,7 +3,6 @@
 
 #include "PauseCommand.h"
 
-
 //==========================================================================================================
 // Parameter string of the command is for example:
 // 1.5 seconds, 3 milliseconds, 1s, 1 second, 0.4 ms, etc.
@@ -34,8 +33,9 @@ void PauseCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
         throw string("Precision too high for pause command: " + pause_str + ". Maximum precision is micro-second.");
     }
     
-    cout << endl << "Pausing for " + pause_str << "..." << endl;
+    cout << "[" << get_time_string() << "] Pausing for " << pause_str << "..." << endl;
     usleep(n);
+    cout << "[" << get_time_string() << "] Pause finished" << endl;
 }
 
 
@@ -62,6 +62,22 @@ int PauseCommand::get_factor_for_units(string units)
 string PauseCommand::get_start_regex_str()
 {
     return "<(pause)";
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+string PauseCommand::get_time_string() {
+    struct timeval  tv;
+    struct  tm      *plocalTime;
+    gettimeofday(&tv, NULL);
+    plocalTime = localtime(&tv.tv_sec);
+    int h       = plocalTime->tm_hour;
+    int m       = plocalTime->tm_min;
+    int s       = plocalTime->tm_sec;
+    int milli   = tv.tv_usec / 1000;
+    
+    return to_string(h) + ":" + to_string(m) + ":" + to_string(s) + "." + to_string(milli);
 }
 
 

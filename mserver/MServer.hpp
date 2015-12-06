@@ -27,6 +27,8 @@ public:
     bool send_sip_message(SipMessage &message);
     void advance_ip();
     void reset_ip();
+    void stop_listening();
+    void start_listening();
     void print_vars();
     
 private:
@@ -34,8 +36,8 @@ private:
 
     bool debug = false;
     bool log_file_set = false;
-    SipConnection *sip_connection = nullptr;
-    ControlConnection *ctrl_connection = nullptr;
+    SipConnection *sip_connection;
+    ControlConnection *ctrl_connection;
     map<string, string> vars;
     vector<string> ips;
     int cur_ip_index = 0;

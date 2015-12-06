@@ -24,6 +24,8 @@
 		FE9B0BA41C11FCE0005FCE06 /* SendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B9F1C11FCE0005FCE06 /* SendCommand.cpp */; };
 		FE9B0BA71C1262AA005FCE06 /* NextIPCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0BA51C1262AA005FCE06 /* NextIPCommand.cpp */; };
 		FED678321BFFD8E300B739BE /* Operator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FED678311BFFD8E300B739BE /* Operator.cpp */; };
+		FEF7460F1C147FF700598473 /* StopListeningCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEF7460D1C147FF700598473 /* StopListeningCommand.cpp */; };
+		FEF746121C1480C100598473 /* StartListeningCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEF746101C1480C100598473 /* StartListeningCommand.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -86,6 +88,10 @@
 		FED6782C1BFF810200B739BE /* Operator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Operator.h; sourceTree = "<group>"; };
 		FED678301BFF8E1900B739BE /* Paren.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paren.h; sourceTree = "<group>"; };
 		FED678311BFFD8E300B739BE /* Operator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Operator.cpp; sourceTree = "<group>"; };
+		FEF7460D1C147FF700598473 /* StopListeningCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StopListeningCommand.cpp; sourceTree = "<group>"; };
+		FEF7460E1C147FF700598473 /* StopListeningCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StopListeningCommand.hpp; sourceTree = "<group>"; };
+		FEF746101C1480C100598473 /* StartListeningCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StartListeningCommand.cpp; sourceTree = "<group>"; };
+		FEF746111C1480C100598473 /* StartListeningCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StartListeningCommand.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +158,10 @@
 				FE9B0B961C11FBB0005FCE06 /* PauseCommand.cpp */,
 				FE9B0BA61C1262AA005FCE06 /* NextIPCommand.hpp */,
 				FE9B0BA51C1262AA005FCE06 /* NextIPCommand.cpp */,
+				FEF7460E1C147FF700598473 /* StopListeningCommand.hpp */,
+				FEF7460D1C147FF700598473 /* StopListeningCommand.cpp */,
+				FEF746111C1480C100598473 /* StartListeningCommand.hpp */,
+				FEF746101C1480C100598473 /* StartListeningCommand.cpp */,
 			);
 			name = commands;
 			sourceTree = "<group>";
@@ -277,9 +287,11 @@
 				FED678321BFFD8E300B739BE /* Operator.cpp in Sources */,
 				FE9B0BA31C11FCE0005FCE06 /* ScenarioCommand.cpp in Sources */,
 				FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */,
+				FEF7460F1C147FF700598473 /* StopListeningCommand.cpp in Sources */,
 				FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */,
 				FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */,
 				FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */,
+				FEF746121C1480C100598473 /* StartListeningCommand.cpp in Sources */,
 				FE9B0B981C11FBB0005FCE06 /* PauseCommand.cpp in Sources */,
 				FE9B0BA41C11FCE0005FCE06 /* SendCommand.cpp in Sources */,
 				FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */,

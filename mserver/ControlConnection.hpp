@@ -17,7 +17,7 @@
 class ControlConnection: public Connection
 {
 public:
-    ControlConnection(string ip, int port): Connection(ip, port, SOCK_DGRAM){}
+    ControlConnection(string ip, int port);
     
     string get_message();
     void send_message(string str);

@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <sys/time.h>
 
 #include "bimap.h"
 #include "defines.h"

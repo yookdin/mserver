@@ -7,6 +7,8 @@
 #include "PauseCommand.h"
 #include "ExpectCommand.hpp"
 #include "NextIPCommand.hpp"
+#include "StopListeningCommand.hpp"
+#include "StartListeningCommand.hpp"
 #include "MServer.hpp"
 
 
@@ -34,6 +36,8 @@ map<string, Command*> ScriptReader::init_commands()
     local_commands["pause"] = new PauseCommand();
     local_commands["expect"] = new ExpectCommand();
     local_commands["move_to_next_ip"] = new NextIPCommand();
+    local_commands["stop_listening"] = new StopListeningCommand();
+    local_commands["start_listening"] = new StartListeningCommand();
 
     return local_commands;
 }

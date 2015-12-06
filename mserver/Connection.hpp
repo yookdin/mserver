@@ -14,11 +14,11 @@
 class Connection
 {
 protected:
-    Connection(string ip, int port, int type);
+    Connection(){};
     ~Connection(){ close(bounded_socket); }
     void bind_socket(string ip, int port, int type);
     
-    int bounded_socket;
+    int bounded_socket = -1;
 };
 
 #endif /* Connection_hpp */

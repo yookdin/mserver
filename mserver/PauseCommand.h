@@ -12,5 +12,6 @@ private:
     const regex params_regex;
     
     int get_factor_for_units(string untis);
+    string get_time_string();
 };
 

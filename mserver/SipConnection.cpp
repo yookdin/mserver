@@ -13,12 +13,42 @@
 
 //======================================================================================================================
 //======================================================================================================================
-SipConnection::SipConnection(string _ip, int _port): ip(_ip), port(_port), Connection(_ip, _port, SOCK_STREAM)
+SipConnection::SipConnection(string _ip, int _port): ip(_ip), port(_port)
 {
     pfd.fd = -1;
     pfd.events = POLLIN | POLLOUT;
     pfd.revents = 0;
+    start();
+}
+
+
+//======================================================================================================================
+//======================================================================================================================
+void SipConnection::start()
+{
+    if(bounded_socket != -1)
+    {
+        throw string("Connection alredy started!");
+    }
+
+    if(ip.empty() || port == -1)
+    {
+        throw string("Can't start SipConnection, IP and port not set!");
+    }
+
+    bind_socket(ip, port, SOCK_STREAM);
     listen();
+}
+
+
+//======================================================================================================================
+//======================================================================================================================
+void SipConnection::stop()
+{
+    close(pfd.fd);
+    pfd.fd = -1;
+    close(bounded_socket);
+    bounded_socket = -1;
 }
 
 
@@ -47,18 +77,6 @@ void SipConnection::listen()
 
 
 //======================================================================================================================
-// When changing IP, need to do the whole bind and listen process again
-//======================================================================================================================
-void SipConnection::rebind()
-{
-    close(bounded_socket);
-    bounded_socket = -1;
-    bind_socket(ip, port, SOCK_STREAM);
-    listen();
-}
-
-
-//======================================================================================================================
 //======================================================================================================================
 void SipConnection::switch_ip(string new_ip)
 {
@@ -66,9 +84,8 @@ void SipConnection::switch_ip(string new_ip)
     {
         cout << "Switching ips: " << ip << " --> " << new_ip << endl;
         ip = new_ip;
-        rebind();
-        close(pfd.fd);
-        pfd.fd = -1;
+        stop();
+        start();
     }
 }
 
