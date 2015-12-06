@@ -25,7 +25,7 @@ public:
     bool send_message(SipMessage &message);
     void start();
     void stop();
-    void switch_ip(string new_ip);
+    void start(string in_ip);
     
 private:
     string ip;

@@ -1,0 +1,22 @@
+
+Receive invite and send 403 response
+
+<scenario file="register.scr"/>
+
+<recv message=INVITE>
+</recv>
+
+<send>
+    SIP/2.0 403 Forbidden
+    [last_Via]
+    [last_From]
+    [last_To];tag=[tag]
+    [last_Call-ID]
+    [last_CSeq]
+    Content-Length: 0
+</send>
+
+<recv message=ACK>
+</recv>
+
+<scenario file="register.scr"/>

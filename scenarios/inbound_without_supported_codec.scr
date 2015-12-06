@@ -1,0 +1,50 @@
+
+Inbound call that is rejected by client due to no supported codecs
+
+<scenario file="register.scr"/>
+
+<send>
+    INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
+    Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
+    From: sipp <sip:12345678900@[client_ip]:[client_port]>;tag=[tag]
+    To: <sip:1800707070@[server_ip]>
+    Call-ID: [call_id]
+    CSeq: 1 INVITE
+    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
+    Max-Forwards: 70
+    Subject: Incoming Call
+    Content-Type: application/sdp
+    Content-Length: [len]
+
+    v=0
+    o=- 3607660610 3607660611 IN IP[client_ip_type] [client_ip]
+    s=voxip_media
+    c=IN IP[media_ip_type] [media_ip]
+    b=AS:174
+    t=0 0
+    a=X-nat:0
+    m=audio [media_port] RTP/AVP 2 18 101
+    b=TIAS:150000
+    a=sendrecv
+    a=rtpmap:2 G726-32/8000 
+    a=rtpmap:18 G729/8000      
+    a=rtpmap:101 telephone-event/8000
+    a=fmtp:101 0-15
+</send>
+
+<recv message=406>
+</recv>
+
+<send>
+      ACK sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
+      [last_Via]
+      Max-Forwards: 70
+      [last_From]
+      [last_To]
+      [last_Call-ID]
+      CSeq: 1 ACK
+      Content-Length: 0
+</send>
+
+
+

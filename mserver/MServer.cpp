@@ -49,7 +49,7 @@ void MServer::run(int argc, char * argv[])
         while(true)
         {
             set_log_file(get_value(RUN_DIR) + "/mserver.log"); // Set the log file back to the global log file between tests
-            reset_ip(); // In case it was change in the previous test
+            reset_ip(); // In case it was change in the previous test. This will also restart listening in case it was stopped
             
             //----------------------------------------------------------------------------------------------
             // Get and process a control message (indicating which scenario to run, etc.)
@@ -294,10 +294,9 @@ void MServer::advance_ip()
         throw string("Can't move to next IP, only one IP in the list!");
     }
     
-    string old_ip = vars[SERVER_IP];
     cur_ip_index = (cur_ip_index + 1) % ips.size();
     vars[SERVER_IP] = ips[cur_ip_index];
-    sip_connection->switch_ip(vars[SERVER_IP]);
+    sip_connection->start(vars[SERVER_IP]);
 }
 
 
@@ -306,7 +305,7 @@ void MServer::advance_ip()
 void MServer::reset_ip()
 {
     vars[SERVER_IP] = ips[cur_ip_index = 0];
-    sip_connection->switch_ip(vars[SERVER_IP]);
+    sip_connection->start(vars[SERVER_IP]);
 }
 
 

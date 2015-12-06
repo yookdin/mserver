@@ -1,0 +1,37 @@
+
+Multiple 407 responses for invite
+
+<scenario file="register.scr"/>
+
+<recv message=INVITE></recv>
+
+<send>
+    SIP/2.0 407 Proxy Authentication Required
+    [last_Via]
+    [last_From]
+    [last_To];tag=[tag]
+    [last_Call-ID]
+    [last_CSeq]
+    WWW-Authenticate: Digest realm="10.116.0.140", domain="10.116.0.140", nonce="603317111", algorithm=MD5
+    Content-Length: 0
+</send>
+
+<recv message=ACK></recv>
+
+<recv message=INVITE></recv>
+
+<send>
+    SIP/2.0 407 Proxy Authentication Required
+    [last_Via]
+    [last_From]
+    [last_To];tag=[tag]
+    [last_Call-ID]
+    [last_CSeq]
+    WWW-Authenticate: Digest realm="10.116.0.140", domain="10.116.0.140", nonce="603317111", algorithm=MD5
+    Content-Length: 0
+</send>
+
+<recv message=ACK></recv>
+
+<scenario file="register.scr"/>
+

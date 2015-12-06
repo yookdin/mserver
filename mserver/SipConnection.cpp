@@ -77,13 +77,23 @@ void SipConnection::listen()
 
 
 //======================================================================================================================
+// Start listening on the given IP. If already listening on it, do nothing. If not listening at all, or on a different
+// IP, switch to this one.
 //======================================================================================================================
-void SipConnection::switch_ip(string new_ip)
+void SipConnection::start(string in_ip)
 {
-    if(ip != new_ip)
+    if(ip != in_ip || bounded_socket == -1)
     {
-        cout << "Switching ips: " << ip << " --> " << new_ip << endl;
-        ip = new_ip;
+        if(ip != in_ip)
+        {
+            cout << "Switching ips: " << ip << " --> " << in_ip << endl;
+            ip = in_ip;
+        }
+        else
+        {
+            cout << "Restarting to listen on IP: " << ip << endl;
+        }
+        
         stop();
         start();
     }
