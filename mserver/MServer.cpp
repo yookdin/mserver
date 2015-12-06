@@ -289,6 +289,11 @@ void MServer::extract_ips(string ip_list)
 //==========================================================================================================
 void MServer::advance_ip()
 {
+    if(ips.size() == 1)
+    {
+        throw string("Can't move to next IP, only one IP in the list!");
+    }
+    
     string old_ip = vars[SERVER_IP];
     cur_ip_index = (cur_ip_index + 1) % ips.size();
     vars[SERVER_IP] = ips[cur_ip_index];
