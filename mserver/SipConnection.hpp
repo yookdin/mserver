@@ -23,6 +23,7 @@ public:
     
     SipMessage* get_message(string kind, int timeout); // Message kind is either method or status code
     bool send_message(SipMessage &message);
+    void switch_ip(string new_ip);
     
 private:
     string ip;
@@ -32,6 +33,8 @@ private:
 
     deque<SipMessage*> msg_queue;
     
+    void listen();
+    void rebind();
     void reconnect();
     void connect();
     void try_poll();

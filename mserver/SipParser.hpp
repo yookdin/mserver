@@ -50,9 +50,10 @@ class SipParser
 public:
     static SipParser& inst();
     
-    const string method_str = "ACK|BYE|CANCEL|INFO|INVITE|MESSAGE|NOTIFY|OPTIONS|PRACK|PUBLISH|REFER|REGISTER|SUBSCRIBE|UPDATE";
+    const string method_regex_str = "ACK|BYE|CANCEL|INFO|INVITE|MESSAGE|NOTIFY|OPTIONS|PRACK|PUBLISH|REFER|REGISTER|SUBSCRIBE|UPDATE";
+    const string ip_regex_str = "(\\d{1,3}\\.){3}\\d{1,3}";
     
-    const string header_name_str =
+    const string header_name_regex_str =
 "Accept|Accept-Contact|Accept-Encoding|Accept-Language|Accept-Resource-Priority|Alert-Info|Allow|Allow-Events|Answer-Mode|\
 Authentication-Info|Authorization|Call-ID|Call-Info|Contact|Content-Disposition|Content-Encoding|Content-Language|\
 Content-Length|Content-Type|CSeq|Date|Error-Info|Event|Expires|Feature-Caps|Flow-Timer|From|Geolocation-header|\

@@ -42,16 +42,16 @@ SipParser::SipParser(): to_tag_regex(";tag=[" + sip_token_chars + "]+")
     // in SIP).
     // If this isn't done right reference loops might occur, but I don't check for them.
     //------------------------------------------------------------------------------------------------------
-    ADD_ELEMENT_MATCHER(METHOD,             method_str,                                 true);
+    ADD_ELEMENT_MATCHER(METHOD,             method_regex_str,                           true);
     ADD_ELEMENT_MATCHER(NUM,                "\\d+",                                     true);
     ADD_ELEMENT_MATCHER(NAME,               "\\w+",                                     true);
     ADD_ELEMENT_MATCHER(USER_NAME,          "[^ :@]+",                                  true);
     ADD_ELEMENT_MATCHER(PASSWORD,           "\\S+",                                     true);
-    ADD_ELEMENT_MATCHER(IP,                 "(\\d{1,3}\\.){3}\\d{1,3}",                 true);
+    ADD_ELEMENT_MATCHER(IP,                 ip_regex_str,                               true);
     ADD_ELEMENT_MATCHER(SIP_VERSION,        "SIP/2.0",                                  true);
     ADD_ELEMENT_MATCHER(PARAM,              "[^ ;=]+(=[^ ;=]+)?",                       true);
     ADD_ELEMENT_MATCHER(STATUS_CODE,        "\\d{3}",                                   true);
-    ADD_ELEMENT_MATCHER(HEADER_NAME,        header_name_str,                            true);
+    ADD_ELEMENT_MATCHER(HEADER_NAME,        header_name_regex_str,                      true);
     ADD_ELEMENT_MATCHER(HEADER_VALUE,       ".*",                                       true); // Allow anything
 
     ADD_ELEMENT_MATCHER(CSEQ_VALUE,         "(_NUM_) +(_NAME_)",                        false);

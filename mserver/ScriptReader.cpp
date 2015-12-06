@@ -6,6 +6,7 @@
 #include "RecvCommand.h"
 #include "PauseCommand.h"
 #include "ExpectCommand.hpp"
+#include "NextIPCommand.hpp"
 #include "MServer.hpp"
 
 
@@ -32,6 +33,7 @@ map<string, Command*> ScriptReader::init_commands()
     local_commands["recv"] = new RecvCommand();
     local_commands["pause"] = new PauseCommand();
     local_commands["expect"] = new ExpectCommand();
+    local_commands["move_to_next_ip"] = new NextIPCommand();
 
     return local_commands;
 }

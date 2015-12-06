@@ -14,6 +14,7 @@
 //==========================================================================================================
 #define RUN_DIR         "run_dir"
 #define SCENARIO_DIR    "scenarios_dir"
+#define IPS             "ips"
 #define SERVER_IP       "server_ip"
 #define SERVER_PORT     "server_port"
 #define CONTROL_PORT    "control_port"
@@ -33,7 +34,7 @@
 #define TAG             "tag"
 #define CSEQ            "cseq"
 #define SIP_IP_TYPE     "sip_ip_type"
-#define CLIENT_IP_TYPE   "client_ip_type"
+#define CLIENT_IP_TYPE  "client_ip_type"
 #define MEDIA_IP_TYPE   "media_ip_type"
 #define MEDIA_IP        "media_ip"
 #define MEDIA_PORT      "media_port"

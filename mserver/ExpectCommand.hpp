@@ -20,18 +20,19 @@
 class ExpectCommand: public Command
 {
 public:
-    ExpectCommand(){}
+    ExpectCommand();
     virtual void interpret(string &line, ifstream &file, ScriptReader &reader);
     virtual string get_start_regex_str();
 
 private:
-    static const regex end_regex;
-    static map<string, Token*> const_tokens;
-    static map<string, Token*> init_const_tokens();
-    static const regex num_regex;
-    static const regex str_regex;
-    static const regex var_regex;
-    static const regex bool_regex;
+    const regex end_regex;
+    const regex num_regex;
+    const regex str_regex;
+    const regex var_regex;
+    const regex bool_regex;
+
+    map<string, Token*> const_tokens;
+    //static map<string, Token*> init_const_tokens();
 
     ScriptReader* reader = nullptr;
     string expression;

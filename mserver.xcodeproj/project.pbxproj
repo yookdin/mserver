@@ -22,6 +22,7 @@
 		FE9B0BA21C11FCE0005FCE06 /* RecvCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B9B1C11FCE0005FCE06 /* RecvCommand.cpp */; };
 		FE9B0BA31C11FCE0005FCE06 /* ScenarioCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B9D1C11FCE0005FCE06 /* ScenarioCommand.cpp */; };
 		FE9B0BA41C11FCE0005FCE06 /* SendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B9F1C11FCE0005FCE06 /* SendCommand.cpp */; };
+		FE9B0BA71C1262AA005FCE06 /* NextIPCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0BA51C1262AA005FCE06 /* NextIPCommand.cpp */; };
 		FED678321BFFD8E300B739BE /* Operator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FED678311BFFD8E300B739BE /* Operator.cpp */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +80,8 @@
 		FE9B0B9E1C11FCE0005FCE06 /* ScenarioCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScenarioCommand.h; sourceTree = "<group>"; };
 		FE9B0B9F1C11FCE0005FCE06 /* SendCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendCommand.cpp; sourceTree = "<group>"; };
 		FE9B0BA01C11FCE0005FCE06 /* SendCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendCommand.h; sourceTree = "<group>"; };
+		FE9B0BA51C1262AA005FCE06 /* NextIPCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NextIPCommand.cpp; sourceTree = "<group>"; };
+		FE9B0BA61C1262AA005FCE06 /* NextIPCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NextIPCommand.hpp; sourceTree = "<group>"; };
 		FED6782B1BFF7F9A00B739BE /* Token.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		FED6782C1BFF810200B739BE /* Operator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Operator.h; sourceTree = "<group>"; };
 		FED678301BFF8E1900B739BE /* Paren.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paren.h; sourceTree = "<group>"; };
@@ -147,6 +150,8 @@
 				FE9B0B991C11FCE0005FCE06 /* ExpectCommand.cpp */,
 				FE9B0B971C11FBB0005FCE06 /* PauseCommand.h */,
 				FE9B0B961C11FBB0005FCE06 /* PauseCommand.cpp */,
+				FE9B0BA61C1262AA005FCE06 /* NextIPCommand.hpp */,
+				FE9B0BA51C1262AA005FCE06 /* NextIPCommand.cpp */,
 			);
 			name = commands;
 			sourceTree = "<group>";
@@ -281,6 +286,7 @@
 				FE0ECE6D1BDF832E00958E40 /* Command.cpp in Sources */,
 				FE88A6BD1C091DCD00AB68A2 /* ControlConnection.cpp in Sources */,
 				FE9B0BA21C11FCE0005FCE06 /* RecvCommand.cpp in Sources */,
+				FE9B0BA71C1262AA005FCE06 /* NextIPCommand.cpp in Sources */,
 				FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */,
 				FE924AA51C0C823D00769C34 /* Connection.cpp in Sources */,
 			);

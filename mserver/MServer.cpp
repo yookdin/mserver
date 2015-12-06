@@ -48,6 +48,12 @@ void MServer::run(int argc, char * argv[])
         
         while(true)
         {
+            set_log_file(get_value(RUN_DIR) + "/mserver.log"); // Set the log file back to the global log file between tests
+            reset_ip(); // In case it was change in the previous test
+            
+            //----------------------------------------------------------------------------------------------
+            // Get and process a control message (indicating which scenario to run, etc.)
+            //----------------------------------------------------------------------------------------------
             string ctrl_msg = ctrl_connection->get_message();
             
             if(ctrl_msg == "bye")
@@ -58,6 +64,9 @@ void MServer::run(int argc, char * argv[])
         	map<string, string> script_vars;
             process_control_message(ctrl_msg, script_vars);
             
+            //----------------------------------------------------------------------------------------------
+            // Run the scenario
+            //----------------------------------------------------------------------------------------------
             try
             {
                 ScriptReader reader(get_value(SCENARIO), script_vars);
@@ -70,7 +79,6 @@ void MServer::run(int argc, char * argv[])
             }
             
             ctrl_connection->send_message("success"); // Test succeeded as far as mserver is concerned
-            set_log_file(get_value(RUN_DIR) + "/mserver.log"); // Set the log file back to the global log file between tests
         }
     }
     catch (string err) // Error caught here is fatal, and mserver can't run anymore
@@ -99,17 +107,18 @@ void MServer::run(int argc, char * argv[])
 // -call_id_<min|max>   generate either minimal or maximal call id for a generated call
 //==========================================================================================================
 void MServer::process_args(int argc, char * argv[])
-{
+{    
     //------------------------------------------------------------------------------------------------------
     // Collect and check options
     //------------------------------------------------------------------------------------------------------
     map<string, Option> options;
 
-    options.emplace(SERVER_IP, Option(true, true));
+    options.emplace(IPS, Option(true, true));
     options.emplace(SERVER_PORT, Option(true, true));
     options.emplace(CONTROL_PORT, Option(true, true));
     options.emplace(SCENARIO_DIR, Option(false, true));
     options.emplace(RUN_DIR, Option(true, true));
+    options.emplace("debug", Option(false, false));
     options.emplace("var", ParamValOption()); // -var name=value
 
     OptionParser parser(argc, argv, options); // Parse command line option and put values in the map
@@ -120,7 +129,19 @@ void MServer::process_args(int argc, char * argv[])
     //------------------------------------------------------------------------------------------------------
     for(auto pair: options)
     {
-        vars[pair.first] = pair.second.get_value();
+        if(pair.first == "debug" && pair.second.was_found())
+        {
+            debug = true;
+        }
+        else if(pair.first == IPS)
+        {
+            extract_ips(pair.second.get_value());
+            vars[SERVER_IP] = ips[cur_ip_index];
+        }
+        else
+        {
+            vars[pair.first] = pair.second.get_value();
+        }
     }
     
     // -scenario_dir option should be given only in developing phase because xcode puts exe in weird places.
@@ -134,7 +155,7 @@ void MServer::process_args(int argc, char * argv[])
     //------------------------------------------------------------------------------------------------------
     // Check validity of given parameters
     //------------------------------------------------------------------------------------------------------
-    if(!ifstream(get_value(RUN_DIR)))
+    if(!debug && !ifstream(get_value(RUN_DIR)))
     {
         throw string("Dir " + get_value(RUN_DIR) + " doesn't exist");
     }
@@ -146,6 +167,11 @@ void MServer::process_args(int argc, char * argv[])
     if(!ifstream(get_value(SCENARIO_DIR)))
     {
         throw string("Dir " + get_value(SCENARIO_DIR) + " doesn't exist");
+    }
+    
+    if(debug)
+    {
+        print_vars();
     }
 }
 
@@ -233,11 +259,49 @@ void MServer::print_vars()
 //======================================================================================================================
 void MServer::set_log_file(string filepath)
 {
-    // Redirect both stdout and stderr to file
-    if(freopen(filepath.c_str(), "a", stdout) == nullptr || freopen(filepath.c_str(), "a", stderr) == nullptr)
+    if(!debug) // If debug print all messages to standard output
     {
-        throw string("freopen Failed [" + to_string(errno) + ":" + strerror(errno) + "]");
+        // Redirect both stdout and stderr to file
+        if(freopen(filepath.c_str(), "a", stdout) == nullptr || freopen(filepath.c_str(), "a", stderr) == nullptr)
+        {
+            throw string("freopen Failed [" + to_string(errno) + ":" + strerror(errno) + "]");
+        }
     }
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+void MServer::extract_ips(string ip_list)
+{
+    regex re(SipParser::inst().ip_regex_str);
+    sregex_iterator iter(ip_list.begin(), ip_list.end(), re);
+    sregex_iterator end;
+    
+    for(;iter != end; ++iter)
+    {
+        ips.push_back(iter->str());
+    }
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+void MServer::advance_ip()
+{
+    string old_ip = vars[SERVER_IP];
+    cur_ip_index = (cur_ip_index + 1) % ips.size();
+    vars[SERVER_IP] = ips[cur_ip_index];
+    sip_connection->switch_ip(vars[SERVER_IP]);
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+void MServer::reset_ip()
+{
+    vars[SERVER_IP] = ips[cur_ip_index = 0];
+    sip_connection->switch_ip(vars[SERVER_IP]);
 }
 
 

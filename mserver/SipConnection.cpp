@@ -18,16 +18,14 @@ SipConnection::SipConnection(string _ip, int _port): ip(_ip), port(_port), Conne
     pfd.fd = -1;
     pfd.events = POLLIN | POLLOUT;
     pfd.revents = 0;
-    
-    //------------------------------------------------------------------------------------------------------------------
-    // Set up the bounded socket for listening, but don't accept any connections yet. This will be initiated by the first
-    // get/send_message() call.
-    //------------------------------------------------------------------------------------------------------------------
-    if(listen(bounded_socket, 1) != 0) // 1 is the max size of incoming connections queue
-    {
-        throw string("listen() error");
-    }
-    
+    listen();
+}
+
+
+//======================================================================================================================
+//======================================================================================================================
+void SipConnection::listen()
+{
     // Set the listen socket to be non-blocking, so accept() won't block
     int flags = fcntl(bounded_socket, F_GETFL);
     flags |= O_NONBLOCK;
@@ -35,6 +33,42 @@ SipConnection::SipConnection(string _ip, int _port): ip(_ip), port(_port), Conne
     if(fcntl(bounded_socket, F_SETFL, flags) == -1)
     {
         throw string("fcntl() error");
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Set up the bounded socket for listening, but don't accept any connections yet. This will be initiated by the first
+    // get/send_message() call.
+    //------------------------------------------------------------------------------------------------------------------
+    if(::listen(bounded_socket, 1) != 0) // 1 is the max size of incoming connections queue
+    {
+        throw string("listen() error");
+    }
+}
+
+
+//======================================================================================================================
+// When changing IP, need to do the whole bind and listen process again
+//======================================================================================================================
+void SipConnection::rebind()
+{
+    close(bounded_socket);
+    bounded_socket = -1;
+    bind_socket(ip, port, SOCK_STREAM);
+    listen();
+}
+
+
+//======================================================================================================================
+//======================================================================================================================
+void SipConnection::switch_ip(string new_ip)
+{
+    if(ip != new_ip)
+    {
+        cout << "Switching ips: " << ip << " --> " << new_ip << endl;
+        ip = new_ip;
+        rebind();
+        close(pfd.fd);
+        pfd.fd = -1;
     }
 }
 
@@ -175,7 +209,7 @@ void SipConnection::connect()
             }
             else // Real error
             {
-                throw string("accept() error");
+                throw string("accept() error: ") + strerror(errno);
             }
         }
         else // Successful

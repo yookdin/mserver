@@ -12,48 +12,35 @@
 #include "Paren.h"
 #include "ScriptReader.h"
 
-//==========================================================================================================
-//==========================================================================================================
-const regex ExpectCommand::end_regex("</expect>");
-const regex ExpectCommand::num_regex("^-?\\d+");
-const regex ExpectCommand::var_regex("^\\w+");
-const regex ExpectCommand::bool_regex("^true|false");
-
-// Yes, all these backslashes are needed, because after the normal replacement, the regex does another one it seems.
-const regex ExpectCommand::str_regex("^\"(\\\\\"|[^\"])*\"");
-
-
-//==========================================================================================================
-// Map of static tokens (ones without values)
-//==========================================================================================================
-map<string, Token*> ExpectCommand::const_tokens = ExpectCommand::init_const_tokens();
-
 
 //==========================================================================================================
 //==========================================================================================================
-map<string, Token*> ExpectCommand::init_const_tokens()
+ExpectCommand::ExpectCommand():
+    end_regex("</expect>"),
+    num_regex("^-?\\d+"),
+    var_regex("^\\w+"),
+    bool_regex("^true|false"),
+    str_regex("^\"(\\\\\"|[^\"])*\"") // Yes, all these backslashes are needed, because after the normal replacement, the regex does another one it seems
 {
-    map<string, Token*> tokens;
-    tokens[OpenParen::str] = new OpenParen;
-    tokens[CloseParen::str] = new CloseParen;
-    tokens[Add::str] = new Add;
-    tokens[Subtract::str] = new Subtract;
-    tokens[Div::str] = new Div;
-    tokens[Mul::str] = new Mul;
-    tokens[Mod::str] = new Mod;
-    tokens[Equal::str] = new Equal;
-    tokens[NotEqual::str] = new NotEqual;
-    tokens[LessThan::str] = new LessThan;
-    tokens[GreaterThan::str] = new GreaterThan;
-    tokens[LessThanEqual::str] = new LessThanEqual;
-    tokens[GreaterThanEqual::str] = new GreaterThanEqual;
-    tokens[Or::str] = new Or;
-    tokens[And::str] = new And;
-    tokens[Not::str] = new Not;
-    tokens[Match::str] = new Match;
-    tokens[NotMatch::str] = new NotMatch;
-    
-    return tokens;
+    // Map of constant tokens (ones without values)
+    const_tokens[OpenParen::str] = new OpenParen;
+    const_tokens[CloseParen::str] = new CloseParen;
+    const_tokens[Add::str] = new Add;
+    const_tokens[Subtract::str] = new Subtract;
+    const_tokens[Div::str] = new Div;
+    const_tokens[Mul::str] = new Mul;
+    const_tokens[Mod::str] = new Mod;
+    const_tokens[Equal::str] = new Equal;
+    const_tokens[NotEqual::str] = new NotEqual;
+    const_tokens[LessThan::str] = new LessThan;
+    const_tokens[GreaterThan::str] = new GreaterThan;
+    const_tokens[LessThanEqual::str] = new LessThanEqual;
+    const_tokens[GreaterThanEqual::str] = new GreaterThanEqual;
+    const_tokens[Or::str] = new Or;
+    const_tokens[And::str] = new And;
+    const_tokens[Not::str] = new Not;
+    const_tokens[Match::str] = new Match;
+    const_tokens[NotMatch::str] = new NotMatch;
 }
 
 
@@ -237,7 +224,7 @@ Token* ExpectCommand::try_header_name(string &line, int &pos)
 {
     smatch match;
     
-    if(regex_search(line.substr(pos), match, regex("^" + SipParser::inst().header_name_str)))
+    if(regex_search(line.substr(pos), match, regex("^" + SipParser::inst().header_name_regex_str)))
     {
         pos += match.length();
         
