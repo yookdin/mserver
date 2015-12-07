@@ -1,0 +1,100 @@
+
+<scenario file="register.scr"/>
+
+----------------------------------------------------------------------------------------------------
+First call from voxip
+----------------------------------------------------------------------------------------------------
+<scenario file="receive_invite.scr" user_number=12345678900/>
+
+----------------------------------------------------------------------------------------------------
+First call put on hold
+----------------------------------------------------------------------------------------------------
+<recv message=INVITE></recv>
+
+<send>
+    SIP/2.0 200 OK
+    [last_Via]
+    [last_From]
+    [last_To]
+    [last_Call-ID]
+    [last_CSeq]
+    User-Agent: bb-test
+    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
+    Session-Expires: 300;refresher=uac
+    Require: timer
+    Supported: replaces,timer,norefersub
+    X-Connect-Type: Wifi
+    Content-Type: application/sdp
+    Content-Length: [len]
+
+    [default_response_body]
+</send>
+
+<recv message=ACK></recv>
+
+----------------------------------------------------------------------------------------------------
+Second call from voxip
+----------------------------------------------------------------------------------------------------
+<scenario file="receive_invite.scr" user_number=12345678902/>
+
+----------------------------------------------------------------------------------------------------
+Second call ends
+----------------------------------------------------------------------------------------------------
+<recv message=BYE></recv>
+
+<send>
+    SIP/2.0 200 OK
+    [last_Via]
+    [last_From]
+    [last_To]
+    [last_Call-ID]
+    [last_CSeq]
+    User-Agent: bb-test
+    Contact: <sip:12345678902@[server_ip]:[server_port];transport=[transport]>
+    Content-Type: application/sdp
+    Content-Length: 0
+</send>
+
+----------------------------------------------------------------------------------------------------
+First call unhold
+----------------------------------------------------------------------------------------------------
+<recv message=INVITE timeout=3></recv>  For some reason we need to wait longer here
+
+<send>
+    SIP/2.0 200 OK
+    [last_Via]
+    [last_From]
+    [last_To]
+    [last_Call-ID]
+    [last_CSeq]
+    User-Agent: bb-test
+    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
+    Session-Expires: 300;refresher=uac
+    Require: timer
+    Supported: replaces,timer,norefersub
+    X-Connect-Type: Wifi
+    Content-Type: application/sdp
+    Content-Length: [len]
+
+    [default_response_body]
+</send>
+
+<recv message=ACK></recv>
+
+----------------------------------------------------------------------------------------------------
+First call ends
+----------------------------------------------------------------------------------------------------
+<recv message=BYE></recv>
+
+<send>
+    SIP/2.0 200 OK
+    [last_Via]
+    [last_From]
+    [last_To]
+    [last_Call-ID]
+    [last_CSeq]
+    User-Agent: bb-test
+    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
+    Content-Type: application/sdp
+    Content-Length: 0
+</send>

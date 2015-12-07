@@ -13,104 +13,13 @@
 
 
 //==========================================================================================================
-// Static commands, shared by all script readers
-//==========================================================================================================
-map<string, Command*> ScriptReader::commands = init_commands();
-
-
-//==========================================================================================================
-// Static regular expression describing commands start. Must initialize it after commands initialization
-//==========================================================================================================
-const regex ScriptReader::command_start_regex = ScriptReader::init_command_start_regex();
-
-
-//==========================================================================================================
-// Initialize the commands map and calculate the commands start regex
-//==========================================================================================================
-map<string, Command*> ScriptReader::init_commands()
-{
-    map<string, Command*> local_commands;
-    local_commands["scenario"] = new ScenarioCommand();
-    local_commands["send"] = new SendCommand();
-    local_commands["recv"] = new RecvCommand();
-    local_commands["pause"] = new PauseCommand();
-    local_commands["expect"] = new ExpectCommand();
-    local_commands["move_to_next_ip"] = new NextIPCommand();
-    local_commands["stop_listening"] = new StopListeningCommand();
-    local_commands["start_listening"] = new StartListeningCommand();
-
-    return local_commands;
-}
-
-
-//==========================================================================================================
-//==========================================================================================================
-regex ScriptReader::init_command_start_regex()
-{
-    string command_start_str;
-    
-    for(auto com: commands)
-    {
-        command_start_str += "^ *" + com.second->get_start_regex_str() + "|";
-    }
-    
-    command_start_str.erase(command_start_str.length() - 1); // Remove the last '|'
-    return regex(command_start_str);
-}
-
-
-//==========================================================================================================
-// Some commong regular expressions for identifying variable in script
-//==========================================================================================================
-const string ScriptReader::query_str("(last_)?([-\\w]+)(:value)?");
-const regex ScriptReader::query_regex(ScriptReader::query_str);
-const regex ScriptReader::script_var_regex("\\[(" + ScriptReader::query_str + ")\\]");
-
-//==========================================================================================================
-// A default body for SIP responses. Usually used where the body doesn't really matter to the test.
-//==========================================================================================================
-const string ScriptReader::default_response_sip_msg_body =
-"v=0\n\
-o=- 3607660610 3607660611 IN IP[sip_ip_type] [server_ip]\n\
-s=voxip_media\n\
-c=IN IP[sip_ip_type] [server_ip]\n\
-b=AS:174\n\
-t=0 0\n\
-a=X-nat:0\n\
-m=audio [media_port] RTP/AVP 0 101\n\
-c=IN IP[media_ip_type] [media_ip]\n\
-b=TIAS:150000\n\
-a=sendrecv\n\
-a=rtpmap:0 PCMU/8000\n\
-a=rtpmap:101 telephone-event/8000\n\
-a=fmtp:101 0-15";
-
-//==========================================================================================================
-// A default body for SIP requests. Usually used where the body doesn't really matter to the test.
-//==========================================================================================================
-const string ScriptReader::default_request_sip_msg_body =
-"v=0\n\
-o=- 3607660610 3607660611 IN IP[client_ip_type] [client_ip]\n\
-s=voxip_media\n\
-c=IN IP[media_ip_type] [media_ip]\n\
-b=AS:174\n\
-t=0 0\n\
-a=X-nat:0\n\
-m=audio [media_port] RTP/AVP 104 101\n\
-b=TIAS:150000\n\
-a=sendrecv\n\
-a=rtpmap:104 ISAC/16000\n\
-a=rtpmap:101 telephone-event/8000\n\
-a=fmtp:101 0-15";
-
-
-
-//==========================================================================================================
 // Init command map, read and execute file.
 //==========================================================================================================
 ScriptReader::ScriptReader(string filepath, map<string, string> _vars, ScriptReader* parent):
     vars(_vars), root(parent == nullptr)
 {
+    print_title(filepath);
+    
     if(root)
     {
         calls_num_map = new CallsNumMap;
@@ -122,7 +31,10 @@ ScriptReader::ScriptReader(string filepath, map<string, string> _vars, ScriptRea
     
     vars[DEFAULT_RESPONSE_BODY] = default_response_sip_msg_body;
     vars[DEFAULT_REQUEST_BODY] = default_request_sip_msg_body;
+    vars[DEFAULT_100_TRYING] = default_100_trying;
     read_file(filepath);
+    
+    print_end_title(filepath);
 }
 
 
@@ -152,8 +64,6 @@ void ScriptReader::read_file(string filename)
 	{
         throw string("File " + filepath + " not found");
 	}
-
-    cout << "Running scenario " << filepath << endl;
     
 	for(string line; getline(file, line);)
 	{
@@ -430,11 +340,156 @@ int ScriptReader::CallsNumMap::get_call_num(string call_id)
 }
 
 
+//==========================================================================================================
+//==========================================================================================================
+void ScriptReader::print_title(string filepath)
+{
+    cout << "====================================================================================================" << endl;
+    cout << "RUNNING SCENARIO: " << filepath << " ";
+    
+    for(auto p: vars)
+    {
+        cout << p.first << "=" << p.second << " ";
+    }
+
+    cout << endl << "====================================================================================================" << endl;
+}
 
 
+//==========================================================================================================
+//==========================================================================================================
+void ScriptReader::print_end_title(string filepath)
+{
+    cout << "----------------------------------------------------------------------------------------------------" << endl;
+    cout << "                      FINISHED SCENARIO: " << filepath << endl;
+    cout << "----------------------------------------------------------------------------------------------------" << endl << endl;
+}
 
 
+//==========================================================================================================
+// Static commands, shared by all script readers
+//==========================================================================================================
+map<string, Command*> ScriptReader::commands = init_commands();
 
+
+//==========================================================================================================
+// Static regular expression describing commands start. Must initialize it after commands initialization
+//==========================================================================================================
+const regex ScriptReader::command_start_regex = ScriptReader::init_command_start_regex();
+
+
+//==========================================================================================================
+// Initialize the commands map and calculate the commands start regex
+//==========================================================================================================
+map<string, Command*> ScriptReader::init_commands()
+{
+    map<string, Command*> local_commands;
+    local_commands["scenario"] = new ScenarioCommand();
+    local_commands["send"] = new SendCommand();
+    local_commands["recv"] = new RecvCommand();
+    local_commands["pause"] = new PauseCommand();
+    local_commands["expect"] = new ExpectCommand();
+    local_commands["move_to_next_ip"] = new NextIPCommand();
+    local_commands["stop_listening"] = new StopListeningCommand();
+    local_commands["start_listening"] = new StartListeningCommand();
+    
+    return local_commands;
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+regex ScriptReader::init_command_start_regex()
+{
+    string command_start_str;
+    
+    for(auto com: commands)
+    {
+        command_start_str += "^ *" + com.second->get_start_regex_str() + "|";
+    }
+    
+    command_start_str.erase(command_start_str.length() - 1); // Remove the last '|'
+    return regex(command_start_str);
+}
+
+
+//==========================================================================================================
+// Some commong regular expressions for identifying variable in script
+//==========================================================================================================
+const string ScriptReader::query_str("(last_)?([-\\w]+)(:value)?");
+const regex ScriptReader::query_regex(ScriptReader::query_str);
+const regex ScriptReader::script_var_regex("\\[(" + ScriptReader::query_str + ")\\]");
+
+//==========================================================================================================
+// A default body for SIP responses. Usually used where the body doesn't really matter to the test.
+//==========================================================================================================
+const string ScriptReader::default_response_sip_msg_body =
+"v=0\n\
+o=- 3607660610 3607660611 IN IP[sip_ip_type] [server_ip]\n\
+s=voxip_media\n\
+c=IN IP[sip_ip_type] [server_ip]\n\
+b=AS:174\n\
+t=0 0\n\
+a=X-nat:0\n\
+m=audio [media_port] RTP/AVP 0 101\n\
+c=IN IP[media_ip_type] [media_ip]\n\
+b=TIAS:150000\n\
+a=sendrecv\n\
+a=rtpmap:0 PCMU/8000\n\
+a=rtpmap:101 telephone-event/8000\n\
+a=fmtp:101 0-15";
+
+
+//==========================================================================================================
+// A default body for SIP requests. Usually used where the body doesn't really matter to the test.
+//==========================================================================================================
+const string ScriptReader::default_request_sip_msg_body =
+"v=0\n\
+o=- 3607660610 3607660611 IN IP[client_ip_type] [client_ip]\n\
+s=voxip_media\n\
+c=IN IP[media_ip_type] [media_ip]\n\
+b=AS:174\n\
+t=0 0\n\
+a=X-nat:0\n\
+m=audio [media_port] RTP/AVP 104 101\n\
+b=TIAS:150000\n\
+a=sendrecv\n\
+a=rtpmap:104 ISAC/16000\n\
+a=rtpmap:101 telephone-event/8000\n\
+a=fmtp:101 0-15";
+
+
+//==========================================================================================================
+//==========================================================================================================
+const string ScriptReader::default_100_trying =
+"SIP/2.0 100 Trying\n\
+[last_Via]\n\
+[last_From]\n\
+[last_To]\n\
+[last_Call-ID]\n\
+[last_CSeq]\n\
+Content-Length: 0";
+
+
+//==========================================================================================================
+//==========================================================================================================
+const string ScriptReader::default_183_header =
+"SIP/2.0 183 Session Progress\n\
+[last_Via]\n\
+[last_From]\n\
+[last_To];tag=[tag]\n\
+[last_Call-ID]\n\
+[last_CSeq]\n\
+User-Agent: bb-test\n\
+Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>\n\
+Alert-Info: <file://ringing.wav>\n\
+Content-Type: application/sdp\n\
+Content-Length: [len]\n";
+
+
+//==========================================================================================================
+//==========================================================================================================
+const string ScriptReader::default_183 = ScriptReader::default_183_header + "\n" + ScriptReader::default_response_sip_msg_body;
 
 
 

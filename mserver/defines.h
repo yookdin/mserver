@@ -40,6 +40,7 @@
 #define MEDIA_PORT      "media_port"
 #define DEFAULT_RESPONSE_BODY   "default_response_body"
 #define DEFAULT_REQUEST_BODY    "default_request_body"
+#define DEFAULT_100_TRYING      "default_100_trying"
 
 #define CONNECTION_BUFFER_SIZE 5000
 #define CONTROL_BUFFER_SIZE 500

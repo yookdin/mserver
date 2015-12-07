@@ -2,57 +2,7 @@
 Recive an audio call
   
 <scenario file="register.scr"/>   Run the registration scenario
-
-<recv message=INVITE>
-</recv>
-
-<send>
-    SIP/2.0 100 Trying
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    Content-Length: 0
-</send>
-
-<send>
-    SIP/2.0 183 Session Progress
-    [last_Via]
-    [last_From]
-    [last_To];tag=1234
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
-    Alert-Info: <file://ringing.wav>
-    Content-Type: application/sdp
-    Content-Length: [len]
-
-    [default_response_body]
-</send>
-
-<send>
-    SIP/2.0 200 OK
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
-    Session-Expires: 300;refresher=uac
-    Require: timer
-    Supported: replaces,timer,norefersub
-    X-Connect-Type: Wifi
-    Content-Type: application/sdp
-    Content-Length: [len]
-
-    [default_response_body]
-</send>
-
-<recv message=ACK>
-</recv>
+<scenario file="receive_invite.scr" user_number=12345678900/>
 
 <recv message=BYE>
 </recv>
@@ -65,7 +15,7 @@ Recive an audio call
     [last_Call-ID]
     [last_CSeq]
     User-Agent: bb-test
-    Contact: <sip:[server_ip]:[server_port];transport=[transport]>
+    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
     Content-Type: application/sdp
     Content-Length: 0
 </send>

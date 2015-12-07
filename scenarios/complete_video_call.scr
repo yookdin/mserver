@@ -18,7 +18,7 @@ Receive video call
     SIP/2.0 183 Session Progress
     [last_Via]
     [last_From]
-    [last_To]
+    [last_To];tag=[tag]
     [last_Call-ID]
     [last_CSeq]
     User-Agent: bb-test
