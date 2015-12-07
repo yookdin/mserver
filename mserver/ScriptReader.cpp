@@ -32,6 +32,12 @@ ScriptReader::ScriptReader(string filepath, map<string, string> _vars, ScriptRea
     vars[DEFAULT_RESPONSE_BODY] = default_response_sip_msg_body;
     vars[DEFAULT_REQUEST_BODY] = default_request_sip_msg_body;
     vars[DEFAULT_100_TRYING] = default_100_trying;
+    
+    if(vars.count(USER_NUMBER) == 0)
+    {
+        vars[USER_NUMBER] = DEFAULT_USER_NUMBER;
+    }
+    
     read_file(filepath);
     
     print_end_title(filepath);
@@ -451,10 +457,10 @@ c=IN IP[media_ip_type] [media_ip]\n\
 b=AS:174\n\
 t=0 0\n\
 a=X-nat:0\n\
-m=audio [media_port] RTP/AVP 104 101\n\
+m=audio [media_port] RTP/AVP 0 101\n\
 b=TIAS:150000\n\
 a=sendrecv\n\
-a=rtpmap:104 ISAC/16000\n\
+a=rtpmap:0 PCMU/8000\n\
 a=rtpmap:101 telephone-event/8000\n\
 a=fmtp:101 0-15";
 

@@ -18,10 +18,8 @@
 #define SERVER_IP       "server_ip"
 #define SERVER_PORT     "server_port"
 #define CONTROL_PORT    "control_port"
-
 #define TEST_DIR        "test_dir"
 #define SCENARIO        "scenario"
-
 #define CLIENT_IP       "client_ip"
 #define CLIENT_PORT     "client_port"
 #define BRANCH          "branch"
@@ -38,9 +36,15 @@
 #define MEDIA_IP_TYPE   "media_ip_type"
 #define MEDIA_IP        "media_ip"
 #define MEDIA_PORT      "media_port"
+#define USER_NUMBER     "user_number"
 #define DEFAULT_RESPONSE_BODY   "default_response_body"
 #define DEFAULT_REQUEST_BODY    "default_request_body"
 #define DEFAULT_100_TRYING      "default_100_trying"
+
+//==========================================================================================================
+// Default values for variables
+//==========================================================================================================
+#define DEFAULT_USER_NUMBER     "12345678900"
 
 #define CONNECTION_BUFFER_SIZE 5000
 #define CONTROL_BUFFER_SIZE 500

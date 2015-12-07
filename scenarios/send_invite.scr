@@ -4,11 +4,11 @@ A common send INVITE and get answer scenario that appears in many other scripts
 <send>
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
-    From: sipp <sip:12345678900@[client_ip]:[client_port]>;tag=[tag]
+    From: sipp <sip:[user_number]@[client_ip]:[client_port]>;tag=[tag]
     To: <sip:1800707070@[server_ip]>
     Call-ID: [call_id]
     CSeq: 1 INVITE
-    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
+    Contact: <sip:[user_number]@[server_ip]:[server_port];transport=[transport]>
     Max-Forwards: 70
     Subject: Incoming Call
     Content-Type: application/sdp
@@ -17,7 +17,8 @@ A common send INVITE and get answer scenario that appears in many other scripts
     [default_request_body]
 </send>
 
-<recv message=100 optional></recv>
+<recv message=100></recv>
+<recv message=180 optional></recv>
 <recv message=183></recv>
 <recv message=200></recv>
 
@@ -31,4 +32,3 @@ A common send INVITE and get answer scenario that appears in many other scripts
       CSeq: 1 ACK
       Content-Length: 0
 </send>
-
