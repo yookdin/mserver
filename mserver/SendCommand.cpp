@@ -46,8 +46,8 @@ void SendCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines, ScriptReader &reader)
 {
     bool calc_len = false;
-    int len = 0;
-    vector<long> len_lines_indices; // Lines containins [len]
+    int len = 0; // Value of Content-Length header
+    long content_length_index = -1; // Index of the line of the Content-Length header
     
     for(string line; getline(file, line);)
     {
@@ -57,31 +57,53 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines, Script
         }
         
         trim(line); // Remove leading white spaces and tabs, final newline
-        bool contains_len = replace_vars(line, reader, call_number); // replace_vars() return true if it sees "[len]"
-        msg_lines.push_back(line);
-        
-        if(contains_len)
-        {
-            len_lines_indices.push_back(msg_lines.size() - 1);
-        }
-        
-        if(calc_len)
-        {
-            len += line.length() + 2; // The plus 2 is for the \r\n that will be appended after each line
-        }
-        
-        if(line.empty()) //  This is the last line of the header section, after which there's the optional body
+        replace_vars(line, reader, call_number);
+
+        if(line.empty()) // This is the last line of the header section, after which there's the optional body
         {
             calc_len = true;
+            msg_lines.push_back(line);
+        }
+        else
+        {
+            //----------------------------------------------------------------------------------------------
+            // Line may contain newline chars after replacement. Split to single lines and add to list.
+            //----------------------------------------------------------------------------------------------
+            stringstream ss(line);
+            string single_line;
+            
+            while(getline(ss, single_line))
+            {
+                if(calc_len)
+                {
+                    len += single_line.length() + 2; // The plus 2 is for the \r\n that will be appended after each line
+                }
+                
+                if(single_line.empty()) // This is the last line of the header section, after which there's the optional body
+                {
+                    calc_len = true;
+                }
+                
+                if(single_line.find("[len]") != string::npos)
+                {
+                    if(content_length_index != -1)
+                    {
+                        throw string("Expected only one [len] occurrence");
+                    }
+                    
+                    content_length_index = msg_lines.size();
+                }
+                
+                msg_lines.push_back(single_line);
+            }
         }
     }
     
-    // Replace [len] in all the lines that contain it; can it really be more than one line?
-    string len_str = to_string(len);
-    
-    for(auto index: len_lines_indices)
+    // Replace [len] with its value
+    if(content_length_index > -1)
     {
-        replace_len(msg_lines[index], len_str);
+        string len_str = to_string(len);
+        replace_len(msg_lines[content_length_index], len_str);
     }
 }
 

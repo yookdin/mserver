@@ -37,6 +37,8 @@ private:
     static map<string, Command*> commands;
     static map<string, Command*> init_commands();
     static regex init_command_start_regex();
+    static const string default_response_sip_msg_body;
+    static const string default_request_sip_msg_body;
     
     bool root;
     map<string, string> vars; // Map of var names and their values
@@ -50,8 +52,10 @@ private:
     CallIDKind string_to_call_id_kind(string str);
     bool is_last_var(string&);
     string get_last_value(string& var, int call_number = -1);
-
+    
+    
     //==================================================================================================================
+    // A map between call-ids and call numbers
     //==================================================================================================================
     class CallsNumMap
     {

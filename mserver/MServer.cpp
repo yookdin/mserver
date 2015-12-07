@@ -168,11 +168,6 @@ void MServer::process_args(int argc, char * argv[])
     {
         throw string("Dir " + get_value(SCENARIO_DIR) + " doesn't exist");
     }
-    
-    if(debug)
-    {
-        print_vars();
-    }
 }
 
 

@@ -66,6 +66,44 @@ const string ScriptReader::query_str("(last_)?([-\\w]+)(:value)?");
 const regex ScriptReader::query_regex(ScriptReader::query_str);
 const regex ScriptReader::script_var_regex("\\[(" + ScriptReader::query_str + ")\\]");
 
+//==========================================================================================================
+// A default body for SIP responses. Usually used where the body doesn't really matter to the test.
+//==========================================================================================================
+const string ScriptReader::default_response_sip_msg_body =
+"v=0\n\
+o=- 3607660610 3607660611 IN IP[sip_ip_type] [server_ip]\n\
+s=voxip_media\n\
+c=IN IP[sip_ip_type] [server_ip]\n\
+b=AS:174\n\
+t=0 0\n\
+a=X-nat:0\n\
+m=audio [media_port] RTP/AVP 0 101\n\
+c=IN IP[media_ip_type] [media_ip]\n\
+b=TIAS:150000\n\
+a=sendrecv\n\
+a=rtpmap:0 PCMU/8000\n\
+a=rtpmap:101 telephone-event/8000\n\
+a=fmtp:101 0-15";
+
+//==========================================================================================================
+// A default body for SIP requests. Usually used where the body doesn't really matter to the test.
+//==========================================================================================================
+const string ScriptReader::default_request_sip_msg_body =
+"v=0\n\
+o=- 3607660610 3607660611 IN IP[client_ip_type] [client_ip]\n\
+s=voxip_media\n\
+c=IN IP[media_ip_type] [media_ip]\n\
+b=AS:174\n\
+t=0 0\n\
+a=X-nat:0\n\
+m=audio [media_port] RTP/AVP 104 101\n\
+b=TIAS:150000\n\
+a=sendrecv\n\
+a=rtpmap:104 ISAC/16000\n\
+a=rtpmap:101 telephone-event/8000\n\
+a=fmtp:101 0-15";
+
+
 
 //==========================================================================================================
 // Init command map, read and execute file.
@@ -82,6 +120,8 @@ ScriptReader::ScriptReader(string filepath, map<string, string> _vars, ScriptRea
         calls_num_map = parent->calls_num_map;
     }
     
+    vars[DEFAULT_RESPONSE_BODY] = default_response_sip_msg_body;
+    vars[DEFAULT_REQUEST_BODY] = default_request_sip_msg_body;
     read_file(filepath);
 }
 
