@@ -35,7 +35,6 @@ private:
 
     deque<SipMessage*> msg_queue;
     
-    
     void listen();
     void reconnect();
     void connect();
