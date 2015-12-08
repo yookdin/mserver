@@ -25,26 +25,19 @@ Inbound call to VoXIP that is answered and ended by other side
 <recv message=200></recv>
 
 <send>
-      ACK sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
-      [last_Via]
-      Max-Forwards: 70
-      [last_From]
-      [last_To]
-      [last_Call-ID]
-      CSeq: 1 ACK
-      Content-Length: 0
+    [default_ack]
 </send>
   
 <send>
-      BYE sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
-      [last_Via]
-      [last_From]
-      [last_To]
-      [last_Call-ID]
-      Max-Forwards: 9
-      CSeq: 3 BYE
-      X-HDAP-TraceId: 17209172011445449877235
-      Content-Length: 0
+    BYE sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
+    [last_Via]
+    [last_From]
+    [last_To]
+    [last_Call-ID]
+    Max-Forwards: 9
+    CSeq: 3 BYE
+    X-HDAP-TraceId: 17209172011445449877235
+    Content-Length: 0
 </send>
 
 <recv message=200></recv>

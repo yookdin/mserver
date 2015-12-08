@@ -36,13 +36,7 @@ Second call is coming in before first call got connected
 <recv message=INVITE></recv>
   
 <send>
-  SIP/2.0 100 Trying
-  [last_Via]
-  [last_From]
-  [last_To]
-  [last_Call-ID]
-  [last_CSeq]
-  Content-Length: 0
+  [default_100_trying]
 </send>
 
 
@@ -54,13 +48,7 @@ call_number = 1 indicates that this is expected to be for the first call
 </recv>
 
 <send>
-  ACK sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
-  [last_Via]
-  [last_From]
-  [last_To]
-  [last_Call-ID]
-  CSeq: 1 ACK
-  Content-Length: 0
+  [default_ack]
 </send>
 
 

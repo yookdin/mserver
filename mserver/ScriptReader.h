@@ -42,6 +42,7 @@ private:
     static const string default_response_sip_msg_body;
     static const string default_request_sip_msg_body;
     static const string default_100_trying;
+    static const string default_ack;
     static const string default_183_header;
     static const string default_183;
     

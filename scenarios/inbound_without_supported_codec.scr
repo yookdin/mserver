@@ -36,14 +36,7 @@ Inbound call that is rejected by client due to no supported codecs
 </recv>
 
 <send>
-      ACK sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
-      [last_Via]
-      Max-Forwards: 70
-      [last_From]
-      [last_To]
-      [last_Call-ID]
-      CSeq: 1 ACK
-      Content-Length: 0
+    [default_ack]
 </send>
 
 

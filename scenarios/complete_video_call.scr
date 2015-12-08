@@ -5,13 +5,7 @@ Receive video call
 <recv message=INVITE></recv>
 
 <send>
-    SIP/2.0 100 Trying
-    [last_Via]
-    [last_From]
-    [last_To];tag=[tag]
-    [last_Call-ID]
-    [last_CSeq]
-    Content-Length: 0
+    [default_100_trying]
 </send>
 
 <send>

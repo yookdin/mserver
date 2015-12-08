@@ -33,6 +33,7 @@ ScriptReader::ScriptReader(string _filename, map<string, string> _vars, ScriptRe
     vars[DEFAULT_RESPONSE_BODY] = default_response_sip_msg_body;
     vars[DEFAULT_REQUEST_BODY] = default_request_sip_msg_body;
     vars[DEFAULT_100_TRYING] = default_100_trying;
+    vars[DEFAULT_ACK] = default_ack;
     
     read_file(filename);
     print_end_title();
@@ -489,6 +490,20 @@ const string ScriptReader::default_100_trying =
 [last_Call-ID]\n\
 [last_CSeq]\n\
 Content-Length: 0";
+
+
+//==========================================================================================================
+//==========================================================================================================
+const string ScriptReader::default_ack =
+"ACK sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0\n\
+[last_Via]\n\
+[last_From]\n\
+[last_To]\n\
+[last_Call-ID]\n\
+Max-Forwards: 70\n\
+CSeq: 1 ACK\n\
+Content-Length: 0";
+
 
 
 //==========================================================================================================
