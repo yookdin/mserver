@@ -9,7 +9,7 @@
 #include "MServer.hpp"
 #include "ScriptReader.h"
 #include "SipParser.hpp"
-#include "OptionParser.hpp"
+#include "mserver_utils.hpp"
 
 
 //==========================================================================================================
@@ -177,7 +177,7 @@ void MServer::process_args(int argc, char * argv[])
 //==========================================================================================================
 void MServer::process_control_message(string& ctrl_msg, map<string, string>& script_vars)
 {
-    cout << "Got control message: " << ctrl_msg << endl;
+    cout << "Received control message: " << ctrl_msg << endl;
     map<string, Option> options;
     
     options.emplace(SCENARIO, Option(true, true));

@@ -1,7 +1,7 @@
 
 #include "ScenarioCommand.h"
 #include "ScriptReader.h"
-#include "OptionParser.hpp"
+#include "mserver_utils.hpp"
 
 
 //==========================================================================================================
@@ -18,6 +18,8 @@ void ScenarioCommand::interpret(string &line, ifstream &file, ScriptReader &read
         cout << err << endl;
         throw string("Error executing scenario file " + scenario_file);
     }
+    
+    reader.print_continue_title();
 }
 
 

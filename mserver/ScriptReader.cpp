@@ -9,16 +9,17 @@
 #include "NextIPCommand.hpp"
 #include "StopListeningCommand.hpp"
 #include "StartListeningCommand.hpp"
+#include "SetCommand.hpp"
 #include "MServer.hpp"
 
 
 //==========================================================================================================
 // Init command map, read and execute file.
 //==========================================================================================================
-ScriptReader::ScriptReader(string filepath, map<string, string> _vars, ScriptReader* parent):
-    vars(_vars), root(parent == nullptr)
+ScriptReader::ScriptReader(string _filename, map<string, string> _vars, ScriptReader* parent):
+    filename(_filename), vars(_vars), root(parent == nullptr)
 {
-    print_title(filepath);
+    print_title();
     
     if(root)
     {
@@ -33,14 +34,8 @@ ScriptReader::ScriptReader(string filepath, map<string, string> _vars, ScriptRea
     vars[DEFAULT_REQUEST_BODY] = default_request_sip_msg_body;
     vars[DEFAULT_100_TRYING] = default_100_trying;
     
-    if(vars.count(USER_NUMBER) == 0)
-    {
-        vars[USER_NUMBER] = DEFAULT_USER_NUMBER;
-    }
-    
-    read_file(filepath);
-    
-    print_end_title(filepath);
+    read_file(filename);
+    print_end_title();
 }
 
 
@@ -331,6 +326,16 @@ SipMessage* ScriptReader::get_last_message(int call_number)
 }
 
 
+//==========================================================================================================
+//==========================================================================================================
+void ScriptReader::set_value(string var, string value, bool overwirte)
+{
+    if(vars.count(var) == 0 || overwirte)
+    {
+        vars[var] = value;
+    }
+}
+
 
 //==========================================================================================================
 //==========================================================================================================
@@ -348,10 +353,10 @@ int ScriptReader::CallsNumMap::get_call_num(string call_id)
 
 //==========================================================================================================
 //==========================================================================================================
-void ScriptReader::print_title(string filepath)
+void ScriptReader::print_title()
 {
     cout << "====================================================================================================" << endl;
-    cout << "RUNNING SCENARIO: " << filepath << " ";
+    cout << "RUNNING SCENARIO: " << filename << " ";
     
     for(auto p: vars)
     {
@@ -364,11 +369,19 @@ void ScriptReader::print_title(string filepath)
 
 //==========================================================================================================
 //==========================================================================================================
-void ScriptReader::print_end_title(string filepath)
+void ScriptReader::print_end_title()
 {
     cout << "----------------------------------------------------------------------------------------------------" << endl;
-    cout << "                      FINISHED SCENARIO: " << filepath << endl;
+    cout << "                      FINISHED SCENARIO: " << filename << endl;
     cout << "----------------------------------------------------------------------------------------------------" << endl << endl;
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+void ScriptReader::print_continue_title()
+{
+    cout << "CONTINUING SCENARIO: " << filename << endl << endl;
 }
 
 
@@ -398,6 +411,7 @@ map<string, Command*> ScriptReader::init_commands()
     local_commands["move_to_next_ip"] = new NextIPCommand();
     local_commands["stop_listening"] = new StopListeningCommand();
     local_commands["start_listening"] = new StartListeningCommand();
+    local_commands["set"] = new SetCommand();
     
     return local_commands;
 }

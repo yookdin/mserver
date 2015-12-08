@@ -20,7 +20,7 @@ ExpectCommand::ExpectCommand():
     num_regex("^-?\\d+"),
     var_regex("^\\w+"),
     bool_regex("^true|false"),
-    str_regex("^\"(\\\\\"|[^\"])*\"") // Yes, all these backslashes are needed, because after the normal replacement, the regex does another one it seems
+    str_regex("^" + string_regex_str)
 {
     // Map of constant tokens (ones without values)
     const_tokens[OpenParen::str] = new OpenParen;
@@ -203,10 +203,7 @@ Token* ExpectCommand::try_string(string &line, int &pos)
     if(regex_search(line.substr(pos), match, str_regex))
     {
         pos += match.length();
-        
-        // Get the string without the " at the beginning and end
-        string full = match.str();
-        return new String(string(full.begin() + 1, full.end() - 1));
+        return new String(match[1]); // match[1] is without the " at the beginning and end
     }
     
     return nullptr;

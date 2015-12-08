@@ -14,11 +14,13 @@ public:
     static const regex query_regex;
     static const regex script_var_regex;
 
+    void set_value(string var, string value, bool overwirte);
     string get_value(string var, int call_number = -1);
     void add_message(SipMessage* msg, bool from_child_script = false);
     void add_messages(vector<SipMessage*>& messages);
     vector<SipMessage*>& get_messages();
     SipMessage* get_last_message(int call_number = -1);
+    void print_continue_title();
     
 private:
     //------------------------------------------------------------------------------------------------------------------
@@ -43,6 +45,7 @@ private:
     static const string default_183_header;
     static const string default_183;
     
+    string filename;
     bool root;
     map<string, string> vars; // Map of var names and their values
     vector<SipMessage*> messages;
@@ -55,8 +58,8 @@ private:
     CallIDKind string_to_call_id_kind(string str);
     bool is_last_var(string&);
     string get_last_value(string& var, int call_number = -1);
-    void print_title(string filepath);
-    void print_end_title(string filepath);
+    void print_title();
+    void print_end_title();
     
     
     //==================================================================================================================

@@ -18,7 +18,7 @@
 #include <signal.h>
 #include <sys/time.h>
 
-#include "bimap.h"
+#include "mserver_utils.hpp"
 #include "defines.h"
 
 using namespace std;

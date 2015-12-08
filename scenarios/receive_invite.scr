@@ -1,6 +1,10 @@
 
 A common receive and answer scenario that appears in many other scripts
 
+<set>
+    default user_number = 12345678900 // Default value of user_number
+</set>
+
 <recv message=INVITE></recv>
 
 <send>

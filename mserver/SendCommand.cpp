@@ -11,7 +11,7 @@
 #include "SipMessage.hpp"
 #include "MServer.hpp"
 #include "ScriptReader.h"
-#include "OptionParser.hpp"
+#include "mserver_utils.hpp"
 
 
 //==========================================================================================================
@@ -20,6 +20,7 @@ SendCommand::SendCommand(): end_regex("</send>") {}
 
 
 //==========================================================================================================
+// Note: the rest of the line after the closing > of the command start is ignored
 //==========================================================================================================
 void SendCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {

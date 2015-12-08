@@ -1,6 +1,10 @@
 
 A common send INVITE and get answer scenario that appears in many other scripts
 
+<set>
+    default user_number = 12345678900 // Default value of user_number
+</set>
+
 <send>
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
