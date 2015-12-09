@@ -7,7 +7,7 @@ After a received call, make a call to voxip and cancel it
 <send>
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
-    From: sipp <sip:12345678901@[client_ip]:[client_port]>;tag=[tag]
+    From: "Yuk" <sip:12345678901@[client_ip]:[client_port]>;tag=[tag]
     To: <sip:1800707070@[server_ip]>
     Call-ID: [call_id]
     CSeq: 1 INVITE

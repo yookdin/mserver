@@ -244,7 +244,9 @@ Token* ExpectCommand::try_var(string &line, int &pos)
     if(regex_search(line.substr(pos), match, var_regex))
     {
         pos += match.length();
-        string val = reader->get_value(match.str());
+        
+        // Second variable 'true' means: if variable not found try to interpret it as last_<var>
+        string val = reader->get_value(match.str(), -1, true);
         return interpret_value(val);
     }
 

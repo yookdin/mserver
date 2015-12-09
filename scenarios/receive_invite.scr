@@ -21,7 +21,7 @@ A common receive and answer scenario that appears in many other scripts
     SIP/2.0 183 Session Progress
     [last_Via]
     [last_From]
-    [last_To];tag=1234
+    [last_To];tag=[tag]
     [last_Call-ID]
     [last_CSeq]
     User-Agent: bb-test

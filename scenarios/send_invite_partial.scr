@@ -1,5 +1,5 @@
 
-Sunny day INVITE scenario (invite sent and receives OK)
+Send INVITE and get responses up to and including the 183, with no OK
 
 <set>
     default user_number = 12345678900 // Default value of user_number
@@ -24,15 +24,3 @@ Sunny day INVITE scenario (invite sent and receives OK)
 <recv message=100></recv>
 <recv message=180 optional></recv>
 <recv message=183></recv>
-<recv message=200></recv>
-
-<send>
-    ACK sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    Max-Forwards: 70
-    CSeq: 1 ACK
-    Content-Length: 0
-</send>

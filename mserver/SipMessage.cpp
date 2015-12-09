@@ -12,6 +12,18 @@
 
 
 //==========================================================================================================
+//==========================================================================================================
+const vector<string> SipMessage::message_vars = {CSEQ, SDP_SEND_RECV};
+
+//==========================================================================================================
+//==========================================================================================================
+bool SipMessage::is_message_var(string var)
+{
+    return find(message_vars.begin(), message_vars.end(), var) != message_vars.end();
+}
+
+
+//==========================================================================================================
 // Construct message from a vector of strings, received from script file.
 //==========================================================================================================
 SipMessage::SipMessage(vector<string>& _lines): lines(_lines), dir(OUT)
@@ -265,6 +277,11 @@ string SipMessage::get_value(string& var)
         return cseq;
     }
     
+    if(name == SDP_SEND_RECV)
+    {
+        return get_sdp_send_recv();
+    }
+    
     bool to_no_tag = false;
     
     if(name == "To_no_tag")
@@ -299,6 +316,27 @@ string SipMessage::get_value(string& var)
     }
     
     throw string("SipMessage::get_value(): header " + name + " not found");
+}
+
+
+//==========================================================================================================
+// Find the SDP send-recv attribute and return its value
+//==========================================================================================================
+string SipMessage::get_sdp_send_recv()
+{
+    regex send_recv_regex("a=(sendrecv|sendonly|recvonly|inactive)");
+
+    for(auto& l: lines)
+    {
+        smatch match;
+        
+        if(regex_search(l, match, send_recv_regex))
+        {
+            return match[1];
+        }
+    }
+    
+    throw string("Message doesn't contain a send-recv SDP attribute!");
 }
 
 

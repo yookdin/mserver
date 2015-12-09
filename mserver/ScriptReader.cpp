@@ -97,8 +97,13 @@ void ScriptReader::read_file(string filename)
 // Get the value for a variable that appear in the script in brackets (like [call_id]). Some are static to
 // the test (received from MServer), some generated, some stored from previous messages.
 //==========================================================================================================
-string ScriptReader::get_value(string var, int call_number)
+string ScriptReader::get_value(string var, int call_number, bool try_as_last)
 {
+    if(is_last_var(var) || (try_as_last && SipMessage::is_message_var(var)))
+    {
+        return get_last_value(var, call_number);
+    }
+    
     if(var == BRANCH)
     {
         return gen_branch();
@@ -116,17 +121,12 @@ string ScriptReader::get_value(string var, int call_number)
         return gen_tag();
     }
     
-    if(is_last_var(var))
+    if(vars.count(var) != 0)
     {
-        return get_last_value(var, call_number);
+        return vars[var];
     }
     
-    if(vars.count(var) == 0)
-    {
-        return MServer::inst.get_value(var);
-    }
-    
-    return vars[var];
+    return MServer::inst.get_value(var);
 }
 
 

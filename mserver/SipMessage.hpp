@@ -15,6 +15,8 @@ class ScriptReader;
 
 class SipMessage {
 public:
+    static bool is_message_var(string var);
+    
     SipMessage(vector<string>& lines);
     SipMessage(char *buf, long &offset, long num_bytes);
     
@@ -31,6 +33,9 @@ public:
     void print();
     
 private:
+    // List of variable names that can be given to the get_value() function
+    static const vector<string> message_vars;
+    
     const Direction dir;
     vector<string> lines;
     string kind;    // INVITE, 200, etc.
@@ -46,6 +51,7 @@ private:
     void parse(bool from_script);
     void get_sip_line(char*& cur_buf, long& remaining_bytes, string& line);
     string extract_cseq(string header_value);
+    string get_sdp_send_recv();
 };
 
 #endif /* SipMessage_hpp */

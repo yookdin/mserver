@@ -15,7 +15,8 @@ public:
     static const regex script_var_regex;
 
     void set_value(string var, string value, bool overwirte);
-    string get_value(string var, int call_number = -1);
+    string get_value(string var, int call_number = -1, bool try_as_last = false);
+    
     void add_message(SipMessage* msg, bool from_child_script = false);
     void add_messages(vector<SipMessage*>& messages);
     vector<SipMessage*>& get_messages();
