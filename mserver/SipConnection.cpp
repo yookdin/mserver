@@ -101,9 +101,10 @@ void SipConnection::start(string in_ip)
 
 
 //======================================================================================================================
-// Try until timeout expires to get a message. If one found and is of right kind return it, o/w return null.
+// If optional is false return a message regardless of the kind.
+// If optional is true return a message only if it matches the given kind.
 //======================================================================================================================
-SipMessage* SipConnection::get_message(string kind, int timeout)
+SipMessage* SipConnection::get_message(string kind, bool optional, int timeout)
 {
     if(pfd.fd == -1)
     {
@@ -160,7 +161,8 @@ SipMessage* SipConnection::get_message(string kind, int timeout)
         }
 
         SipMessage* front = msg_queue.front();
-        if(front->get_kind() == kind)
+
+        if(!optional || front->get_kind() == kind)
         {
             msg_queue.pop_front();
             return front;

@@ -224,9 +224,9 @@ string& MServer::get_value(string var)
 
 //==========================================================================================================
 //==========================================================================================================
-SipMessage* MServer::get_sip_message(string kind, int timeout)
+SipMessage* MServer::get_sip_message(string kind, bool optional, int timeout)
 {
-    return sip_connection->get_message(kind, timeout);
+    return sip_connection->get_message(kind, optional, timeout);
 }
 
 

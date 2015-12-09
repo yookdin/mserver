@@ -35,12 +35,20 @@ TODO:
 void RecvCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
     process_args(line);
-    SipMessage* msg = MServer::inst.get_sip_message(message_kind, timeout);
+    SipMessage* msg = MServer::inst.get_sip_message(message_kind, optional, timeout);
     
-    if(msg == nullptr && !optional)
+    if(!optional)
     {
-        string plural = (timeout > 1 ? "s" : "");
-        throw string("Expected message " + message_kind + " didn't arrive (timed out after " + to_string(timeout) + " second" + plural + ")");
+        if(msg == nullptr)
+        {
+            string plural = (timeout > 1 ? "s" : "");
+            throw string("Expected message " + message_kind + " didn't arrive (timed out after " + to_string(timeout) + " second" + plural + ")");
+        }
+
+        if(msg->get_kind() != message_kind)
+        {
+            throw string("Received message " + msg->get_kind() + " while expecting message " + message_kind);
+        }
     }
     
     if(msg != nullptr)

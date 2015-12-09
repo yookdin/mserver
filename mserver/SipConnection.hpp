@@ -21,7 +21,7 @@ public:
     SipConnection(string ip, int port);
     ~SipConnection() { close(pfd.fd); }
     
-    SipMessage* get_message(string kind, int timeout); // Message kind is either method or status code
+    SipMessage* get_message(string kind, bool optional, int timeout); // Message kind is either method or status code
     bool send_message(SipMessage &message);
     void start();
     void stop();

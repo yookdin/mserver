@@ -23,7 +23,7 @@ public:
     
     void run(int argc, char * argv[]);
     string& get_value(string var);
-    SipMessage* get_sip_message(string kind, int timeout); // Message kind is either method or status code
+    SipMessage* get_sip_message(string kind, bool optional, int timeout); // Message kind is either method or status code
     bool send_sip_message(SipMessage &message);
     void advance_ip();
     void reset_ip();
