@@ -24,7 +24,7 @@ SendCommand::SendCommand(): end_regex("</send>") {}
 //==========================================================================================================
 void SendCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
-    process_args(line);
+    process_args(line, reader);
     vector<string> msg_lines;
     replcae_vars(file, msg_lines, reader);
     
@@ -111,8 +111,9 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines, Script
 
 //==========================================================================================================
 //==========================================================================================================
-void SendCommand::process_args(string& line)
+void SendCommand::process_args(string& line, ScriptReader &reader)
 {
+    replace_vars(line, reader);
     call_number = -1;
     string opt = "call_number";
     map<string, Option> options;

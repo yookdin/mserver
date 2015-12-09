@@ -1,41 +1,9 @@
 
 <scenario file="register.scr"/>
 
-----------------------------------------------------------------------------------------------------
-First call to voxip
-----------------------------------------------------------------------------------------------------
-<scenario file="send_invite.scr" user_number=12345678900/> // This is also the default user-number, but specified anyway for clarity
-
-----------------------------------------------------------------------------------------------------
-First call put on hold from voxip
-----------------------------------------------------------------------------------------------------
-<recv message=INVITE></recv>
-
-<send>
-    SIP/2.0 200 OK
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
-    Session-Expires: 300;refresher=uac
-    Require: timer
-    Supported: replaces,timer,norefersub
-    X-Connect-Type: Wifi
-    Content-Type: application/sdp
-    Content-Length: [len]
-
-    [default_response_body]
-</send>
-
-<recv message=ACK></recv>
-
-----------------------------------------------------------------------------------------------------
-Second call from voxip
-----------------------------------------------------------------------------------------------------
-<scenario file="receive_invite.scr" user_number=12345678902/>
+<scenario file="send_invite.scr"/>      First call to voxip
+<scenario file="receive_hold.scr"/>     First call put on hold from voxip
+<scenario file="receive_invite.scr" user_number=12345678902/>   Second call from voxip
 
 ----------------------------------------------------------------------------------------------------
 Second call ends
@@ -56,34 +24,10 @@ Second call ends
 </send>
 
 ----------------------------------------------------------------------------------------------------
-First call unhold
+First call unhold and end
 ----------------------------------------------------------------------------------------------------
-<recv message=INVITE timeout=3></recv>  For some reason we need to wait longer here
+<scenario file="receive_unhold.scr" call_number=1/>
 
-<send>
-    SIP/2.0 200 OK
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
-    Session-Expires: 300;refresher=uac
-    Require: timer
-    Supported: replaces,timer,norefersub
-    X-Connect-Type: Wifi
-    Content-Type: application/sdp
-    Content-Length: [len]
-
-    [default_response_body]
-</send>
-
-<recv message=ACK></recv>
-
-----------------------------------------------------------------------------------------------------
-First call ends
-----------------------------------------------------------------------------------------------------
 <recv message=BYE></recv>
 
 <send>

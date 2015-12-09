@@ -13,6 +13,6 @@ private:
     string scenario_file;
     map<string, string> args;
     
-    void process_args(string& line);
+    void process_args(string& line, ScriptReader &reader);
 };
 

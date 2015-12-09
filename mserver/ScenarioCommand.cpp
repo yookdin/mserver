@@ -8,14 +8,13 @@
 //==========================================================================================================
 void ScenarioCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
-    process_args(line);
+    process_args(line, reader);
     
     try
     {
         ScriptReader nested_reader(scenario_file, args, &reader);
-        reader.add_messages(nested_reader.get_messages());
     } catch (string err) {
-        cout << err << endl;
+        cout << endl << err << endl;
         throw string("Error executing scenario file " + scenario_file);
     }
     
@@ -25,8 +24,9 @@ void ScenarioCommand::interpret(string &line, ifstream &file, ScriptReader &read
 
 //==========================================================================================================
 //==========================================================================================================
-void ScenarioCommand::process_args(string& line)
+void ScenarioCommand::process_args(string& line, ScriptReader &reader)
 {
+    replace_vars(line, reader);
     scenario_file.clear();
     args.clear();
     map<string, Option> options;

@@ -15,7 +15,7 @@
 // If 'default' is specified, it means this is the default value for this variable, and will be set only
 // if that variable isn't set yet.
 //==========================================================================================================
-SetCommand::SetCommand(): end_regex("</set>"), var_set_regex("(default +)?(\\w+) *= *(\\w+|" + string_regex_str + ")")
+SetCommand::SetCommand(): end_regex("</set>"), var_set_regex("(default +)?(\\w+) *= *(-?\\w+|" + string_regex_str + ")")
 {}
 
 

@@ -24,10 +24,12 @@ ScriptReader::ScriptReader(string _filename, map<string, string> _vars, ScriptRe
     if(root)
     {
         calls_num_map = new CallsNumMap;
+        messages = new vector<SipMessage*>;
     }
     else
     {
         calls_num_map = parent->calls_num_map;
+        messages = parent->messages;
     }
     
     vars[DEFAULT_RESPONSE_BODY] = default_response_sip_msg_body;
@@ -46,11 +48,12 @@ ScriptReader::~ScriptReader()
 {
     if(root)
     {
-        for(auto msg: messages)
+        for(auto msg: *messages)
         {
             delete msg;
         }
         
+        delete messages;
         delete calls_num_map;
     }
 }
@@ -237,33 +240,10 @@ void ScriptReader::gen_random_string(string& str, int min_len, const string* cha
 
 //==========================================================================================================
 //==========================================================================================================
-void ScriptReader::add_message(SipMessage* msg, bool from_child_script)
+void ScriptReader::add_message(SipMessage* msg)
 {
-    messages.push_back(msg);
-    
-    if(!from_child_script) // o/w call number already set in child script
-    {
-        msg->set_call_number(calls_num_map->get_call_num(msg->get_call_id()));
-    }
-}
-
-
-//==========================================================================================================
-//==========================================================================================================
-void ScriptReader::add_messages(vector<SipMessage*>& _messages)
-{
-    for(auto m: _messages)
-    {
-        add_message(m, true);
-    }
-}
-
-
-//==========================================================================================================
-//==========================================================================================================
-vector<SipMessage*>& ScriptReader::get_messages()
-{
-    return messages;
+    messages->push_back(msg);
+    msg->set_call_number(calls_num_map->get_call_num(msg->get_call_id()));
 }
 
 
@@ -303,22 +283,22 @@ string ScriptReader::get_last_value(string& var, int call_number)
 //==========================================================================================================
 SipMessage* ScriptReader::get_last_message(int call_number)
 {
-    if(messages.empty())
+    if(messages->empty())
     {
         return nullptr;
     }
     
     if(call_number == -1) // Default is the last message
     {
-        return messages.back();
+        return messages->back();
     }
 
     // Go over messages in reverse order
-    for(long i = messages.size() - 1; i >= 0; --i)
+    for(long i = messages->size() - 1; i >= 0; --i)
     {
-        if(messages[i]->get_call_number() == call_number)
+        if(messages->at(i)->get_call_number() == call_number)
         {
-            return messages[i];
+            return messages->at(i);
         }
     }
 

@@ -15,6 +15,6 @@ private:
     int timeout; // In seconds
     int call_number;
 
-    void process_args(string& line);
+    void process_args(string& line, ScriptReader &reader);
 };
 

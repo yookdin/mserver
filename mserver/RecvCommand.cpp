@@ -34,7 +34,7 @@ TODO:
 //==========================================================================================================
 void RecvCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
-    process_args(line);
+    process_args(line, reader);
     SipMessage* msg = MServer::inst.get_sip_message(message_kind, optional, timeout);
     
     if(!optional)
@@ -53,9 +53,9 @@ void RecvCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
     
     if(msg != nullptr)
     {
-        // INVITE starts a new call. Otherwise, the message belongs to a previous call and should check that its parameters (such as call-id)
-        // match that call.
-        if(message_kind != "INVITE")
+        // Check call params only if call number explicitly specified. Automatic detection of call number is tricky, and need
+        // some work
+        if(call_number != -1)
         {
             msg->check_call_params(call_number, reader); // Must call this before adding the messagae, o/w it, the message, will become the last of its call
         }
@@ -67,8 +67,9 @@ void RecvCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 
 //==========================================================================================================
 //==========================================================================================================
-void RecvCommand::process_args(string& line)
+void RecvCommand::process_args(string& line, ScriptReader &reader)
 {
+    replace_vars(line, reader);
     message_kind.clear();
     optional = false;
     timeout = 2;

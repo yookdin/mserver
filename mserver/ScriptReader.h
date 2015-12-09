@@ -17,9 +17,7 @@ public:
     void set_value(string var, string value, bool overwirte);
     string get_value(string var, int call_number = -1, bool try_as_last = false);
     
-    void add_message(SipMessage* msg, bool from_child_script = false);
-    void add_messages(vector<SipMessage*>& messages);
-    vector<SipMessage*>& get_messages();
+    void add_message(SipMessage* msg);
     SipMessage* get_last_message(int call_number = -1);
     void print_continue_title();
     
@@ -50,7 +48,7 @@ private:
     string filename;
     bool root;
     map<string, string> vars; // Map of var names and their values
-    vector<SipMessage*> messages;
+    vector<SipMessage*>* messages;
     
     void read_file(string filepath);
     string gen_branch();

@@ -1,13 +1,29 @@
 
 <scenario file="register.scr"/>
-<scenario file="receive_invite.scr"/> call number 1
+
+<scenario file="receive_invite.scr" user_number=12345678900/>       Call number 1
 <scenario file="send_invite_partial.scr" user_number=12345678901/>  Call number 2: invite sent but doesn't receive OK
+<scenario file="receive_hold.scr" call_number=1/>    Receive hold for call 1
 
 ----------------------------------------------------------------------------------------------------
-End intial call 1
+Receive 200-OK and then hold for call 2
 ----------------------------------------------------------------------------------------------------
-<recv message=BYE call_number = 1>
+<recv message=200 call_number = 2>
 </recv>
+
+<send>
+    [default_ack]
+</send>
+
+<scenario file="receive_hold.scr" call_number=2/>
+
+
+----------------------------------------------------------------------------------------------------
+Unhold and end call 1
+----------------------------------------------------------------------------------------------------
+<scenario file="receive_unhold.scr" call_number = 1 />
+
+<recv message=BYE></recv>
 
 <send>
     SIP/2.0 200 OK
@@ -19,25 +35,15 @@ End intial call 1
     User-Agent: bb-test
     Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
     Content-Type: application/sdp
-    Content-Length: [len]
+    Content-Length: 0
 </send>
 
-
 ----------------------------------------------------------------------------------------------------
-Second call is answered and ended
+Unhold and end call 2
 ----------------------------------------------------------------------------------------------------
-<recv message=183 call_number = 2> There's another 183 for second call
-</recv>
+<scenario file="receive_unhold.scr" call_number = 2 />
 
-<recv message=200>
-</recv>
-
-<send>
-    [default_ack]
-</send>
-
-<recv message=BYE>
-</recv>
+<recv message=BYE></recv>
 
 <send>
     SIP/2.0 200 OK
@@ -49,5 +55,5 @@ Second call is answered and ended
     User-Agent: bb-test
     Contact: <sip:12345678901@[server_ip]:[server_port];transport=[transport]>
     Content-Type: application/sdp
-    Content-Length: [len]
+    Content-Length: 0
 </send>

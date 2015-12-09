@@ -13,7 +13,7 @@ private:
     const regex end_regex;
     int call_number;
     
-    void process_args(string& line);
+    void process_args(string& line, ScriptReader &reader);
     void replcae_vars(ifstream &file, vector<string>& msg_lines, ScriptReader &reader);
 };
 
