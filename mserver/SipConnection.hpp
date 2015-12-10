@@ -26,6 +26,7 @@ public:
     void start();
     void stop();
     void start(string in_ip);
+    bool are_pending_messages();
     
 private:
     string ip;

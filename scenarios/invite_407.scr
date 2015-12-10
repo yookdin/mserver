@@ -42,3 +42,5 @@ Receive invite and send 407 response, then another invite, and send OK
 
     [default_response_body]
 </send>
+
+<recv message=ACK></recv>

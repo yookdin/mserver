@@ -70,6 +70,11 @@ void MServer::run(int argc, char * argv[])
             try
             {
                 ScriptReader reader(get_value(SCENARIO), script_vars);
+                
+                if(sip_connection->are_pending_messages())
+                {
+                    throw string("There are pending messages after test finished");
+                }
             }
             catch(string err) // Error caught here is a test error: report it and continue
             {
