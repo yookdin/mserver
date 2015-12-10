@@ -5,4 +5,4 @@ No network with just more than one IP available - voixp should just try to regis
 <stop_listening/>
 <pause for 1 second/>
 <move_to_next_ip/> // Will also restart the listening process
-<scenario file="register.scr"/>
+<scenario file=register.scr/>

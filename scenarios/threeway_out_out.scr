@@ -1,44 +1,20 @@
 
-<scenario file="register.scr"/>
-
-<scenario file="receive_invite.scr"/>   First call from voxip
-<scenario file="receive_hold.scr"/>     First call put on hold
-<scenario file="receive_invite.scr" user_number=12345678902/>   Second call from voxip
+<scenario file=register.scr/>
 
 ----------------------------------------------------------------------------------------------------
-Second call ends
+First call received and put on hold
 ----------------------------------------------------------------------------------------------------
-<recv message=BYE></recv>
-
-<send>
-    SIP/2.0 200 OK
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:12345678902@[server_ip]:[server_port];transport=[transport]>
-    Content-Type: application/sdp
-    Content-Length: 0
-</send>
+<scenario file=receive_invite.scr/>
+<scenario file=receive_hold.scr/>
 
 ----------------------------------------------------------------------------------------------------
-First call unhold and end
+Second call received and ended
 ----------------------------------------------------------------------------------------------------
-<scenario file="receive_unhold.scr" call_number=1/>
+<scenario file=receive_invite.scr user_number=12345678902/>
+<scenario file=receive_bye.scr user_number=12345678902/>
 
-<recv message=BYE></recv>
-
-<send>
-    SIP/2.0 200 OK
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
-    Content-Type: application/sdp
-    Content-Length: 0
-</send>
+----------------------------------------------------------------------------------------------------
+First call unholded and ended
+----------------------------------------------------------------------------------------------------
+<scenario file=receive_unhold.scr call_number=1/>
+<scenario file=receive_bye.scr/>

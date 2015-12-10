@@ -1,26 +1,10 @@
 
-<scenario file="register.scr"/>
-<scenario file="receive_invite.scr"/> call number 1
-<scenario file="send_invite_partial.scr" user_number=12345678901/>  Call number 2: invite sent but doesn't receive OK
+<scenario file=register.scr/>
 
-----------------------------------------------------------------------------------------------------
-End intial call 1
-----------------------------------------------------------------------------------------------------
-<recv message=BYE call_number = 1>
-</recv>
 
-<send>
-    SIP/2.0 200 OK
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
-    Content-Type: application/sdp
-    Content-Length: [len]
-</send>
+<scenario file=receive_invite.scr/>                               Call number 1
+<scenario file=send_invite_partial.scr user_number=12345678901/>  Call number 2: invite sent but doesn't receive OK
+<scenario file=receive_bye.scr call_number = 1/>                    End call 1
 
 
 ----------------------------------------------------------------------------------------------------
@@ -36,18 +20,4 @@ Second call is answered and ended
     [default_ack]
 </send>
 
-<recv message=BYE>
-</recv>
-
-<send>
-    SIP/2.0 200 OK
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:12345678901@[server_ip]:[server_port];transport=[transport]>
-    Content-Type: application/sdp
-    Content-Length: [len]
-</send>
+<scenario file=receive_bye.scr user_number=12345678901/>

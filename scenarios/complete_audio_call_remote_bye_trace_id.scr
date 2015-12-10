@@ -1,7 +1,7 @@
 
 Receive audio call and end it from mserver
 
-<scenario file="register.scr"/>
+<scenario file=register.scr/>
 
 <recv message=INVITE></recv>
 
@@ -61,4 +61,4 @@ Receive audio call and end it from mserver
 
 <recv message=200></recv>
 
-<scenario file="unregister.scr"/>
+<scenario file=unregister.scr/>

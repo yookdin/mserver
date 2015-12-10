@@ -1,7 +1,7 @@
 
 Inbound call that is rejected by client due to no supported codecs
 
-<scenario file="register.scr"/>
+<scenario file=register.scr/>
 
 <send>
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0

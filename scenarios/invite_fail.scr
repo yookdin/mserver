@@ -1,7 +1,7 @@
 
 Receive invite and send an error response
 
-<scenario file="register.scr"/>
+<scenario file=register.scr/>
 
 <recv message=INVITE>
 </recv>

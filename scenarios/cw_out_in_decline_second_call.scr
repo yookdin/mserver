@@ -1,8 +1,8 @@
 
 After a received call, make a call to voxip and have it rejected
 
-<scenario file="register.scr"/>
-<scenario file="receive_invite.scr"/>
+<scenario file=register.scr/>
+<scenario file=receive_invite.scr/>
 
 <send>
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0

@@ -1,7 +1,7 @@
 
 Receive invite and send 407 response, then another invite, and send OK
   
-<scenario file="register.scr"/>   Run the registration scenario
+<scenario file=register.scr/>   Run the registration scenario
 
 <recv message=INVITE></recv>
 

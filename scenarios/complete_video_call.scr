@@ -1,6 +1,6 @@
 Receive video call
   
-<scenario file="register.scr"/>   Run the registration scenario
+<scenario file=register.scr/>   Run the registration scenario
 
 <recv message=INVITE></recv>
 
@@ -102,4 +102,4 @@ Receive video call
     Content-Length: [len]
 </send>
 
-<scenario file="unregister.scr"/>   Run the unregistration scenario
+<scenario file=unregister.scr/>   Run the unregistration scenario

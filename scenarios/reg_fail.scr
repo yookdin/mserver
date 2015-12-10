@@ -16,4 +16,4 @@ Registration failure with given error code
 
 <move_to_next_ip/>
 
-<scenario file="reg_unreg.scr"/>
+<scenario file=reg_unreg.scr/>

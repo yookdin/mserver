@@ -1,7 +1,7 @@
 
 Receive a call, don't send 200, send invite to another call, get busy reply
 
-<scenario file="register.scr"/>
+<scenario file=register.scr/>
 
 <recv message=INVITE></recv>
 

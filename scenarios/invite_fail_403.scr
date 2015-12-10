@@ -1,7 +1,7 @@
 
 Receive invite and send 403 response
 
-<scenario file="register.scr"/>
+<scenario file=register.scr/>
 
 <recv message=INVITE>
 </recv>
@@ -19,4 +19,4 @@ Receive invite and send 403 response
 <recv message=ACK>
 </recv>
 
-<scenario file="register.scr"/>
+<scenario file=register.scr/>

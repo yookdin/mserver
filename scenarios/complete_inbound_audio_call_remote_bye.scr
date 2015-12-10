@@ -1,8 +1,8 @@
 
 Inbound call to VoXIP that is answered and ended by other side
  
-<scenario file="register.scr"/>
-<scenario file="send_invite.scr"/>
+<scenario file=register.scr/>
+<scenario file=send_invite.scr/>
   
 <send>
       BYE sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0

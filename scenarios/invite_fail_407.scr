@@ -1,7 +1,7 @@
 
 Multiple 407 responses for invite
 
-<scenario file="register.scr"/>
+<scenario file=register.scr/>
 
 <recv message=INVITE></recv>
 
@@ -33,5 +33,5 @@ Multiple 407 responses for invite
 
 <recv message=ACK></recv>
 
-<scenario file="register.scr"/>
+<scenario file=register.scr/>
 

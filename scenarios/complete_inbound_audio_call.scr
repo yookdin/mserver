@@ -1,22 +1,6 @@
 
 Inbound call that is answered and ended by client
 
-<scenario file="register.scr"/>
-<scenario file="send_invite.scr"/>
-
-<recv message=BYE></recv>
-
-<send>
-    SIP/2.0 200 OK
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
-    Content-Type: application/sdp
-    Content-Length: [len]
-</send>
-
-
+<scenario file=register.scr/>
+<scenario file=send_invite.scr/>
+<scenario file=receive_bye.scr/>

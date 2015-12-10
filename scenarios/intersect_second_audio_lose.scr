@@ -4,7 +4,7 @@ second  - voxip sends the invite second
 audio   - both calls are audio
 lose    - voxip should lose due to lower call-id
 
-<scenario file="register.scr"/>
+<scenario file=register.scr/>
 
 ----------------------------------------------------------------------------------------------------
 Initiate the first call; call_number = 1

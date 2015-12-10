@@ -1,7 +1,7 @@
 
 Recive an audio call
   
-<scenario file="register.scr"/>   Run the registration scenario
+<scenario file=register.scr/>   Run the registration scenario
 
 <recv message=INVITE>
 </recv>
@@ -50,21 +50,6 @@ Recive an audio call
 <recv message=ACK>
 </recv>
 
-<recv message=BYE>
-</recv>
-
-<send>
-    SIP/2.0 200 OK
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:[server_ip]:[server_port];transport=[transport]>
-    Content-Type: application/sdp
-    Content-Length: 0
-</send>
-
-<scenario file="unregister.scr"/>   Run the unregistration scenario
+<scenario file=receive_bye.scr/>
+<scenario file=unregister.scr/>   Run the unregistration scenario
 

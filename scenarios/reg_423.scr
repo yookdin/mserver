@@ -50,4 +50,4 @@ The next register should contain Expires value >= min_exp_val
     Content-Length: 0
 </send>
 
-<scenario file="unregister.scr"/>
+<scenario file=unregister.scr/>
