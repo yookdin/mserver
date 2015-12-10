@@ -1,0 +1,38 @@
+
+INVITE sent and is rejected
+
+<set>
+    default user_number = 12345678900 // Default value of user_number
+</set>
+
+<send>
+    INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
+    Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
+    From: "Yuk" <sip:[user_number]@[client_ip]:[client_port]>;tag=[tag]
+    To: <sip:1800707070@[server_ip]>
+    Call-ID: [call_id]
+    CSeq: 1 INVITE
+    Contact: <sip:[user_number]@[server_ip]:[server_port];transport=[transport]>
+    Max-Forwards: 70
+    Subject: Incoming Call
+    Content-Type: application/sdp
+    Content-Length: [len]
+
+    [default_request_body]
+</send>
+
+<recv message=100></recv>
+<recv message=180 optional></recv>
+<recv message=183 optional></recv>
+<recv message=486></recv>
+
+<send>
+    ACK sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
+    [last_Via]
+    [last_From]
+    [last_To]
+    [last_Call-ID]
+    Max-Forwards: 70
+    CSeq: 1 ACK
+    Content-Length: 0
+</send>

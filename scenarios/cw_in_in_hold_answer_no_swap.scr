@@ -1,0 +1,28 @@
+
+<scenario file=register.scr/>
+
+<scenario file=send_invite.scr/>                                    Call to voxip that is answered
+<scenario file=send_invite_partial.scr user_number=12345678901/>    Call number 2: invite sent but doesn't receive OK
+
+<scenario file=receive_hold.scr call_number=1/>    Receive hold for call 1
+
+----------------------------------------------------------------------------------------------------
+Second call answered
+----------------------------------------------------------------------------------------------------
+<recv message=183 optional call_number= 2>
+</recv>
+
+<recv message=200>
+</recv>
+
+<send>
+    [default_ack]
+</send>
+
+<scenario file=receive_bye.scr user_number=12345678901/>    Second call ended
+
+----------------------------------------------------------------------------------------------------
+First call taken out of hold and ended
+----------------------------------------------------------------------------------------------------
+<scenario file=receive_unhold.scr call_number = 1/>
+<scenario file=receive_bye.scr/>
