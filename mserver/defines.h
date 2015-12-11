@@ -10,7 +10,7 @@
 #define defines_h
 
 //==========================================================================================================
-// Keywords/vars names
+// Global variable names
 //==========================================================================================================
 #define RUN_DIR         "run_dir"
 #define SCENARIO_DIR    "scenarios_dir"
@@ -22,35 +22,42 @@
 #define SCENARIO        "scenario"
 #define CLIENT_IP       "client_ip"
 #define CLIENT_PORT     "client_port"
-#define BRANCH          "branch"
 #define TRANSPORT       "transport"
-#define CALL_ID         "call_id"
-#define MIN_CALL_ID     "min_call_id"
-#define MAX_CALL_ID     "max_call_id"
 #define PID             "pid"
-#define LEN             "len"
-#define TAG             "tag"
-#define CSEQ            "cseq"
-#define SDP_SEND_RECV   "sdp_send_recv"
 #define SIP_IP_TYPE     "sip_ip_type"
 #define CLIENT_IP_TYPE  "client_ip_type"
 #define MEDIA_IP_TYPE   "media_ip_type"
 #define MEDIA_IP        "media_ip"
 #define MEDIA_PORT      "media_port"
-#define USER_NUMBER     "user_number"
 #define DEFAULT_RESPONSE_BODY   "default_response_body"
 #define DEFAULT_REQUEST_BODY    "default_request_body"
 #define DEFAULT_100_TRYING      "default_100_trying"
 #define DEFAULT_ACK             "default_ack"
 
 //==========================================================================================================
-// Default values for variables
+// Generative variables
 //==========================================================================================================
-#define DEFAULT_USER_NUMBER     "12345678900"
+#define BRANCH          "branch"
+#define CALL_ID         "call_id"
+#define MIN_CALL_ID     "min_call_id"
+#define MAX_CALL_ID     "max_call_id"
+#define LEN             "len"
+#define TAG             "tag"
 
+//==========================================================================================================
+// Message variable names
+//==========================================================================================================
+#define CSEQ            "cseq"
+#define SDP_SEND_RECV   "sdp_send_recv"
+#define ME              "me"
+#define OTHER           "other"
+
+
+//==========================================================================================================
+// Constants
+//==========================================================================================================
 #define CONNECTION_BUFFER_SIZE 5000
 #define CONTROL_BUFFER_SIZE 500
-
 #define CRLF "\r\n"
 
 #endif /* defines_h */

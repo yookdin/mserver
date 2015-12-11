@@ -12,8 +12,10 @@
 
 
 //==========================================================================================================
+// These are special variables, that if encountered in a script, are given to the apropriate last message
+// to get their value. They're like last_<header> vars, but are not header names.
 //==========================================================================================================
-const vector<string> SipMessage::message_vars = {CSEQ, SDP_SEND_RECV};
+const vector<string> SipMessage::message_vars = {CSEQ, SDP_SEND_RECV, ME, OTHER};
 
 //==========================================================================================================
 //==========================================================================================================
@@ -253,25 +255,58 @@ void SipMessage::write_to_buffer(char buf[], long &num_to_write)
 
 
 //==========================================================================================================
-// Get a value from the current message according to the var string. The var can represent an entire header,
-// just the header value, or other data (if var starts with "last_", that part is ignored).
-// var = <header-name>          :   the entire header line will be returned (not including CRLF)
-// var = <header-name>:value    :   only the value part of the header line
-// Special vars:
-// var = cseq                   :   the numerical part of CSeq header
-// var = To_no_tag              :   "To" header without the tag part
+// Get a value from the current message according to the var string. The var can represent a header or other
+// data. When header line is returned it is not including CRLF.
+// If just_value is true, return only the value part of a header.
 //==========================================================================================================
-string SipMessage::get_value(string& var)
+string SipMessage::get_value(string var, bool just_value)
 {
-    smatch match;
-    
-    if(!regex_match(var, match, ScriptReader::query_regex))
+    if(is_message_var(var))
     {
-        throw string("SipMessage::get_value(): wrong format of var: " + var);
+        return get_special_var(var);
+    }
+    else
+    {
+        return get_header(var, just_value);
+    }
+}
+
+
+//==========================================================================================================
+//==========================================================================================================
+string SipMessage::get_header(string name, bool just_value)
+{
+    string result;
+    
+    for(int i = 1; i < lines.size() && !lines[i].empty(); ++i)
+    {
+        SipParser::inst().match(HEADER_LINE, lines[i]);
+        
+        if(name == SipParser::inst().get_sub_match(HEADER_NAME))
+        {
+            result = (!just_value ? (name + ": ") : "") + SipParser::inst().get_sub_match(HEADER_VALUE);
+            break;
+        }
     }
     
-    string name = match[2];
+    if(result.empty())
+    {
+        throw string("SipMessage::get_value(): header " + name + " not found");
+    }
     
+    return result;
+}
+
+
+//==========================================================================================================
+// Special vars:
+// cseq             : the numerical part of CSeq header
+// sdp_send_recv    : SDP send/recv attribute
+// me               : value of 'From' header for outgoing message, 'To' header for incoming
+// other            : value of 'To' header for outgoing message, 'From' header for incoming
+//==========================================================================================================
+string SipMessage::get_special_var(string &name)
+{
     if(name == CSEQ)
     {
         return cseq;
@@ -281,41 +316,18 @@ string SipMessage::get_value(string& var)
     {
         return get_sdp_send_recv();
     }
-    
-    bool to_no_tag = false;
-    
-    if(name == "To_no_tag")
-    {
-        name = "To";
-        to_no_tag = true;
-    }
-    
-    bool entire_hdr = match[3].str().empty(); // No ":value" in query string
-    string result;
-    
-    for(int i = 1; i < lines.size() && !lines[i].empty(); ++i)
-    {
-        SipParser::inst().match(HEADER_LINE, lines[i]);
 
-        if(name == SipParser::inst().get_sub_match(HEADER_NAME))
-        {
-            result = (entire_hdr ? (name + ": ") : "") + SipParser::inst().get_sub_match(HEADER_VALUE);
-            break;
-        }
-    }
-    
-    if(!result.empty())
+    if(name == ME)
     {
-        if(to_no_tag)
-        {
-            // Remove the to-tag from the header
-            result = regex_replace(result, SipParser::inst().to_tag_regex, "");
-        }
-        
-        return result;
+        return call->get_me();
     }
     
-    throw string("SipMessage::get_value(): header " + name + " not found");
+    if(name == OTHER)
+    {
+        return call->get_other();
+    }
+
+    throw string("Variable: " + name + " is not a message variable name");
 }
 
 
@@ -342,14 +354,14 @@ string SipMessage::get_sdp_send_recv()
 
 //==========================================================================================================
 //==========================================================================================================
-void SipMessage::set_call_number(int call_num)
+void SipMessage::set_call(Call* _call)
 {
-    if(call_number != -1)
+    if(call != nullptr)
     {
-        throw string("Call number already set!");
+        throw string("Call already set!");
     }
     
-    call_number = call_num;
+    call = _call;
 }
 
 

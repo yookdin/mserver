@@ -1,5 +1,5 @@
 
-Sunny day INVITE scenario (invite sent and receives OK)
+Send unhold scenario
 
 <set>
     default user_number = 12345678900 // Default value of user_number
@@ -8,22 +8,35 @@ Sunny day INVITE scenario (invite sent and receives OK)
 <send>
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
-    From: "Yuk" <sip:[user_number]@[client_ip]:[client_port]>;tag=[tag]
-    To: <sip:1800707070@[server_ip]>
-    Call-ID: [call_id]
-    CSeq: 1 INVITE
+    From: [last_me]
+    To: [last_other]
+    [last_Call-ID]
+    CSeq: [last_cseq+1] INVITE
     Contact: <sip:[user_number]@[server_ip]:[server_port];transport=[transport]>
     Max-Forwards: 70
-    Subject: Outgoing Call
+    Supported: replaces,timer,norefersub
+    Session-Expires: 300;refresher=uac
+    Min-SE: 90
+    User-Agent: bb-test
     Content-Type: application/sdp
     Content-Length: [len]
 
-    [default_request_body]
+    v=0
+    o=- 3607660610 3607660611 IN IP[client_ip_type] [client_ip]
+    s=voxip_media
+    c=IN IP[media_ip_type] [media_ip]
+    b=AS:174
+    t=0 0
+    a=X-nat:0
+    m=audio [media_port] RTP/AVP 0 101
+    c=IN IP[media_ip_type] [media_ip]
+    b=TIAS:150000
+    a=sendrecv
+    a=rtpmap:0 PCMU/8000
+    a=rtpmap:101 telephone-event/8000
+    a=fmtp:101 0-15
 </send>
 
-<recv message=100></recv>
-<recv message=180 optional></recv>
-<recv message=183></recv>
 <recv message=200></recv>
 
 <send>
@@ -33,6 +46,7 @@ Sunny day INVITE scenario (invite sent and receives OK)
     [last_To]
     [last_Call-ID]
     Max-Forwards: 70
-    CSeq: 1 ACK
+    CSeq: [last_cseq] ACK
     Content-Length: 0
 </send>
+

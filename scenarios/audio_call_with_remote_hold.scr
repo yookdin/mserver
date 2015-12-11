@@ -1,0 +1,14 @@
+
+Receive audio call, place call on hold and take call off hold
+
+<scenario file=register.scr/>
+<scenario file=receive_invite.scr/>     (Incoming call, from INVITE to OK)
+<scenario file=send_hold.scr/>          (From INVITE to ACK)
+
+If unholding immediatley, then the unhold might occur before BB start to expect an unhold, and then it will complain
+that it can't expect a remote unhold, if we're not on a remote hold!
+<pause for 1 second/>
+
+<scenario file=send_unhold.scr/>        (From INVITE to ACK)
+<scenario file=receive_bye.scr/>        (From BYE to OK)
+<scenario file=unregister.scr/>

@@ -12,6 +12,8 @@
 #include "OptionParser.hpp"
 #include "bimap.h"
 
+enum Direction {IN, OUT};
+
 extern const string string_regex_str;
 
 #endif /* mserver_utils_hpp */

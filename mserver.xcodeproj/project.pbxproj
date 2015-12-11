@@ -23,6 +23,7 @@
 		FE9B0BA31C11FCE0005FCE06 /* ScenarioCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B9D1C11FCE0005FCE06 /* ScenarioCommand.cpp */; };
 		FE9B0BA41C11FCE0005FCE06 /* SendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B9F1C11FCE0005FCE06 /* SendCommand.cpp */; };
 		FE9B0BA71C1262AA005FCE06 /* NextIPCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0BA51C1262AA005FCE06 /* NextIPCommand.cpp */; };
+		FEC54F2E1C1B223B00D316E9 /* Call.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEC54F2C1C1B223B00D316E9 /* Call.cpp */; };
 		FED678321BFFD8E300B739BE /* Operator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FED678311BFFD8E300B739BE /* Operator.cpp */; };
 		FEF7460F1C147FF700598473 /* StopListeningCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEF7460D1C147FF700598473 /* StopListeningCommand.cpp */; };
 		FEF746121C1480C100598473 /* StartListeningCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEF746101C1480C100598473 /* StartListeningCommand.cpp */; };
@@ -86,6 +87,8 @@
 		FE9B0BA01C11FCE0005FCE06 /* SendCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendCommand.h; sourceTree = "<group>"; };
 		FE9B0BA51C1262AA005FCE06 /* NextIPCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NextIPCommand.cpp; sourceTree = "<group>"; };
 		FE9B0BA61C1262AA005FCE06 /* NextIPCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NextIPCommand.hpp; sourceTree = "<group>"; };
+		FEC54F2C1C1B223B00D316E9 /* Call.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Call.cpp; sourceTree = "<group>"; };
+		FEC54F2D1C1B223B00D316E9 /* Call.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Call.hpp; sourceTree = "<group>"; };
 		FED6782B1BFF7F9A00B739BE /* Token.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		FED6782C1BFF810200B739BE /* Operator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Operator.h; sourceTree = "<group>"; };
 		FED678301BFF8E1900B739BE /* Paren.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paren.h; sourceTree = "<group>"; };
@@ -135,19 +138,18 @@
 				FE0ECE611BDF832E00958E40 /* main.cpp */,
 				FE0ECE7E1BDF882B00958E40 /* MServer.hpp */,
 				FE0ECE7D1BDF882B00958E40 /* MServer.cpp */,
-				FE0ECE691BDF832E00958E40 /* ScriptReader.h */,
-				FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */,
-				FE88A6BE1C0C65DC00AB68A2 /* connections */,
-				FE0ECE7A1BDF854600958E40 /* sip */,
-				FE0ECE741BDF848600958E40 /* commands */,
+				FEC54F211C1AD71C00D316E9 /* Reader */,
+				FE88A6BE1C0C65DC00AB68A2 /* Connections */,
+				FE0ECE7A1BDF854600958E40 /* SIP */,
+				FE0ECE741BDF848600958E40 /* Commands */,
 				FE7911881BFF116B00A5DD60 /* Expression Evaluation */,
-				FE610F101BE0D0F6002834FC /* utils */,
+				FE610F101BE0D0F6002834FC /* Utils */,
 				FE0ECE781BDF850E00958E40 /* Docs */,
 			);
 			path = mserver;
 			sourceTree = "<group>";
 		};
-		FE0ECE741BDF848600958E40 /* commands */ = {
+		FE0ECE741BDF848600958E40 /* Commands */ = {
 			isa = PBXGroup;
 			children = (
 				FE0ECE5F1BDF832E00958E40 /* Command.h */,
@@ -171,7 +173,7 @@
 				FEF7461E1C16DD7B00598473 /* SetCommand.hpp */,
 				FEF7461D1C16DD7B00598473 /* SetCommand.cpp */,
 			);
-			name = commands;
+			name = Commands;
 			sourceTree = "<group>";
 		};
 		FE0ECE781BDF850E00958E40 /* Docs */ = {
@@ -185,7 +187,7 @@
 			name = Docs;
 			sourceTree = "<group>";
 		};
-		FE0ECE7A1BDF854600958E40 /* sip */ = {
+		FE0ECE7A1BDF854600958E40 /* SIP */ = {
 			isa = PBXGroup;
 			children = (
 				FE0ECE971BE0B76400958E40 /* SipParser.hpp */,
@@ -193,10 +195,10 @@
 				FE2FFC501BE76B3E004E05A2 /* SipMessage.hpp */,
 				FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */,
 			);
-			name = sip;
+			name = SIP;
 			sourceTree = "<group>";
 		};
-		FE610F101BE0D0F6002834FC /* utils */ = {
+		FE610F101BE0D0F6002834FC /* Utils */ = {
 			isa = PBXGroup;
 			children = (
 				FE2FFC6F1BEF89E5004E05A2 /* OptionParser.hpp */,
@@ -205,7 +207,7 @@
 				FEF746211C16E43C00598473 /* mserver_utils.hpp */,
 				FEF746201C16E43C00598473 /* mserver_utils.cpp */,
 			);
-			name = utils;
+			name = Utils;
 			sourceTree = "<group>";
 		};
 		FE7911881BFF116B00A5DD60 /* Expression Evaluation */ = {
@@ -223,7 +225,7 @@
 			name = "Expression Evaluation";
 			sourceTree = "<group>";
 		};
-		FE88A6BE1C0C65DC00AB68A2 /* connections */ = {
+		FE88A6BE1C0C65DC00AB68A2 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
 				FE924AA41C0C823D00769C34 /* Connection.hpp */,
@@ -233,7 +235,18 @@
 				FE88A6BC1C091DCD00AB68A2 /* ControlConnection.hpp */,
 				FE88A6BB1C091DCD00AB68A2 /* ControlConnection.cpp */,
 			);
-			name = connections;
+			name = Connections;
+			sourceTree = "<group>";
+		};
+		FEC54F211C1AD71C00D316E9 /* Reader */ = {
+			isa = PBXGroup;
+			children = (
+				FE0ECE691BDF832E00958E40 /* ScriptReader.h */,
+				FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */,
+				FEC54F2D1C1B223B00D316E9 /* Call.hpp */,
+				FEC54F2C1C1B223B00D316E9 /* Call.cpp */,
+			);
+			name = Reader;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -299,6 +312,7 @@
 				FE9B0BA31C11FCE0005FCE06 /* ScenarioCommand.cpp in Sources */,
 				FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */,
 				FEF7460F1C147FF700598473 /* StopListeningCommand.cpp in Sources */,
+				FEC54F2E1C1B223B00D316E9 /* Call.cpp in Sources */,
 				FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */,
 				FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */,
 				FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */,

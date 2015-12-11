@@ -23,12 +23,12 @@ ScriptReader::ScriptReader(string _filename, map<string, string> _vars, ScriptRe
     
     if(root)
     {
-        calls_num_map = new CallsNumMap;
+        calls_map = new CallsMap;
         messages = new vector<SipMessage*>;
     }
     else
     {
-        calls_num_map = parent->calls_num_map;
+        calls_map = parent->calls_map;
         messages = parent->messages;
     }
     
@@ -54,7 +54,7 @@ ScriptReader::~ScriptReader()
         }
         
         delete messages;
-        delete calls_num_map;
+        delete calls_map;
     }
 }
 
@@ -102,34 +102,61 @@ void ScriptReader::read_file(string filename)
 //==========================================================================================================
 string ScriptReader::get_value(string var, int call_number, bool try_as_last)
 {
-    if(is_last_var(var) || (try_as_last && SipMessage::is_message_var(var)))
+    smatch match;
+    
+    if(!regex_match(var, match, var_regex))
     {
-        return get_last_value(var, call_number);
+        throw string("Wrong format for var in ScriptReader::get_value(): " + var);
     }
     
-    if(var == BRANCH)
+    // var_regex:   "(last_)?(((cseq)\\+(\\d+))|([-\\w]+))(:value)?"
+    // submatches:   1       234        5       6         7
+    bool is_last = (match[1].length() > 0);
+    bool just_value = (match[7].length() >  0);
+    int add_to_cseq = 0;
+    string name = match[2];
+    
+    if(match[3].length() > 0)
+    {
+        name = match[4];
+        add_to_cseq = stoi(match[5]);
+    }
+    
+    if(is_last || (try_as_last && SipMessage::is_message_var(name)))
+    {
+        string result = get_last_value(name, call_number, just_value);
+        
+        if(name == CSEQ)
+        {
+            return to_string(stoi(result) + add_to_cseq);
+        }
+        
+        return result;
+    }
+    
+    if(name == BRANCH)
     {
         return gen_branch();
     }
     
-    CallIDKind cid_kind = string_to_call_id_kind(var);
+    CallIDKind cid_kind = string_to_call_id_kind(name);
     
     if(cid_kind != NONE)
     {
         return gen_call_id(cid_kind);
     }
     
-    if(var == TAG)
+    if(name == TAG)
     {
         return gen_tag();
     }
     
-    if(vars.count(var) != 0)
+    if(vars.count(name) != 0)
     {
-        return vars[var];
+        return vars[name];
     }
     
-    return MServer::inst.get_value(var);
+    return MServer::inst.get_value(name);
 }
 
 
@@ -139,7 +166,7 @@ string ScriptReader::get_value(string var, int call_number, bool try_as_last)
 string ScriptReader::gen_branch()
 {
     string res = "z9hG4bK"; // Must start with this
-    gen_random_string(res, 1, &SipParser::inst().sip_token_chars);
+    gen_random_string(res, 10, &SipParser::inst().sip_token_chars);
     return res;
 }
 
@@ -243,30 +270,14 @@ void ScriptReader::gen_random_string(string& str, int min_len, const string* cha
 void ScriptReader::add_message(SipMessage* msg)
 {
     messages->push_back(msg);
-    msg->set_call_number(calls_num_map->get_call_num(msg->get_call_id()));
-}
-
-
-//==========================================================================================================
-// Return true if var is a valid query string starting with "last_"
-//==========================================================================================================
-bool ScriptReader::is_last_var(string& var)
-{
-    smatch match;
-
-    if(regex_match(var, match, query_regex))
-    {
-        return !(match[1].str().empty());
-    }
-    
-    return false;
+    msg->set_call(calls_map->get_call(msg));
 }
 
 
 //==========================================================================================================
 // Return the value of last_* variable
 //==========================================================================================================
-string ScriptReader::get_last_value(string& var, int call_number)
+string ScriptReader::get_last_value(string& var, int call_number, bool just_value)
 {
     SipMessage* last_msg = get_last_message(call_number);
     
@@ -274,7 +285,7 @@ string ScriptReader::get_last_value(string& var, int call_number)
     {
         throw string("Can't use last_*, no previous messages");
     }
-    return last_msg->get_value(var);
+    return last_msg->get_value(var, just_value);
 }
 
 
@@ -320,15 +331,35 @@ void ScriptReader::set_value(string var, string value, bool overwirte)
 
 //==========================================================================================================
 //==========================================================================================================
-int ScriptReader::CallsNumMap::get_call_num(string call_id)
+ScriptReader::CallsMap::~CallsMap()
 {
-    if(id_num_map.count(call_id) != 0)
+    for(auto& p: calls_map)
     {
-        return id_num_map[call_id];
+        delete p.second;
     }
-    
-    id_num_map[call_id] = ++last_call_num;
-    return last_call_num;
+}
+
+
+//==========================================================================================================
+// If call-id exists, return the call that it is mapped to.
+// If not create a new call object. Its direction will be the direction of its first message.
+//==========================================================================================================
+Call* ScriptReader::CallsMap::get_call(SipMessage* msg)
+{
+    string call_id = msg->get_call_id();
+    Call* call;
+
+    if(calls_map.count(call_id) != 0)
+    {
+        call = calls_map[call_id];
+        call->update(msg);
+        return call;
+    }
+    else
+    {
+        calls_map[call_id] = new Call(++last_call_num, msg);
+        return calls_map[call_id];
+    }
 }
 
 
@@ -415,11 +446,12 @@ regex ScriptReader::init_command_start_regex()
 
 
 //==========================================================================================================
-// Some commong regular expressions for identifying variable in script
+// A regular expression for identifying variable in script
 //==========================================================================================================
-const string ScriptReader::query_str("(last_)?([-\\w]+)(:value)?");
-const regex ScriptReader::query_regex(ScriptReader::query_str);
-const regex ScriptReader::script_var_regex("\\[(" + ScriptReader::query_str + ")\\]");
+const string ScriptReader::var_regex_str = "(last_)?(((" + string(CSEQ) + ")\\+(\\d+))|([-\\w]+))(:value)?";
+const regex ScriptReader::var_regex(ScriptReader::var_regex_str);
+const regex ScriptReader::script_var_regex("\\[(" + ScriptReader::var_regex_str + ")\\]");
+
 
 //==========================================================================================================
 // A default body for SIP responses. Usually used where the body doesn't really matter to the test.
@@ -453,6 +485,7 @@ b=AS:174\n\
 t=0 0\n\
 a=X-nat:0\n\
 m=audio [media_port] RTP/AVP 0 101\n\
+c=IN IP[media_ip_type] [media_ip]\n\
 b=TIAS:150000\n\
 a=sendrecv\n\
 a=rtpmap:0 PCMU/8000\n\

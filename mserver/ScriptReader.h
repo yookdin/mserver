@@ -2,6 +2,7 @@
 
 #include "Command.h"
 #include "SipMessage.hpp"
+#include "Call.hpp"
 
 //======================================================================================================================
 //======================================================================================================================
@@ -11,7 +12,6 @@ public:
 	ScriptReader(string filename, map<string, string> vars, ScriptReader* parent = nullptr);
     ~ScriptReader();
     
-    static const regex query_regex;
     static const regex script_var_regex;
 
     void set_value(string var, string value, bool overwirte);
@@ -33,7 +33,8 @@ private:
         NONE
     };
 
-    static const string query_str;
+    static const string var_regex_str;
+    static const regex var_regex;
     static const regex command_start_regex;
     static map<string, Command*> commands;
     static map<string, Command*> init_commands();
@@ -56,24 +57,24 @@ private:
     string gen_tag();
     void gen_random_string(string& str, int min_length = 1, const string* char_set = nullptr);
     CallIDKind string_to_call_id_kind(string str);
-    bool is_last_var(string&);
-    string get_last_value(string& var, int call_number = -1);
+    string get_last_value(string& var, int call_number, bool just_value);
     void print_title();
     void print_end_title();
     
     
     //==================================================================================================================
-    // A map between call-ids and call numbers
+    // A map between call-ids and calls
     //==================================================================================================================
-    class CallsNumMap
+    class CallsMap
     {
     public:
-        int get_call_num(string call_id);
+        ~CallsMap();
+        Call* get_call(SipMessage* msg);
         
     private:
-        map<string, int> id_num_map; // Map between call-ids and call numbers
+        map<string, Call*> calls_map; // Map between call-ids and call numbers
         int last_call_num = -1;
         
-    } *calls_num_map;
+    } *calls_map;
 };
 
