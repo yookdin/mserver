@@ -1,0 +1,13 @@
+
+Receive audio call, receive hold and unhold, place call on hold and take call off hold
+
+<scenario file=register.scr/>
+<scenario file=receive_invite.scr/>
+<scenario file=receive_hold.scr/>
+<scenario file=receive_unhold.scr/>
+<scenario file=send_hold.scr/>
+<pause for 1 second/>
+<scenario file=send_unhold.scr/>
+<scenario file=receive_bye.scr/>
+<scenario file=unregister.scr/>
+

@@ -4,6 +4,8 @@ Inbound call while on hold that is rejected and then 2nd call that is answered a
   
 <scenario file=register.scr/>
 
+<pause for 1 second/>  Let voxip enter GSM hold
+
 <send>
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
@@ -21,7 +23,6 @@ Inbound call while on hold that is rejected and then 2nd call that is answered a
 </send>
 
 <recv message=100></recv>
-<recv message=183></recv>
 <recv message=486></recv>
 
 <send>
