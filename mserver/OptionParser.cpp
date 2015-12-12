@@ -7,6 +7,7 @@
 //
 
 #include "mserver_utils.hpp"
+#include "ScriptReader.h"
 
 
 /***********************************************************************************************************
@@ -104,7 +105,8 @@ ParamValOption::ParamValOption(): Option(false, true, true)
 // A regex for opt[=val] appearing in a script file. May be opt = "val with spaces", and may be just opt.
 // This is used when searching for such pairs within a line.
 //==========================================================================================================
-const regex OptionParser::eq_pair_regex("(\\w+)( *= *(-?[\\w\\.]+|" + string_regex_str + "))?");
+const regex OptionParser::eq_pair_regex(
+    "(\\w+)( *= *(-?[\\w\\.]+|" + string_regex_str + "|\\[" + var_regex_str + "\\]))?");
 
 
 //==========================================================================================================

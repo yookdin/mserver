@@ -26,11 +26,19 @@
 #define PID             "pid"
 #define SIP_IP_TYPE     "sip_ip_type"
 #define CLIENT_IP_TYPE  "client_ip_type"
-#define MEDIA_IP_TYPE   "media_ip_type"
-#define MEDIA_IP        "media_ip"
-#define MEDIA_PORT      "media_port"
+
+#define AUDIO_IP_TYPE   "audio_ip_type"
+#define AUDIO_IP        "audio_ip"
+#define AUDIO_PORT      "audio_port"
+
+#define VIDEO_IP_TYPE   "video_ip_type"
+#define VIDEO_IP        "video_ip"
+#define VIDEO_PORT      "video_port"
+
 #define DEFAULT_RESPONSE_BODY   "default_response_body"
 #define DEFAULT_REQUEST_BODY    "default_request_body"
+#define DEFAULT_VIDEO_RESPONSE_BODY   "default_video_response_body"
+#define DEFAULT_VIDEO_REQUEST_BODY    "default_video_request_body"
 #define DEFAULT_100_TRYING      "default_100_trying"
 #define DEFAULT_ACK             "default_ack"
 

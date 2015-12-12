@@ -28,9 +28,12 @@ MServer::MServer()
     vars[CLIENT_PORT] = "5060";
     vars[SIP_IP_TYPE] = "4";
     vars[CLIENT_IP_TYPE] = "4";
-    vars[MEDIA_IP_TYPE] = "4";
-    vars[MEDIA_IP] = "127.0.0.1";
-    vars[MEDIA_PORT] = "2000";
+    vars[AUDIO_IP_TYPE] = "4";
+    vars[AUDIO_IP] = "127.0.0.1";
+    vars[AUDIO_PORT] = "20000";
+    vars[VIDEO_IP_TYPE] = "4";
+    vars[VIDEO_IP] = "127.0.0.1";
+    vars[VIDEO_PORT] = "30000";
 }
 
 //==========================================================================================================

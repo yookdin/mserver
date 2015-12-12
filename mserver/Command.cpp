@@ -26,7 +26,6 @@ void Command::trim(string &line)
 //==========================================================================================================
 // Replace variable specified by a name inside brackets: [var_name] with their value returned from the
 // containing script reader.
-// Return true if the special var [len] is seen, since it is not yet known and will be replaced later.
 // Note: the replacement may itself contain reference to other values. So the process is repeated for the
 // replacemed string until it contain no variables.
 //==========================================================================================================
@@ -68,6 +67,29 @@ void Command::replace_vars(string &line, ScriptReader &reader, int call_number)
             break;
         }
     }
+    
+    sregex_iterator iter(line.begin(), line.end(), ScriptReader::literal_var_regex);
+    sregex_iterator end;
+    
+    if(iter == end)
+    {
+        return;
+    }
+    
+    string line2 = line;
+    long offset = 0;
+    
+    // Replace all occurrences of \[var\] with [var]
+    for(;iter != end; ++iter) {
+        string var = (*iter)[0].str();
+        var.erase(0, 1);
+        var.erase(var.length() - 2, 1);
+        
+        line2.replace(iter->position() + offset, iter->length(), var);
+        offset += var.length() - iter->length();
+    }
+    
+    line = line2;
 }
 
 

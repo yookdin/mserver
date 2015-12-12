@@ -1,0 +1,96 @@
+
+
+<set>
+    request_body = [is_video] ? [default_video_request_body] : [default_request_body]
+    response_body = [is_video] ? [default_video_response_body] : [default_response_body]
+</set>
+
+<scenario file=register.scr/>
+
+----------------------------------------------------------------------------------------------------
+Receive invitation but don't send OK
+----------------------------------------------------------------------------------------------------
+<recv message=INVITE></recv>
+
+<send>
+  [default_100_trying]
+</send>
+
+<send>
+    SIP/2.0 180 Ringing
+    [last_Via]
+    [last_From]
+    [last_To];tag=[tag]
+    [last_Call-ID]
+    [last_CSeq]
+    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
+    Content-Length: 0
+</send>
+
+----------------------------------------------------------------------------------------------------
+Send an invite to create the intersecting scenario
+----------------------------------------------------------------------------------------------------
+<send>
+    INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
+    Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
+    From: "Yuk" <sip:12345678901@[client_ip]:[client_port]>;tag=[tag]
+    To: <sip:1800707070@[server_ip]>
+    Call-ID: [min_call_id]
+    CSeq: 1 INVITE
+    Contact: <sip:12345678901@[server_ip]:[server_port];transport=[transport]>
+    Max-Forwards: 70
+    Subject: Outgoing Call
+    Content-Type: application/sdp
+    Content-Length: [len]
+
+    [request_body]
+</send>
+
+<recv message=100></recv>
+
+<recv message=486></recv>   Busy here
+
+----------------------------------------------------------------------------------------------------
+Cancel the invitation because the other side wins
+----------------------------------------------------------------------------------------------------
+<send>
+    CANCEL sip:1800707070@[server_ip]:[server_port] SIP/2.0
+    [last_Via]
+    [last_From]
+    [last_To]
+    [last_Call-ID]
+    CSeq: 1 CANCEL
+    Reason: VOXIP ;cause=2 ;text="call_rejected_by_user"
+    Max-Forwards: 11
+    Content-Length: 0
+</send>
+
+<recv message=200></recv>
+
+
+----------------------------------------------------------------------------------------------------
+Send a 200/OK for the original invite (call 1)
+----------------------------------------------------------------------------------------------------
+<send call_number=1>
+    SIP/2.0 200 OK
+    [last_Via]
+    [last_From]
+    [last_To]
+    [last_Call-ID]
+    [last_CSeq]
+    User-Agent: bb-test
+    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
+    Session-Expires: 300;refresher=uac
+    Require: timer
+    Supported: replaces,timer,norefersub
+    X-Connect-Type: Wifi
+    Content-Type: application/sdp
+    Content-Length: [len]
+
+    [response_body]
+</send>
+
+<recv message=ACK></recv>
+
+<scenario file=receive_bye.scr/>
+

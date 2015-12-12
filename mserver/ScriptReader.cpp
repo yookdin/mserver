@@ -32,8 +32,10 @@ ScriptReader::ScriptReader(string _filename, map<string, string> _vars, ScriptRe
         messages = parent->messages;
     }
     
-    vars[DEFAULT_RESPONSE_BODY] = default_response_sip_msg_body;
-    vars[DEFAULT_REQUEST_BODY] = default_request_sip_msg_body;
+    vars[DEFAULT_REQUEST_BODY] = default_request_body;
+    vars[DEFAULT_RESPONSE_BODY] = default_response_body;
+    vars[DEFAULT_VIDEO_REQUEST_BODY] = default_video_request_body;
+    vars[DEFAULT_VIDEO_RESPONSE_BODY] = default_video_response_body;
     vars[DEFAULT_100_TRYING] = default_100_trying;
     vars[DEFAULT_ACK] = default_ack;
     
@@ -448,24 +450,27 @@ regex ScriptReader::init_command_start_regex()
 //==========================================================================================================
 // A regular expression for identifying variable in script
 //==========================================================================================================
-const string ScriptReader::var_regex_str = "(last_)?(((" + string(CSEQ) + ")\\+(\\d+))|([-\\w]+))(:value)?";
-const regex ScriptReader::var_regex(ScriptReader::var_regex_str);
-const regex ScriptReader::script_var_regex("\\[(" + ScriptReader::var_regex_str + ")\\]");
+const regex ScriptReader::var_regex(var_regex_str);
+
+// Matches [var]
+const regex ScriptReader::script_var_regex("\\[(" + var_regex_str + ")\\]");
+
+// Matches \[var\]
+const regex ScriptReader::literal_var_regex("\\\\\\[" + var_regex_str + "\\\\\\]");
 
 
 //==========================================================================================================
 // A default body for SIP responses. Usually used where the body doesn't really matter to the test.
 //==========================================================================================================
-const string ScriptReader::default_response_sip_msg_body =
+const string ScriptReader::default_response_body =
 "v=0\n\
 o=- 3607660610 3607660611 IN IP[sip_ip_type] [server_ip]\n\
 s=voxip_media\n\
-c=IN IP[sip_ip_type] [server_ip]\n\
 b=AS:174\n\
 t=0 0\n\
 a=X-nat:0\n\
-m=audio [media_port] RTP/AVP 0 101\n\
-c=IN IP[media_ip_type] [media_ip]\n\
+m=audio [audio_port] RTP/AVP 0 101\n\
+c=IN IP[audio_ip_type] [audio_ip]\n\
 b=TIAS:150000\n\
 a=sendrecv\n\
 a=rtpmap:0 PCMU/8000\n\
@@ -476,22 +481,72 @@ a=fmtp:101 0-15";
 //==========================================================================================================
 // A default body for SIP requests. Usually used where the body doesn't really matter to the test.
 //==========================================================================================================
-const string ScriptReader::default_request_sip_msg_body =
+const string ScriptReader::default_request_body =
 "v=0\n\
 o=- 3607660610 3607660611 IN IP[client_ip_type] [client_ip]\n\
 s=voxip_media\n\
-c=IN IP[media_ip_type] [media_ip]\n\
 b=AS:174\n\
 t=0 0\n\
 a=X-nat:0\n\
-m=audio [media_port] RTP/AVP 0 101\n\
-c=IN IP[media_ip_type] [media_ip]\n\
+m=audio [audio_port] RTP/AVP 0 101\n\
+c=IN IP[audio_ip_type] [audio_ip]\n\
 b=TIAS:150000\n\
 a=sendrecv\n\
 a=rtpmap:0 PCMU/8000\n\
 a=rtpmap:101 telephone-event/8000\n\
 a=fmtp:101 0-15";
 
+
+//==========================================================================================================
+//==========================================================================================================
+const string ScriptReader::default_video_response_body =
+"v=0\n\
+o=- 3607660610 3607660611 IN IP[sip_ip_type] [server_ip]\n\
+s=voxip_media\n\
+b=AS:174\n\
+t=0 0\n\
+a=X-nat:0\n\
+m=audio [audio_port] RTP/AVP 104 101\n\
+c=IN IP[audio_ip_type] [audio_ip]\n\
+b=TIAS:150000\n\
+a=sendrecv\n\
+a=rtpmap:104 ISAC/16000\n\
+a=rtpmap:101 telephone-event/8000\n\
+a=fmtp:101 0-15\n\
+m=video [video_port] RTP/AVP 110 111 112\n\
+c=IN IP[video_ip_type] [video_ip]\n\
+b=TIAS:2000000\n\
+a=sendrecv\n\
+a=rtpmap:110 VP8/90000\n\
+a=fmtp:110 max-fs=300; max-fr=15; width=212; height=362\n\
+a=rtpmap:111 red/90000\n\
+a=rtpmap:112 ulpfec/90000";
+
+
+//==========================================================================================================
+//==========================================================================================================
+const string ScriptReader::default_video_request_body =
+"v=0\n\
+o=- 3607660610 3607660611 IN IP[client_ip_type] [client_ip]\n\
+s=voxip_media\n\
+b=AS:174\n\
+t=0 0\n\
+a=X-nat:0\n\
+m=audio [audio_port] RTP/AVP 104 101\n\
+c=IN IP[audio_ip_type] [audio_ip]\n\
+b=TIAS:150000\n\
+a=sendrecv\n\
+a=rtpmap:104 ISAC/16000\n\
+a=rtpmap:101 telephone-event/8000\n\
+a=fmtp:101 0-15\n\
+m=video [video_port] RTP/AVP 110 111 112\n\
+c=IN IP[video_ip_type] [video_ip]\n\
+b=TIAS:2000000\n\
+a=sendrecv\n\
+a=rtpmap:110 VP8/90000\n\
+a=fmtp:110 max-fs=300; max-fr=15; width=212; height=362\n\
+a=rtpmap:111 red/90000\n\
+a=rtpmap:112 ulpfec/90000";
 
 //==========================================================================================================
 //==========================================================================================================
@@ -537,7 +592,7 @@ Content-Length: [len]\n";
 
 //==========================================================================================================
 //==========================================================================================================
-const string ScriptReader::default_183 = ScriptReader::default_183_header + "\n" + ScriptReader::default_response_sip_msg_body;
+const string ScriptReader::default_183 = ScriptReader::default_183_header + "\n" + ScriptReader::default_response_body;
 
 
 

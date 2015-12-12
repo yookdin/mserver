@@ -15,11 +15,23 @@
 // If 'default' is specified, it means this is the default value for this variable, and will be set only
 // if that variable isn't set yet.
 //==========================================================================================================
-SetCommand::SetCommand(): end_regex("</set>"), var_set_regex("(default +)?(\\w+) *= *(-?\\w+|" + string_regex_str + ")")
+SetCommand::SetCommand():
+    end_regex("</set>"),
+    value_str("-?\\w+|" + string_regex_str + "|" +  brackets_var_regex_str), // 9 submatches
+    ternarry_op_str("(" + brackets_var_regex_str + ") *\\? *(" + value_str + ") *: *(" + value_str + ")"),
+    var_set_regex("(default +)?(\\w+) *= *((" + ternarry_op_str + ")|(" + value_str + "))")
 {}
 
 
 //==========================================================================================================
+// Submatches of var_set_regex:
+// 1 : default
+// 2 : var
+// 3 : value|ternary. If ternary is empty, then this is the value
+// 4 : ternary
+// 5 : condition
+// 13: ternary-value-1
+// 23: ternary-value-2
 //==========================================================================================================
 void SetCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
@@ -37,13 +49,52 @@ void SetCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
         {
             throw string("Wrong format of line in set command: " + line);
         }
-        
+
         // If 'default' is specified don't overwrite, o/w do
         bool overwrite = (match[1].length() == 0);
-        string var = match[2];
+        string var = match[2]; // Variable name
+        string value;
         
-        // match[4] is the content of a string if specified; if not string then value is match[3]
-        string value = (match[4].length() != 0 ? match[4] : match[3]);
+        if(match[4].length() == 0)   // "var = value"
+        {
+            value = match[3];
+        }
+         else                       // "var = [cond] ? val1 : val2"
+        {
+            bool condition;
+            string condition_str = match[5];
+            replace_vars(condition_str, reader);
+            
+            if(condition_str == "true")
+            {
+                condition = true;
+            }
+            else if(condition_str == "false")
+            {
+                condition = false;
+            }
+            else
+            {
+                throw string("Condition of set command must evalutate to true or false");
+            }
+            
+            if(condition)
+            {
+                value = match[13];
+            }
+            else
+            {
+                value = match[23];
+            }
+        }
+        
+        value = unqoute(value); // Remove quotes if they exist
+        
+        if(regex_match(value, regex(brackets_var_regex_str))) // If value is [var-name], get its literal value
+        {
+            replace_vars(value, reader);
+        }
+        
         reader.set_value(var, value, overwrite);
     }
 }

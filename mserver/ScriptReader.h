@@ -13,6 +13,7 @@ public:
     ~ScriptReader();
     
     static const regex script_var_regex;
+    static const regex literal_var_regex;
 
     void set_value(string var, string value, bool overwirte);
     string get_value(string var, int call_number = -1, bool try_as_last = false);
@@ -33,14 +34,15 @@ private:
         NONE
     };
 
-    static const string var_regex_str;
     static const regex var_regex;
     static const regex command_start_regex;
     static map<string, Command*> commands;
     static map<string, Command*> init_commands();
     static regex init_command_start_regex();
-    static const string default_response_sip_msg_body;
-    static const string default_request_sip_msg_body;
+    static const string default_response_body;
+    static const string default_request_body;
+    static const string default_video_response_body;
+    static const string default_video_request_body;
     static const string default_100_trying;
     static const string default_ack;
     static const string default_183_header;

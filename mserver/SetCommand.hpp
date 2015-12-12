@@ -22,6 +22,8 @@ public:
     
 private:
     const regex end_regex;
+    const string value_str;
+    const string ternarry_op_str;
     const regex var_set_regex;
 };
 
