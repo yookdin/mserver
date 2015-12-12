@@ -1,0 +1,20 @@
+
+
+<set>
+    default user_number = 12345678900   // Default value of user_number
+    default call_number = -1            // -1: current message considered belonging to the call of the previous message
+</set>
+
+<send call_number = [call_number]>
+    BYE sip:[user_number]@127.0.0.1:10000;transport=TCP SIP/2.0
+    Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
+    Max-Forwards: 70
+    From: [last_me]
+    To: [last_other]
+    [last_Call-ID]
+    CSeq: [last_cseq+1] BYE
+    User-Agent: bb-test
+    Content-Length:  0
+</send>
+
+<recv message=200></recv>

@@ -1,0 +1,14 @@
+
+<scenario file=register.scr/>
+
+<scenario file=receive_invite.scr/>
+<scenario file=receive_hold.scr/>
+<scenario file=send_hold.scr hold_request=inactive hold_response=inactive/>
+
+<pause for 1 second/> So that the unhold won't occur before voxip start to wait for it...
+<scenario file=send_unhold.scr unhold_request=recvonly unhold_response=sendonly/>
+
+<scenario file=receive_unhold.scr unhold_request=sendrecv unhold_response=sendrecv/>
+
+<scenario file=receive_bye.scr/>
+<scenario file=unregister.scr/>

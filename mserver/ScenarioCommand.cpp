@@ -14,8 +14,8 @@ void ScenarioCommand::interpret(string &line, ifstream &file, ScriptReader &read
     {
         ScriptReader nested_reader(scenario_file, args, &reader);
     } catch (string err) {
-        cout << endl << err << endl;
-        throw string("Error executing scenario file " + scenario_file);
+        // Roll the exception up to be caught at top level
+        throw string("Error executing scenario file " + scenario_file + ":\n    " + err);
     }
     
     reader.print_continue_title();

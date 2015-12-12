@@ -1,0 +1,7 @@
+
+
+<scenario file=register.scr/>
+<scenario file=send_invite.scr/>
+<scenario file=receive_hold.scr/>
+<scenario file=receive_bye.scr/>
+<scenario file=unregister.scr/>

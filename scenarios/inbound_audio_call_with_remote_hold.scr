@@ -1,0 +1,9 @@
+
+
+<scenario file=register.scr/>
+<scenario file=send_invite.scr/>
+<scenario file=send_hold.scr/>
+<pause for 1 second/>
+<scenario file=send_unhold.scr/>
+<scenario file=receive_bye.scr/>
+
