@@ -3,6 +3,9 @@ Send INVITE and get responses up to and including the 183, with no OK
 
 <set>
     default user_number = 12345678900 // Default value of user_number
+    default is_video = false
+    request_body = [is_video] ? [default_video_request_body] : [default_request_body]
+    default call_id_param = [call_id]
 </set>
 
 <send>
@@ -10,7 +13,7 @@ Send INVITE and get responses up to and including the 183, with no OK
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:[user_number]@[client_ip]:[client_port]>;tag=[tag]
     To: <sip:1800707070@[server_ip]>
-    Call-ID: [call_id]
+    Call-ID: [call_id_param]
     CSeq: 1 INVITE
     Contact: <sip:[user_number]@[server_ip]:[server_port];transport=[transport]>
     Max-Forwards: 70
@@ -18,7 +21,7 @@ Send INVITE and get responses up to and including the 183, with no OK
     Content-Type: application/sdp
     Content-Length: [len]
 
-    [default_request_body]
+    [request_body]
 </send>
 
 <recv message=100></recv>

@@ -1,0 +1,63 @@
+
+<set>
+    request_body = [is_video] ? [default_video_request_body] : [default_request_body]
+    response_body = [is_video] ? [default_video_response_body] : [default_response_body]
+</set>
+
+<scenario file=register.scr/>
+<scenario file=send_invite_partial.scr is_video=[is_video] call_id_param="[min_call_id]"/>
+
+----------------------------------------------------------------------------------------------------
+Receive invite from voxip and answer it
+----------------------------------------------------------------------------------------------------
+<recv message=INVITE>
+</recv>
+
+<send>
+    [default_100_trying]
+</send>
+
+<send>
+    SIP/2.0 200 OK
+    [last_Via]
+    [last_From]
+    [last_To];tag=[tag]
+    [last_Call-ID]
+    [last_CSeq]
+    User-Agent: bb-test
+    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
+    Session-Expires: 300;refresher=uac
+    Require: timer
+    Supported: replaces,timer,norefersub
+    X-Connect-Type: Wifi
+    Content-Type: application/sdp
+    Content-Length: [len]
+
+    [response_body]
+</send>
+
+<recv message=ACK></recv>
+
+----------------------------------------------------------------------------------------------------
+Cancel the first call
+----------------------------------------------------------------------------------------------------
+<send call_number=1>
+    CANCEL sip:1800707070@[server_ip]:[server_port] SIP/2.0
+    [last_Via]
+    [last_From]
+    [last_To]
+    [last_Call-ID]
+    CSeq: [last_cseq] CANCEL
+    Reason: VOXIP ;cause=2 ;text="intersect cancel"
+    Max-Forwards: 11
+    Content-Length: 0
+</send>
+
+<recv message=200></recv>
+
+<recv message=487></recv>
+
+<send>
+    [default_ack]
+</send>
+

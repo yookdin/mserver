@@ -75,7 +75,7 @@ voxip cancels its invitation
     [last_From]
     [last_To]
     [last_Call-ID]
-    CSeq: [cseq] INVITE
+    CSeq: [last_cseq] INVITE
     Content-Length: 0
 </send>
 
