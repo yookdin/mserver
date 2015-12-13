@@ -117,7 +117,7 @@ SipMessage* SipConnection::get_message(string kind, bool optional, int timeout)
     
     while(msg_queue.empty() && time(nullptr) <= start_time + timeout)
     {
-        try_poll(); // Check that there are no errors on the socket
+        try_poll(); // Check that there are no errors on the socket and update the pfd.revents field
         
         long num_bytes = 0;
         
