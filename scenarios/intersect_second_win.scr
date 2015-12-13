@@ -54,7 +54,6 @@ Cancel the first call
 </send>
 
 <recv message=200></recv>
-
 <recv message=487></recv>
 
 <send>
