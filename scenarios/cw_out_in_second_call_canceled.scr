@@ -26,23 +26,4 @@ After a received call, make a call to voxip and cancel it
 <recv message=183>
 </recv>
 
-<send>
-    CANCEL sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    CSeq: 1 CANCEL
-    Max-Forwards: 9
-    Content-Length: 0
-</send>
-
-<recv message=200>
-</recv>
-
-<recv message=487>
-</recv>
-
-<send>
-    [default_ack]
-</send>
+<scenario file = send_cancel.scr/>

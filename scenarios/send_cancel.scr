@@ -1,0 +1,26 @@
+
+
+Send a CANCEL (to a previously sent INVITE), receive OK and 487 (request terminated) and send ack.
+
+<set>
+    default call_number = -1
+</set>
+
+<send call_number = [call_number]>
+    CANCEL sip:1800707070@[server_ip]:[server_port] SIP/2.0
+    [last_Via]
+    [last_From]
+    [last_To]
+    [last_Call-ID]
+    CSeq: [last_cseq] CANCEL
+    Reason: VOXIP ;cause=2 ;text="call_rejected_by_user"
+    Max-Forwards: 11
+    Content-Length: 0
+</send>
+
+<recv message=200></recv>
+<recv message=487></recv>  Request terminated
+
+<send>
+    [default_ack]
+</send>

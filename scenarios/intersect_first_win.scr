@@ -79,25 +79,7 @@ Send a 200/OK for the original invite (call 1)
 ----------------------------------------------------------------------------------------------------
 Cancel the second call because voxip should win due to higher call-id
 ----------------------------------------------------------------------------------------------------
-<send call_number=2>
-    CANCEL sip:1800707070@[server_ip]:[server_port] SIP/2.0
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    CSeq: 1 CANCEL
-    Reason: VOXIP ;cause=2 ;text="call_rejected_by_user"
-    Max-Forwards: 11
-    Content-Length: 0
-</send>
-
-<recv message=200></recv>
-<recv message=487></recv>  Request terminated
-
-<send>
-    [default_ack]
-</send>
-
+<scenario file = send_cancel.scr call_number = 2/>
 
 <scenario file=receive_bye.scr/>
 

@@ -569,7 +569,7 @@ const string ScriptReader::default_ack =
 [last_To]\n\
 [last_Call-ID]\n\
 Max-Forwards: 70\n\
-CSeq: 1 ACK\n\
+CSeq: [last_cseq] ACK\n\
 Content-Length: 0";
 
 

@@ -1,13 +1,7 @@
 
 
-VOXIP sends an invitation before it receives the other side's invitation.
-VOXIP wins due to higher call-id.
-Other sides cancels its invitation and answers voxip's invitation.
-
-<set>
-    request_body = [is_video] ? [default_video_request_body] : [default_request_body]
-    response_body = [is_video] ? [default_video_response_body] : [default_response_body]
-</set>
+Voxip sends a video invite.
+Other side sends an audio invite, which loses.
 
 <scenario file=register.scr/>
 
@@ -31,8 +25,9 @@ Receive invitation but don't send OK
     Content-Length: 0
 </send>
 
+
 ----------------------------------------------------------------------------------------------------
-Send an invite to create the intersecting scenario
+Send an audio invite to create the intersecting scenario
 ----------------------------------------------------------------------------------------------------
 <send>
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
@@ -47,19 +42,14 @@ Send an invite to create the intersecting scenario
     Content-Type: application/sdp
     Content-Length: [len]
 
-    [request_body]
+    [default_request_body]
 </send>
 
 <recv message=100></recv>
 
-----------------------------------------------------------------------------------------------------
-Cancel the second call because voxip should win due to higher call-id
-----------------------------------------------------------------------------------------------------
-<scenario file = send_cancel.scr call_number = 2/>
-
 
 ----------------------------------------------------------------------------------------------------
-Send a 200/OK for the original invite (call 1)
+Send a 200/OK for the original invite (call 1), which wins because its video and other one is audio
 ----------------------------------------------------------------------------------------------------
 <send call_number=1>
     SIP/2.0 200 OK
@@ -77,10 +67,13 @@ Send a 200/OK for the original invite (call 1)
     Content-Type: application/sdp
     Content-Length: [len]
 
-    [response_body]
+    [default_video_response_body]
 </send>
 
 <recv message=ACK></recv>
 
-<scenario file=receive_bye.scr/>
 
+----------------------------------------------------------------------------------------------------
+Cancel the second call
+----------------------------------------------------------------------------------------------------
+<scenario file = send_cancel.scr call_number = 2/>

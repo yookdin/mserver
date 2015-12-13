@@ -1,13 +1,6 @@
 
-
-VOXIP sends an invitation before it receives the other side's invitation.
-VOXIP wins due to higher call-id.
-Other sides cancels its invitation and answers voxip's invitation.
-
-<set>
-    request_body = [is_video] ? [default_video_request_body] : [default_request_body]
-    response_body = [is_video] ? [default_video_response_body] : [default_response_body]
-</set>
+Voxip sends a audio invite.
+Other side sends a video invite, which wins.
 
 <scenario file=register.scr/>
 
@@ -32,14 +25,15 @@ Receive invitation but don't send OK
 </send>
 
 ----------------------------------------------------------------------------------------------------
-Send an invite to create the intersecting scenario
+Send an invite to create the intersecting scenario (call_number = 2). The invite gets OK because it
+is a video call, and voxip's invite was for an audio call.
 ----------------------------------------------------------------------------------------------------
 <send>
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:12345678900@[client_ip]:[client_port]>;tag=[tag]
     To: <sip:1800707070@[server_ip]>
-    Call-ID: [min_call_id]
+    Call-ID: [max_call_id]
     CSeq: 1 INVITE
     Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
     Max-Forwards: 70
@@ -47,40 +41,18 @@ Send an invite to create the intersecting scenario
     Content-Type: application/sdp
     Content-Length: [len]
 
-    [request_body]
+    [default_video_request_body]
 </send>
 
 <recv message=100></recv>
+<recv message=200></recv>
 
-----------------------------------------------------------------------------------------------------
-Cancel the second call because voxip should win due to higher call-id
-----------------------------------------------------------------------------------------------------
-<scenario file = send_cancel.scr call_number = 2/>
-
-
-----------------------------------------------------------------------------------------------------
-Send a 200/OK for the original invite (call 1)
-----------------------------------------------------------------------------------------------------
-<send call_number=1>
-    SIP/2.0 200 OK
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    [last_CSeq]
-    User-Agent: bb-test
-    Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
-    Session-Expires: 300;refresher=uac
-    Require: timer
-    Supported: replaces,timer,norefersub
-    X-Connect-Type: Wifi
-    Content-Type: application/sdp
-    Content-Length: [len]
-
-    [response_body]
+<send>
+    [default_ack]
 </send>
 
-<recv message=ACK></recv>
 
-<scenario file=receive_bye.scr/>
-
+----------------------------------------------------------------------------------------------------
+voxip cancels its invitation
+----------------------------------------------------------------------------------------------------
+<scenario file=receive_cancel.scr call_number = 1/>
