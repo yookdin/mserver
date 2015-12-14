@@ -1,0 +1,3 @@
+
+<scenario file=register.scr/>
+<scenario file=send_invite_rejected.scr/>

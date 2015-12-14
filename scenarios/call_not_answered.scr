@@ -1,0 +1,6 @@
+
+
+<scenario file=register.scr/>
+<scenario file=receive_invite_partial.scr/>
+<stop_listening/>   Need to lose the tcp connection, o/w voxip will wait forever for call to be answered
+<start_listening/>
