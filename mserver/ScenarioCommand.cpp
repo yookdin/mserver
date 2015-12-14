@@ -26,7 +26,7 @@ void ScenarioCommand::interpret(string &line, ifstream &file, ScriptReader &read
 //==========================================================================================================
 void ScenarioCommand::process_args(string& line, ScriptReader &reader)
 {
-    replace_vars(line, reader);
+    reader.replace_vars(line);
     scenario_file.clear();
     args.clear();
     map<string, Option> options;

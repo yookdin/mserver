@@ -63,7 +63,7 @@ void SetCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
         {
             bool condition;
             string condition_str = match[5];
-            replace_vars(condition_str, reader);
+            reader.replace_vars(condition_str);
             
             if(condition_str == "true")
             {
@@ -92,7 +92,7 @@ void SetCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
         
         if(regex_match(value, regex(brackets_var_regex_str))) // If value is [var-name], get its literal value
         {
-            replace_vars(value, reader);
+            reader.replace_vars(value);
         }
         
         reader.set_value(var, value, overwrite);

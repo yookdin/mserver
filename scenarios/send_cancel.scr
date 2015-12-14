@@ -14,7 +14,7 @@ Send a CANCEL (to a previously sent INVITE), receive OK and 487 (request termina
     [last_Call-ID]
     CSeq: [last_cseq] CANCEL
     Reason: VOXIP ;cause=2 ;text="call_rejected_by_user"
-    Max-Forwards: 11
+    Max-Forwards: 70
     Content-Length: 0
 </send>
 

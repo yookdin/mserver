@@ -69,7 +69,7 @@ void RecvCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 //==========================================================================================================
 void RecvCommand::process_args(string& line, ScriptReader &reader)
 {
-    replace_vars(line, reader);
+    reader.replace_vars(line);
     message_kind.clear();
     optional = false;
     timeout = 2;

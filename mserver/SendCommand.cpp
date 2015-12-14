@@ -58,7 +58,7 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines, Script
         }
         
         trim(line); // Remove leading white spaces and tabs, final newline
-        replace_vars(line, reader, call_number);
+        reader.replace_vars(line, call_number);
 
         if(line.empty()) // This is the last line of the header section, after which there's the optional body
         {
@@ -113,7 +113,7 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines, Script
 //==========================================================================================================
 void SendCommand::process_args(string& line, ScriptReader &reader)
 {
-    replace_vars(line, reader);
+    reader.replace_vars(line);
     call_number = -1;
     string opt = "call_number";
     map<string, Option> options;

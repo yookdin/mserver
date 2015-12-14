@@ -53,7 +53,6 @@
 		FE0ECE691BDF832E00958E40 /* ScriptReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptReader.h; sourceTree = "<group>"; };
 		FE0ECE751BDF850100958E40 /* mserver.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mserver.txt; sourceTree = "<group>"; };
 		FE0ECE7B1BDF863300958E40 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
-		FE0ECE7C1BDF875000958E40 /* script.scr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = script.scr; sourceTree = "<group>"; };
 		FE0ECE7D1BDF882B00958E40 /* MServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MServer.cpp; sourceTree = "<group>"; };
 		FE0ECE7E1BDF882B00958E40 /* MServer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MServer.hpp; sourceTree = "<group>"; };
 		FE0ECE961BE0B76400958E40 /* SipParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipParser.cpp; sourceTree = "<group>"; };
@@ -179,7 +178,6 @@
 		FE0ECE781BDF850E00958E40 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
-				FE0ECE7C1BDF875000958E40 /* script.scr */,
 				FE0ECE7B1BDF863300958E40 /* todo.txt */,
 				FE5C5F4E1C01D4E200A773C0 /* scenario.txt */,
 				FE0ECE751BDF850100958E40 /* mserver.txt */,

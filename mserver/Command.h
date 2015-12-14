@@ -12,7 +12,6 @@ public:
 
 protected:
     void trim(string &line);
-    void replace_vars(string &line, ScriptReader &reader, int call_number = -1);
     void replace_len(string &line, string& len);
 };
 

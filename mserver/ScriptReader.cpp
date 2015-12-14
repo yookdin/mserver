@@ -99,6 +99,104 @@ void ScriptReader::read_file(string filename)
 
 
 //==========================================================================================================
+// First replace [var] with values, then replace \[var\] with [var].
+//==========================================================================================================
+void ScriptReader::replace_vars(string &line, int call_number)
+{
+    replace_regular_vars(line, call_number);
+    replace_literal_vars(line);
+}
+
+
+//==========================================================================================================
+// Replace variable specified by a name inside brackets: [var_name] with their value.
+// Note: the replacement itself may contain references to other variables, which will be replaced too.
+//==========================================================================================================
+void ScriptReader::replace_regular_vars(string &line, int call_number)
+{
+    sregex_iterator iter(line.begin(), line.end(), ScriptReader::script_var_regex);
+    sregex_iterator end;
+    
+    if(iter == end)
+    {
+        return;
+    }
+
+    string line2 = line;
+    long offset = 0;
+        
+    // Replace all occurrences of [var] in the string
+    for(;iter != end; ++iter) {
+        string var = (*iter)[1].str();
+        
+        if(var == "len")
+        {
+            continue; // [len] is not yet known, it should be replaced after reading the entire message and knowing the body length
+        }
+        
+        string value = get_final_value(var, call_number); // Get final value returns a string with no [var] in it, replacing recursively if needed
+        line2.replace(iter->position() + offset, iter->length(), value);
+        offset += value.length() - iter->length();
+    }
+    
+    line = line2;
+}
+
+
+//==========================================================================================================
+// Replace all occurrences of \[var\] with [var].
+//==========================================================================================================
+void ScriptReader::replace_literal_vars(string &line)
+{
+    sregex_iterator iter(line.begin(), line.end(), ScriptReader::literal_var_regex);
+    sregex_iterator end;
+    
+    if(iter == end)
+    {
+        return;
+    }
+    
+    string line2 = line;
+    long offset = 0;
+    
+    for(;iter != end; ++iter) {
+        string var = (*iter)[0].str();
+        
+        // Remove the backslahes
+        var.erase(0, 1);
+        var.erase(var.length() - 2, 1);
+        
+        line2.replace(iter->position() + offset, iter->length(), var);
+        offset += var.length() - iter->length();
+    }
+    
+    line = line2;
+}
+
+
+//==========================================================================================================
+// This is called from replace_regular_vars(), and may call replace_regular_vars() itself, which creates the
+// recursive replacements of [var] occurrences. When no more vars, replace_regular_vars() will not call
+// get_final_value(), and thus the recursion will end.
+//==========================================================================================================
+string ScriptReader::get_final_value(string var, int call_number)
+{
+    string result = get_value(var, call_number);
+    
+    // Random call-id might contain a string looking like a var: "...[xxx]...", or even "[call_id]", and
+    // anyway we don't want to recursively replace random generated strings
+    bool final = (var == CALL_ID || var == MIN_CALL_ID || var == MAX_CALL_ID || var == BRANCH || var == TAG);
+
+    if(!final)
+    {
+        replace_regular_vars(result, call_number); // If no further vars in result, then it will be unchanged.
+    }
+
+    return result;
+}
+
+
+//==========================================================================================================
 // Get the value for a variable that appear in the script in brackets (like [call_id]). Some are static to
 // the test (received from MServer), some generated, some stored from previous messages.
 //==========================================================================================================
@@ -117,7 +215,7 @@ string ScriptReader::get_value(string var, int call_number, bool try_as_last)
     bool just_value = (match[7].length() >  0);
     int add_to_cseq = 0;
     string name = match[2];
-    
+
     if(match[3].length() > 0)
     {
         name = match[4];
@@ -184,6 +282,7 @@ string ScriptReader::gen_call_id(CallIDKind kind)
         {
             string res;
             gen_random_string(res, 1, &SipParser::inst().sip_word_chars);
+            cout << "call-id = " << res << endl;
             return res;
         }
         case MIN:

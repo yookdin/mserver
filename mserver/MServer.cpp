@@ -110,9 +110,6 @@ void MServer::run(int argc, char * argv[])
 // -port <PORT>         port to use
 // -test_dir <NAME>     test directory (for log file)
 // -scenario <NAME>     scenario file to run
-//
-// Optional options:
-// -call_id_<min|max>   generate either minimal or maximal call id for a generated call
 //==========================================================================================================
 void MServer::process_args(int argc, char * argv[])
 {    
