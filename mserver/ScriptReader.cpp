@@ -10,6 +10,7 @@
 #include "StopListeningCommand.hpp"
 #include "StartListeningCommand.hpp"
 #include "SetCommand.hpp"
+#include "PrintCommand.hpp"
 #include "MServer.hpp"
 
 
@@ -20,6 +21,12 @@ ScriptReader::ScriptReader(string _filename, map<string, string> _vars, ScriptRe
     filename(_filename), vars(_vars), root(parent == nullptr)
 {
     print_title();
+    
+    // Check validity of variable-value pairs
+    for(auto& p: vars)
+    {
+        check_valid_value(p.first, p.second);
+    }
     
     if(root)
     {
@@ -100,11 +107,23 @@ void ScriptReader::read_file(string filename)
 
 //==========================================================================================================
 // First replace [var] with values, then replace \[var\] with [var].
+// If no occurrences, the line is unchanged.
 //==========================================================================================================
 void ScriptReader::replace_vars(string &line, int call_number)
 {
     replace_regular_vars(line, call_number);
     replace_literal_vars(line);
+}
+
+
+//==========================================================================================================
+// A returning value version of replace_vars()
+//==========================================================================================================
+string ScriptReader::get_replaced_str(string line, int call_number)
+{
+    string result = line;
+    replace_vars(result, call_number);
+    return result;
 }
 
 
@@ -282,7 +301,6 @@ string ScriptReader::gen_call_id(CallIDKind kind)
         {
             string res;
             gen_random_string(res, 1, &SipParser::inst().sip_word_chars);
-            cout << "call-id = " << res << endl;
             return res;
         }
         case MIN:
@@ -423,9 +441,24 @@ SipMessage* ScriptReader::get_last_message(int call_number)
 //==========================================================================================================
 void ScriptReader::set_value(string var, string value, bool overwirte)
 {
+    check_valid_value(var, value);
+    
     if(vars.count(var) == 0 || overwirte)
     {
         vars[var] = value;
+    }
+}
+
+
+//==========================================================================================================
+// Check for self-reference: if var=[var], it will cause an infinite loop when trying to get value for this
+// variable.
+//==========================================================================================================
+void ScriptReader::check_valid_value(string var, string value)
+{
+    if(value == '[' + var + ']')
+    {
+        throw string("Self reference error: setting variable \"" + var + "\" to \"" + value + "\" will cause an infinite loop");
     }
 }
 
@@ -525,6 +558,7 @@ map<string, Command*> ScriptReader::init_commands()
     local_commands["stop_listening"] = new StopListeningCommand();
     local_commands["start_listening"] = new StartListeningCommand();
     local_commands["set"] = new SetCommand();
+    local_commands["print"] = new PrintCommand();
     
     return local_commands;
 }

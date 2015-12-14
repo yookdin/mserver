@@ -23,3 +23,32 @@ string unqoute(string s)
     
     return s;
 }
+
+
+//==========================================================================================================
+// Return the start positon of the first occurrence not inside double quotes of end_str
+//==========================================================================================================
+int find_end_str_position(string& line, string end_str)
+{
+    bool inside_quotes = false;
+    
+    for(int i = 0; i < line.length(); i++)
+    {
+        if(line[i] == '"' && (i == 0 || line[i-1] != '\\'))
+        {
+            inside_quotes = !inside_quotes;
+        }
+        
+        if(inside_quotes)
+        {
+            continue; // Ignore everything inside quotes
+        }
+        
+        if(strncmp(line.c_str() + i, end_str.c_str(), end_str.length()) == 0)
+        {
+            return i;
+        }
+    }
+    
+    return -1;
+}

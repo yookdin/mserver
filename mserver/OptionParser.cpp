@@ -105,9 +105,8 @@ ParamValOption::ParamValOption(): Option(false, true, true)
 // A regex for opt[=val] appearing in a script file. May be opt = "val with spaces", and may be just opt.
 // This is used when searching for such pairs within a line.
 //==========================================================================================================
-const regex OptionParser::eq_pair_regex(
-    "(\\w+)( *= *(-?[\\w\\.]+|" + string_regex_str + "|\\[" + var_regex_str + "\\]))?");
-
+const regex OptionParser::eq_pair_regex("(\\w+)( *= *(" + string_regex_str + "|[^ ]+))?");
+                    
 
 //==========================================================================================================
 // This is used on a string that was already extracted from its context, which can either be the command
@@ -117,21 +116,20 @@ const regex OptionParser::naked_eq_pair_regex("(\\w+)=(.*)");
 
 //==========================================================================================================
 // Parse options received in a string, of type: opt=val, but only look at the portion of the line before
-// end_char. Set the line the everything after the end_char.
-// This means that options are not supposed to contain the end_char. If this is not the case need to fix
-// this function.
+// end_str. Set the line the everything after the end_str.
+// Option may contain end_str only if inside double quotes.
 //==========================================================================================================
-OptionParser::OptionParser(string& line, map<string, Option>& _options, char end_char): options(_options) {
+OptionParser::OptionParser(string& line, map<string, Option>& _options, string end_str): options(_options) {
 
     long end_pos = line.length();
     
-    if(end_char != 0) // If end_char == 0, entire line is searched
+    if(!end_str.empty()) // If empty entire line is searched
     {
-        end_pos = line.find_first_of(end_char);
+        end_pos = find_end_str_position(line, end_str);
         
         if(end_pos == string::npos)
         {
-            throw string("Expected end char " + string(1, end_char) + " not found");
+            throw string("Expected end string \"" + end_str + "\" not found");
         }
     }
     
@@ -142,19 +140,14 @@ OptionParser::OptionParser(string& line, map<string, Option>& _options, char end
     for(;iter != end; ++iter)
     {
         string opt_name = (*iter)[1];
-        string opt_val = (*iter)[3];
+        string opt_val = unqoute((*iter)[3]);
 
-        if(opt_val[0] == '"')
-        {
-            opt_val = (*iter)[4];
-        }
-        
         set_value(opt_name, opt_val, false);
     }
 
-    if(end_char != 0)
+    if(!end_str.empty())
     {
-        line = line.substr(end_pos + 1);
+        line = line.substr(end_pos + end_str.length());
     }
     else
     {
@@ -164,7 +157,10 @@ OptionParser::OptionParser(string& line, map<string, Option>& _options, char end
     check_missing_options(options);
     remove_param_val_opts();
 }
-    
+
+
+
+
 //==========================================================================================================
 // Parse options received argv (from the command line), of type: -opt val
 //==========================================================================================================
@@ -300,7 +296,7 @@ void OptionParser::remove_param_val_opts()
 
 
 //==========================================================================================================
-// Parse a pair string var=val into its part. If comming from the command line there are no extra " around
+// Parse a pair string var=val into its parts. If comming from the command line there are no extra " around
 // the value. If coming from a file, there could be, so strip them.
 //==========================================================================================================
 void OptionParser::parse_eq_pair(string& pair, string& name, string& val, bool from_cmd_line)

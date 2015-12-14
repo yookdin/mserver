@@ -57,7 +57,7 @@ public:
     };
     
     
-    OptionParser(string& line, map<string, Option>& _options, char end_char = 0);
+    OptionParser(string& line, map<string, Option>& _options, string end_str = "");
     OptionParser(int argc, char * argv[], map<string, Option>& _options);
     
 private:
@@ -72,7 +72,6 @@ private:
     Option* get_opt(string& opt_name);
     void parse_eq_pair(string& pair, string& name, string& val, bool from_cmd_line);
     void remove_param_val_opts();
-
 };
 
 typedef OptionParser::Option Option;

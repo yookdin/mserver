@@ -69,11 +69,10 @@ void RecvCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 //==========================================================================================================
 void RecvCommand::process_args(string& line, ScriptReader &reader)
 {
-    reader.replace_vars(line);
     message_kind.clear();
     optional = false;
     timeout = 2;
-    call_number =  -1;
+    call_number = -1;
 
     string msg_opt = "message", optional_opt = "optional", timeout_opt = "timeout", call_number_opt = "call_number";
     
@@ -82,19 +81,24 @@ void RecvCommand::process_args(string& line, ScriptReader &reader)
     options.emplace(optional_opt, Option(false, false));
     options.emplace(timeout_opt, Option(false, true));
     options.emplace(call_number_opt, Option(false, true));
-    OptionParser parser(line, options, '>');
     
+    OptionParser parser(line, options, ">");
+    
+    if(options.at(call_number_opt).was_found())
+    {
+        string call_number_str = options.at(call_number_opt).get_value();
+        call_number = stoi( reader.get_replaced_str(call_number_str) );
+    }
+
     message_kind = options.at(msg_opt).get_value();
+    reader.replace_vars(message_kind, call_number);
+    
     optional = options.at(optional_opt).was_found();
     
     if(options.at(timeout_opt).was_found())
     {
-        timeout = stoi(options.at(timeout_opt).get_value());
-    }
-    
-    if(options.at(call_number_opt).was_found())
-    {
-        call_number = stoi(options.at(call_number_opt).get_value());
+        string timeout_str = options.at(timeout_opt).get_value();
+        timeout = stoi( reader.get_replaced_str(timeout_str) );
     }
 }
 

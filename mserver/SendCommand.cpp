@@ -113,16 +113,15 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines, Script
 //==========================================================================================================
 void SendCommand::process_args(string& line, ScriptReader &reader)
 {
-    reader.replace_vars(line);
     call_number = -1;
     string opt = "call_number";
     map<string, Option> options;
     options.emplace(opt, Option(false, true));
-    OptionParser parser(line, options, '>');
+    OptionParser parser(line, options, ">");
 
     if(options.at(opt).was_found())
     {
-        call_number = stoi(options.at(opt).get_value());
+        call_number = stoi(reader.get_replaced_str( options.at(opt).get_value() ));
     }
 }
 

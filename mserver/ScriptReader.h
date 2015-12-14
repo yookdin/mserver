@@ -16,6 +16,7 @@ public:
     static const regex literal_var_regex;
 
     void replace_vars(string &line, int call_number = -1);
+    string get_replaced_str(string line, int call_number = -1);
     void set_value(string var, string value, bool overwirte);
     string get_value(string var, int call_number = -1, bool try_as_last = false);
     
@@ -57,7 +58,7 @@ private:
     void read_file(string filepath);
     void replace_regular_vars(string &line, int call_number);
     void replace_literal_vars(string &line);
-
+    void check_valid_value(string var, string value);
     string get_final_value(string var, int call_number = -1);
     string gen_branch();
     string gen_call_id(CallIDKind kind);
