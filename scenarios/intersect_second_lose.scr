@@ -15,7 +15,7 @@ lose        - voxip should lose due to lower call-id
 ----------------------------------------------------------------------------------------------------
 Start a call which will eventually be answered due to higher call-id
 ----------------------------------------------------------------------------------------------------
-<scenario file=send_invite_partial.scr is_video=[is_video] call_id_param="[max_call_id]"/>
+<scenario file=send_invite_partial.scr is_video=[is_video] call_id_param=[max_call_id]/>
 
 
 ----------------------------------------------------------------------------------------------------

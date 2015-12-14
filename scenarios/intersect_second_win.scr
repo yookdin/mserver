@@ -9,7 +9,7 @@
 ----------------------------------------------------------------------------------------------------
 Start a call that will not be answered due to lower call-id
 ----------------------------------------------------------------------------------------------------
-<scenario file=send_invite_partial.scr is_video=[is_video] call_id_param="[min_call_id]"/>
+<scenario file=send_invite_partial.scr is_video=[is_video] call_id_param=[min_call_id]/>
 
 ----------------------------------------------------------------------------------------------------
 Receive invite from voxip and answer it
