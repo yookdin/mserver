@@ -45,13 +45,6 @@ Send unhold scenario
 </recv>
 
 <send>
-    ACK sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
-    [last_Via]
-    [last_From]
-    [last_To]
-    [last_Call-ID]
-    Max-Forwards: 70
-    CSeq: [last_cseq] ACK
-    Content-Length: 0
+    [default_ack]
 </send>
 
