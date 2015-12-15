@@ -6,7 +6,7 @@
 //  Copyright © 2015 Vonage. All rights reserved.
 //
 
-#include "common_headers.h"
+#include "common.h"
 #include "Operator.h"
 
 // Make these static to enable mapping between the string identifier and the operator object

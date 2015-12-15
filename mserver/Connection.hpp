@@ -9,7 +9,7 @@
 #ifndef Connection_hpp
 #define Connection_hpp
 
-#include "common_headers.h"
+#include "common.h"
 
 class Connection
 {

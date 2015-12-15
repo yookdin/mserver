@@ -1,4 +1,4 @@
-#include "common_headers.h"
+#include "common.h"
 #include "ScriptReader.h"
 #include "Command.h"
 #include "ScenarioCommand.h"

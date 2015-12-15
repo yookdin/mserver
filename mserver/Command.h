@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common_headers.h"
+#include "common.h"
 
 class ScriptReader;
 

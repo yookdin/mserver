@@ -9,7 +9,7 @@
 #ifndef SipParser_hpp
 #define SipParser_hpp
 
-#include "common_headers.h"
+#include "common.h"
 
 //==========================================================================================================
 // Syntactic element that appear in SIP messages

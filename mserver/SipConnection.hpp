@@ -9,7 +9,7 @@
 #ifndef SipConnection_hpp
 #define SipConnection_hpp
 
-#include "common_headers.h"
+#include "common.h"
 #include "SipMessage.hpp"
 #include "Connection.hpp"
 

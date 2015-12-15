@@ -9,7 +9,7 @@
 #ifndef ControlConnection_hpp
 #define ControlConnection_hpp
 
-#include "common_headers.h"
+#include "common.h"
 #include "Connection.hpp"
 
 //======================================================================================================================

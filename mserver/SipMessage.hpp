@@ -9,7 +9,7 @@
 #ifndef SipMessage_hpp
 #define SipMessage_hpp
 
-#include "common_headers.h"
+#include "common.h"
 #include "Call.hpp"
 
 class ScriptReader;
