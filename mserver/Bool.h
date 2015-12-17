@@ -38,7 +38,7 @@ public:
     Value& operator!=(Value& other) { return *(new Bool(val != other.get_bool())); }
 
     void flip() { val = !val; }
-    string to_string() { return (val ? "true" : "false"); }
+    virtual string to_string() { return (val ? "true" : "false"); }
     
 private:
     bool val;

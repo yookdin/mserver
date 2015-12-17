@@ -39,6 +39,7 @@ public:
     virtual int get_int() { throw string("Can't call get_int() for type " + get_type_name()); }
     virtual string get_string() { throw string("Can't call get_string() for type " + get_type_name()); }
     virtual bool get_bool() { throw string("Can't call get_bool() for type " + get_type_name()); }
+    virtual string to_string() = 0;
 
 private:
     Value& throw_wrong_op(string op) { throw string("Operator " + op + " not supported by type " + get_type_name()); }

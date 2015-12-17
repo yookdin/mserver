@@ -9,7 +9,7 @@ Receive unhold message and answer it with 408 Timeout
 ----------------------------------------------------------------------------------------------------
 <recv message=INVITE>
     <expect>
-        sdp_send_recv == "sendrecv"
+        [sdp_send_recv] == "sendrecv"
     </expect>
 </recv>
 

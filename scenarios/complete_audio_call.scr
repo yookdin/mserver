@@ -1,8 +1,11 @@
 
 Recive an audio call
+
+<set>
+    default unregister = false
+</set>
   
 <scenario file=register.scr/>
 <scenario file=receive_invite.scr/>
 <scenario file=receive_bye.scr/>
 <scenario file=unregister.scr/>
-

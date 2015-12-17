@@ -1,0 +1,181 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: MServer Script
+scopeName: text.scr
+fileTypes: [scr]
+uuid: ce8820af-06b8-4da9-bfd9-28758ccf9e73
+
+patterns:
+
+#---------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------
+- name: entity
+  match: <print (.*)/>
+  captures:
+    '1': {name: string}
+
+- name: shlomit
+  match: </?(if|elsif|else|endif)(.*)>
+  captures:
+    '2': {name: string}
+
+#---------------------------------------------------------------------------------------------------
+# <expect> ... </expect>
+#---------------------------------------------------------------------------------------------------
+- comment: Expect command
+  name: entity
+  begin: ^ *<expect>
+  end: </expect>
+  patterns:
+  - comment: String literals
+    name: string
+    match: '"(\"|[^"])*"'
+  - comment: Variables
+    name: variable
+    match: '[-\w]+'
+  - comment: Explicit comments
+    name: comment
+    match: ' //.*$'
+
+#---------------------------------------------------------------------------------------------------
+# <scenario ... />
+#---------------------------------------------------------------------------------------------------
+- comment: Scenario command
+  name: entity
+  begin: ^ *<scenario file *= *(("(\"|[^"])*")|([\w\.]+))
+  beginCaptures:
+    '1': {name: string}
+  end: />
+  patterns:
+  - comment: Parameter-value pair; value can be - name, [name], "some string"
+    name: entity
+    match: (\w+ *= *)((\[[-\w]+((\+\d+)|(:value))?\])|(\w+)|("(\"|[^"])*"))
+    captures:
+      '1': {name: entity}
+      '3': {name: variable}
+      '7': {name: string}
+      '8': {name: string}
+
+#---------------------------------------------------------------------------------------------------
+# <send> ... </send>
+#---------------------------------------------------------------------------------------------------
+- comment: Send command
+  name: entity
+  begin: ^ *<send( +call_number *= *((\d+)|(\[\w+\])))? *>(.*)
+  beginCaptures:
+    '3': {name: string}
+    '4': {name: variable}
+    '5': {name: comment}
+  end: </send>
+  patterns:
+  - name: variable
+    match: \[((last_cseq\+\d+)|([-\w]+(:value)?))\]
+  - name: comment
+    match: ' //.*$'
+  - comment: Everything which is not a variable or an explicit comment, is a string literal (part of the SIP message)
+    name: string
+    match: .
+
+#---------------------------------------------------------------------------------------------------
+# <set> ... </set>
+#---------------------------------------------------------------------------------------------------
+- comment: Set command
+  name: entity
+  begin: ^ *<set>(.*)
+  beginCaptures:
+    '1': {name: comment}
+  end: </set>
+  patterns:
+  - name: entity
+    match: \w+ =
+  - name: entity
+    match: default
+  - name: variable
+    match: \[[\w-]+((\+\d+)|(:value))?\]
+  - name: entity
+    match: ':'
+  - name: entity
+    match: \?
+  - name: comment
+    match: ' //.*$'
+  - comment: Everything which is not a variable or an explicit comment, is a string literal (part of the SIP message)
+    name: string
+    match: .
+
+
+#---------------------------------------------------------------------------------------------------
+# <recv ... />
+#---------------------------------------------------------------------------------------------------
+- comment: Recv command opening tag
+  name: entity
+  begin: '^ *<recv +'
+  end: '>'
+  patterns:
+  - comment: Parameter-value pair; value is optional; if it appears it should be a number or a word
+    name: entity
+    match: \w+( *= *((\w+)|(\[\w+\])))
+    captures:
+      '3': {name: string}
+      '4': {name: variable}
+
+#---------------------------------------------------------------------------------------------------
+# </recv>
+#---------------------------------------------------------------------------------------------------
+- comment: Recv command closing tag
+  name: entity
+  match: </recv>
+
+#---------------------------------------------------------------------------------------------------
+# <pause ... />
+#---------------------------------------------------------------------------------------------------
+- comment: Pause command
+  name: entity
+  match: ^ *<pause( for)? +([\.\d]+) *\w+ */>
+  captures:
+    '2': {name: string}
+
+
+#---------------------------------------------------------------------------------------------------
+# One liners
+#---------------------------------------------------------------------------------------------------
+- name: entity
+  match: ^ *<(move_to_next_ip|stop_listening|start_listening)/>
+
+
+#---------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------
+- comment: Everything that is not matched by known commands is a comment
+  name: comment
+  match: .
+
+
+...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -10,7 +10,7 @@ Receive unhold, answer it with ok
 
 <recv message=INVITE call_number=[call_number]>  Expect the message to have a=sendrecv in SDP
     <expect>
-        sdp_send_recv == unhold_request
+        [sdp_send_recv] == [unhold_request]
     </expect>
 </recv>
 

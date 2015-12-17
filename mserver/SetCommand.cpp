@@ -88,7 +88,7 @@ void SetCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
             }
         }
         
-        value = unqoute(value); // Remove quotes if they exist
+        value = unquote(value); // Remove quotes if they exist
         
         if(regex_match(value, regex(brackets_var_regex_str))) // If value is [var-name], get its literal value
         {

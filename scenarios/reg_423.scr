@@ -21,7 +21,7 @@ The next register should contain Expires value >= min_exp_val
 <recv message=REGISTER>
   Check that the value of the 'Expires' field is greater or equal to <min_exp_val>, o/w fail the test
   <expect>
-    Expires >= min_exp_val
+    [Expires:value] >= [min_exp_val]
   </expect>
 </recv>
 

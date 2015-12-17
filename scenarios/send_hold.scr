@@ -40,7 +40,7 @@ Send hold scenario
 
 <recv message=200>
     <expect>
-        sdp_send_recv == hold_response
+        [sdp_send_recv] == [hold_response]
     </expect>
 </recv>
 

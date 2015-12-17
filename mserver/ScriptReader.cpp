@@ -373,7 +373,7 @@ string ScriptReader::get_value(string var, int call_number, bool try_as_last)
         add_to_cseq = stoi(match[5]);
     }
     
-    if(is_last || (try_as_last && SipMessage::is_message_var(name)))
+    if(is_last || (try_as_last && (SipMessage::is_message_var(name) || SipParser::inst().match(HEADER_NAME, name))))
     {
         string result = get_last_value(name, call_number, just_value);
         

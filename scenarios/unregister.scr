@@ -3,7 +3,7 @@ Unregistration scenario
 
 <recv message=REGISTER>
   <expect>
-    Expires == 0  // Check that the value of the 'Expires' field is equal to 0, o/w fail the test
+    [Expires:value] == 0  // Check that the value of the 'Expires' field is equal to 0, o/w fail the test
   </expect>
 </recv>
 

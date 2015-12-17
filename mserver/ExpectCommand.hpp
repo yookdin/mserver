@@ -26,30 +26,6 @@ public:
 
 private:
     const regex end_regex;
-    const regex num_regex;
-    const regex str_regex;
-    const regex var_regex;
-    const regex bool_regex;
-
-    map<string, Token*> const_tokens;
-    //static map<string, Token*> init_const_tokens();
-
-    ScriptReader* reader = nullptr;
-    string expression;
-    string expression_rpn;
-    
-    void convert_to_tokens(string &line, ifstream &file, vector<Token*>& tokens);
-    void convert_to_tokens(string &line, vector<Token*>& tokens);
-    void convert_to_rpn(vector<Token*>& tokens, deque<Token*>& output);
-    bool eval_expression(deque<Token*>& output);
-
-    Token* try_const_token  (string& line, int& pos);
-    Token* try_num          (string& line, int& pos);
-    Token* try_bool         (string& line, int& pos);
-    Token* try_string       (string& line, int& pos);
-    Token* try_header_name  (string& line, int& pos);
-    Token* try_var          (string& line, int& pos);
-    Token* interpret_value (string& val);
 };
 
 #endif /* ExpectCommand_hpp */

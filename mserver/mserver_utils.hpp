@@ -18,7 +18,7 @@ extern const string string_regex_str;
 extern const string var_regex_str;
 extern const string brackets_var_regex_str;
 
-string unqoute(string s);
+string unquote(string s);
 int find_end_str_position(string& line, string end_str);
 
 #endif /* mserver_utils_hpp */

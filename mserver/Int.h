@@ -32,8 +32,7 @@ public:
     Value& operator<=(Value& other) { return *(new Bool(val <= other.get_int())); }
     Value& operator>=(Value& other) { return *(new Bool(val >= other.get_int())); }
 
-    string to_string() { return std::to_string(val); }
-
+    virtual string to_string() { return std::to_string(val); }
     
 private:
     const int val;

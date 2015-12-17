@@ -140,7 +140,7 @@ OptionParser::OptionParser(string& line, map<string, Option>& _options, string e
     for(;iter != end; ++iter)
     {
         string opt_name = (*iter)[1];
-        string opt_val = unqoute((*iter)[3]);
+        string opt_val = unquote((*iter)[3]);
 
         set_value(opt_name, opt_val, false);
     }

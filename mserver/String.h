@@ -37,7 +37,7 @@ public:
         return v;
     }
     
-    string to_string() { return '"' + val + '"'; }
+    virtual string to_string() { return val; }
 
 private:
     const string val;

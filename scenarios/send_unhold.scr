@@ -40,7 +40,7 @@ Send unhold scenario
 
 <recv message=200>
     <expect>
-        sdp_send_recv == unhold_response
+        [sdp_send_recv] == [unhold_response]
     </expect>
 </recv>
 

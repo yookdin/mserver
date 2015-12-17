@@ -10,7 +10,7 @@ Receive hold, answer it with ok
 
 <recv message=INVITE call_number=[call_number]>  Expect the message to have a=sendonly in SDP
     <expect>
-        sdp_send_recv == hold_request
+        [sdp_send_recv] == [hold_request]
     </expect>
 </recv>
 

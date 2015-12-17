@@ -12,6 +12,8 @@
 		FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */; };
 		FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE7D1BDF882B00958E40 /* MServer.cpp */; };
 		FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE961BE0B76400958E40 /* SipParser.cpp */; };
+		FE1104B61C22B188001C5AC8 /* ExpressionEvaluator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE1104B41C22B188001C5AC8 /* ExpressionEvaluator.cpp */; };
+		FE1104B81C22B934001C5AC8 /* Paren.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE1104B71C22B934001C5AC8 /* Paren.cpp */; };
 		FE29A95A1C20DCAC0074C4D9 /* IfStatement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE29A9581C20DCAC0074C4D9 /* IfStatement.cpp */; };
 		FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */; };
 		FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC651BEB79A1004E05A2 /* SipConnection.cpp */; };
@@ -59,6 +61,10 @@
 		FE0ECE7E1BDF882B00958E40 /* MServer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MServer.hpp; sourceTree = "<group>"; };
 		FE0ECE961BE0B76400958E40 /* SipParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipParser.cpp; sourceTree = "<group>"; };
 		FE0ECE971BE0B76400958E40 /* SipParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipParser.hpp; sourceTree = "<group>"; };
+		FE1104B41C22B188001C5AC8 /* ExpressionEvaluator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpressionEvaluator.cpp; sourceTree = "<group>"; };
+		FE1104B51C22B188001C5AC8 /* ExpressionEvaluator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ExpressionEvaluator.hpp; sourceTree = "<group>"; };
+		FE1104B71C22B934001C5AC8 /* Paren.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Paren.cpp; sourceTree = "<group>"; };
+		FE1104B91C23050D001C5AC8 /* SCR.YAML-tmLanguage */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SCR.YAML-tmLanguage"; sourceTree = "<group>"; };
 		FE29A9581C20DCAC0074C4D9 /* IfStatement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IfStatement.cpp; sourceTree = "<group>"; };
 		FE29A9591C20DCAC0074C4D9 /* IfStatement.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IfStatement.hpp; sourceTree = "<group>"; };
 		FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipMessage.cpp; sourceTree = "<group>"; };
@@ -228,6 +234,7 @@
 		FE0ECE781BDF850E00958E40 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				FE1104B91C23050D001C5AC8 /* SCR.YAML-tmLanguage */,
 				FE0ECE7B1BDF863300958E40 /* todo.txt */,
 				FE5C5F4E1C01D4E200A773C0 /* scenario.txt */,
 				FE0ECE751BDF850100958E40 /* mserver.txt */,
@@ -261,6 +268,8 @@
 		FE7911881BFF116B00A5DD60 /* Expression Evaluation */ = {
 			isa = PBXGroup;
 			children = (
+				FE1104B51C22B188001C5AC8 /* ExpressionEvaluator.hpp */,
+				FE1104B41C22B188001C5AC8 /* ExpressionEvaluator.cpp */,
 				FED6782B1BFF7F9A00B739BE /* Token.h */,
 				FE79118A1BFF119700A5DD60 /* Value.h */,
 				FE79118D1BFF143300A5DD60 /* Bool.h */,
@@ -269,6 +278,7 @@
 				FED6782C1BFF810200B739BE /* Operator.h */,
 				FED678311BFFD8E300B739BE /* Operator.cpp */,
 				FED678301BFF8E1900B739BE /* Paren.h */,
+				FE1104B71C22B934001C5AC8 /* Paren.cpp */,
 			);
 			name = "Expression Evaluation";
 			sourceTree = "<group>";
@@ -426,6 +436,8 @@
 				FE0ECE6D1BDF832E00958E40 /* Command.cpp in Sources */,
 				FE88A6BD1C091DCD00AB68A2 /* ControlConnection.cpp in Sources */,
 				FE9B0BA21C11FCE0005FCE06 /* RecvCommand.cpp in Sources */,
+				FE1104B61C22B188001C5AC8 /* ExpressionEvaluator.cpp in Sources */,
+				FE1104B81C22B934001C5AC8 /* Paren.cpp in Sources */,
 				FE9B0BA71C1262AA005FCE06 /* NextIPCommand.cpp in Sources */,
 				FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */,
 				FE924AA51C0C823D00769C34 /* Connection.cpp in Sources */,
