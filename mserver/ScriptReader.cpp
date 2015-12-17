@@ -87,6 +87,11 @@ void ScriptReader::interpret(string filename)
     }
 
     for(string line; getline(file, line);) {
+        if(line.empty())
+        {
+            continue;
+        }
+        
         keyword_func func = get_keyword_func(line);
         
         if(func == nullptr)
