@@ -12,6 +12,7 @@
 		FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */; };
 		FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE7D1BDF882B00958E40 /* MServer.cpp */; };
 		FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE961BE0B76400958E40 /* SipParser.cpp */; };
+		FE29A95A1C20DCAC0074C4D9 /* IfStatement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE29A9581C20DCAC0074C4D9 /* IfStatement.cpp */; };
 		FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */; };
 		FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC651BEB79A1004E05A2 /* SipConnection.cpp */; };
 		FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */; };
@@ -58,6 +59,8 @@
 		FE0ECE7E1BDF882B00958E40 /* MServer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MServer.hpp; sourceTree = "<group>"; };
 		FE0ECE961BE0B76400958E40 /* SipParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipParser.cpp; sourceTree = "<group>"; };
 		FE0ECE971BE0B76400958E40 /* SipParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipParser.hpp; sourceTree = "<group>"; };
+		FE29A9581C20DCAC0074C4D9 /* IfStatement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IfStatement.cpp; sourceTree = "<group>"; };
+		FE29A9591C20DCAC0074C4D9 /* IfStatement.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IfStatement.hpp; sourceTree = "<group>"; };
 		FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipMessage.cpp; sourceTree = "<group>"; };
 		FE2FFC501BE76B3E004E05A2 /* SipMessage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipMessage.hpp; sourceTree = "<group>"; };
 		FE2FFC651BEB79A1004E05A2 /* SipConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipConnection.cpp; sourceTree = "<group>"; };
@@ -290,6 +293,8 @@
 				FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */,
 				FEC54F2D1C1B223B00D316E9 /* Call.hpp */,
 				FEC54F2C1C1B223B00D316E9 /* Call.cpp */,
+				FE29A9591C20DCAC0074C4D9 /* IfStatement.hpp */,
+				FE29A9581C20DCAC0074C4D9 /* IfStatement.cpp */,
 			);
 			name = Reader;
 			sourceTree = "<group>";
@@ -409,6 +414,7 @@
 				FEF7460F1C147FF700598473 /* StopListeningCommand.cpp in Sources */,
 				FEC54F2E1C1B223B00D316E9 /* Call.cpp in Sources */,
 				FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */,
+				FE29A95A1C20DCAC0074C4D9 /* IfStatement.cpp in Sources */,
 				FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */,
 				FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */,
 				FEF746121C1480C100598473 /* StartListeningCommand.cpp in Sources */,

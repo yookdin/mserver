@@ -46,7 +46,13 @@ ScriptReader::ScriptReader(string _filename, map<string, string> _vars, ScriptRe
     vars[DEFAULT_100_TRYING] = default_100_trying;
     vars[DEFAULT_ACK] = default_ack;
     
-    read_file(filename);
+    keyword_funcs["if"] = &ScriptReader::handle_if;
+    keyword_funcs["elseif"] = &ScriptReader::handle_elseif;
+    keyword_funcs["else"] = &ScriptReader::handle_else;
+    keyword_funcs["endif"] = &ScriptReader::handle_endif;
+
+    
+    interpret(filename);
     print_end_title();
 }
 
@@ -67,41 +73,162 @@ ScriptReader::~ScriptReader()
     }
 }
 
+
 //==========================================================================================================
 //==========================================================================================================
-void ScriptReader::read_file(string filename)
+void ScriptReader::interpret(string filename)
 {
     string filepath = MServer::inst.get_value(SCENARIO_DIR) + "/" + filename;
-	ifstream file(filepath);
-
-	if(!file.is_open())
-	{
-        throw string("File " + filepath + " not found");
-	}
+    ifstream file(filepath);
     
-	for(string line; getline(file, line);)
-	{
-		smatch res;
+    if(!file.is_open())
+    {
+        throw string("File " + filepath + " not found");
+    }
 
-		if(regex_search(line, res, command_start_regex))
-		{
-			string command_name;
-			
-			// Find the sub-match which succeeded; that is the command name
-            // Skip the first match, it is the entire match
-			for(auto iter = ++res.begin(); iter != res.end(); iter++)
-			{
-				if(! iter->str().empty())
-				{
-					command_name = iter->str();
-					break;
-				}
-			}
+    for(string line; getline(file, line);) {
+        keyword_func func = get_keyword_func(line);
+        
+        if(func == nullptr)
+        {
+            if(should_execute())
+                search_command(line, file);
+        }
+        else
+        {
+            (this->*func)(line);
+        }
+    }
+    
+    bool non_closed_if = !if_stack.empty();
+    
+    while(!if_stack.empty())
+    {
+        delete if_stack.top();
+        if_stack.pop();
+    }
+    
+    if(non_closed_if)
+    {
+        throw string("If statement not closed");
+    }
+}
 
-			line = res.suffix(); // Skip the matched part, so the command won't need to deal with it
-            commands[command_name]->interpret(line, file, *this);
-		}
-	}
+
+//==================================================================================================
+//==================================================================================================
+ScriptReader::keyword_func ScriptReader::get_keyword_func(string& line)
+{
+    regex re("^ *(\\w+)");
+    smatch match;
+    bool found = regex_search(line, match, re);
+    string keyword = match[1];
+    
+    if(found && keyword_funcs.count(keyword) > 0)
+    {
+        line = match.suffix();
+        return keyword_funcs[keyword];
+    }
+    
+    return nullptr;
+}
+
+
+//==================================================================================================
+// Search for a command on the given line and execute it if found.
+//==================================================================================================
+void ScriptReader::search_command(string& line, ifstream& file)
+{
+    smatch match;
+    
+    if(regex_search(line, match, command_start_regex))
+    {
+        string command_name;
+        
+        // Find the sub-match which succeeded; that is the command name
+        // Skip the first match, it is the entire match
+        for(auto iter = ++match.begin(); iter != match.end(); iter++)
+        {
+            if(! iter->str().empty())
+            {
+                command_name = iter->str();
+                break;
+            }
+        }
+        
+        line = match.suffix(); // Skip the matched part, so the command won't need to deal with it
+        commands[command_name]->interpret(line, file, *this);
+    }
+}
+
+
+//==================================================================================================
+//==================================================================================================
+void ScriptReader::handle_if(string& line)
+{
+    cout << "handle_if " << line << endl;
+    if_stack.push(new IfStatement(should_execute(), line));
+}
+
+
+//==================================================================================================
+//==================================================================================================
+void ScriptReader::handle_else(string& line)
+{
+    cout << "handle_else" << endl;
+    if(if_stack.empty())
+    {
+        throw string("else with no preceding if");
+    }
+    
+    if_stack.top()->switch_to_else();
+}
+
+
+//==================================================================================================
+//==================================================================================================
+void ScriptReader::handle_elseif(string& line)
+{
+    cout << "handle_elseif " << line << endl;
+
+    if(if_stack.empty())
+    {
+        throw string("elseif with no preceding if");
+    }
+
+    if_stack.top()->switch_to_else();
+    if_stack.push(new IfStatement(should_execute(), line, true));
+}
+
+
+//==================================================================================================
+//==================================================================================================
+void ScriptReader::handle_endif(string& line)
+{
+    cout << "handle_endif " << endl;
+    IfStatement* top;
+    
+    do
+    {
+        top = if_stack.top();
+        if_stack.pop();
+    }
+    while(top->implicit);
+}
+
+
+//==========================================================================================================
+// Should current line be executed, according to if statement status if one exists.
+//==========================================================================================================
+bool ScriptReader::should_execute() {
+    if(if_stack.empty())
+    {
+        return true;
+    }
+    else
+    {
+        return if_stack.top()->should_execute;
+    }
 }
 
 

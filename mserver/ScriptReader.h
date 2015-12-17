@@ -3,6 +3,7 @@
 #include "Command.h"
 #include "SipMessage.hpp"
 #include "Call.hpp"
+#include "IfStatement.hpp"
 
 //======================================================================================================================
 //======================================================================================================================
@@ -54,8 +55,11 @@ private:
     bool root;
     map<string, string> vars; // Map of var names and their values
     vector<SipMessage*>* messages;
+
+    stack<IfStatement*> if_stack;
+    typedef void(ScriptReader::*keyword_func)(string&);
+    map<string, keyword_func> keyword_funcs;
     
-    void read_file(string filepath);
     void replace_regular_vars(string &line, int call_number);
     void replace_literal_vars(string &line);
     void check_valid_value(string var, string value);
@@ -68,6 +72,15 @@ private:
     string get_last_value(string& var, int call_number, bool just_value);
     void print_title();
     void print_end_title();
+    
+    void interpret(string filename);
+    void search_command(string& line, ifstream& file);
+    bool should_execute();
+    keyword_func get_keyword_func(string& line);
+    void handle_if(string& line);
+    void handle_else(string& line);
+    void handle_elseif(string& line);
+    void handle_endif(string& line);
     
     
     //==================================================================================================================
