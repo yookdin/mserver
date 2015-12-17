@@ -7,20 +7,17 @@
 //
 
 #include "IfStatement.hpp"
-
+#include "ExpressionEvaluator.hpp"
 
 //==========================================================================================================
 //==========================================================================================================
-IfStatement::IfStatement(bool _parent_execute, string condition_str, bool _implicit):
+IfStatement::IfStatement(bool _parent_execute, string condition_str, ScriptReader* reader, bool _implicit):
     parent_execute(_parent_execute), implicit(_implicit)
 {
     if(parent_execute)
     {
-        // tmp, replace with expression evaluation
-        if(regex_search(condition_str, regex("^ *true")))
-        {
-            should_execute = true;
-        }
+        // Assume nothing on the line (condition_str) but a boolean expression;
+        should_execute = ExpressionEvaluator::inst()->eval_bool(condition_str, reader);
     }
 }
 

@@ -12,6 +12,7 @@
 
 #include "common.h"
 
+class ScriptReader;
 
 //==========================================================================================================
 // A class represent an if-statement in a script
@@ -19,7 +20,7 @@
 class IfStatement
 {
 public:
-    IfStatement(bool _execute, string condition_str, bool _implicit = false);
+    IfStatement(bool _execute, string condition_str, ScriptReader* reader, bool _implicit = false);
     
     const bool implicit;
     bool should_execute = false;

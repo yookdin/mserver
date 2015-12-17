@@ -86,6 +86,9 @@ void ScriptReader::interpret(string filename)
         throw string("File " + filepath + " not found");
     }
 
+    //------------------------------------------------------------------------------------------------------
+    // Go over the lines of the file and execute commands
+    //------------------------------------------------------------------------------------------------------
     for(string line; getline(file, line);) {
         if(line.empty())
         {
@@ -105,6 +108,10 @@ void ScriptReader::interpret(string filename)
         }
     }
     
+
+    //------------------------------------------------------------------------------------------------------
+    // Check that control flow structures (if-else) are closed properly
+    //------------------------------------------------------------------------------------------------------
     bool non_closed_if = !if_stack.empty();
     
     while(!if_stack.empty())
@@ -121,6 +128,7 @@ void ScriptReader::interpret(string filename)
 
 
 //==================================================================================================
+// Search for the function to handle the current control flow keyword
 //==================================================================================================
 ScriptReader::keyword_func ScriptReader::get_keyword_func(string& line)
 {
@@ -171,8 +179,8 @@ void ScriptReader::search_command(string& line, ifstream& file)
 //==================================================================================================
 void ScriptReader::handle_if(string& line)
 {
-    cout << "handle_if " << line << endl;
-    if_stack.push(new IfStatement(should_execute(), line));
+    //cout << "handle_if " << line << endl;
+    if_stack.push(new IfStatement(should_execute(), line, this));
 }
 
 
@@ -180,7 +188,7 @@ void ScriptReader::handle_if(string& line)
 //==================================================================================================
 void ScriptReader::handle_else(string& line)
 {
-    cout << "handle_else" << endl;
+    //cout << "handle_else" << endl;
     if(if_stack.empty())
     {
         throw string("else with no preceding if");
@@ -194,7 +202,7 @@ void ScriptReader::handle_else(string& line)
 //==================================================================================================
 void ScriptReader::handle_elseif(string& line)
 {
-    cout << "handle_elseif " << line << endl;
+    //cout << "handle_elseif " << line << endl;
 
     if(if_stack.empty())
     {
@@ -202,7 +210,7 @@ void ScriptReader::handle_elseif(string& line)
     }
 
     if_stack.top()->switch_to_else();
-    if_stack.push(new IfStatement(should_execute(), line, true));
+    if_stack.push(new IfStatement(should_execute(), line, this, true));
 }
 
 
@@ -210,7 +218,7 @@ void ScriptReader::handle_elseif(string& line)
 //==================================================================================================
 void ScriptReader::handle_endif(string& line)
 {
-    cout << "handle_endif " << endl;
+    //cout << "handle_endif " << endl;
     IfStatement* top;
     
     do
