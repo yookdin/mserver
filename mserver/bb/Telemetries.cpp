@@ -21,7 +21,6 @@ BB_TEST_F(CallTest, BatteryStrength)
     run_mserver_scenario("complete_audio_call.scr");
     register_voxip();
     call_and_hangup(false);
-    unregister_voxip();
     
     Call *call = get_call(CALL_UUID_1); // The only call in this test, with the default call id
     
@@ -89,7 +88,6 @@ void CallTest::test_connection_type(string connection_type)
     run_mserver_scenario("complete_audio_call.scr");
     register_voxip();
     call_and_hangup(false);
-    unregister_voxip();
     
     Call *call = get_call(CALL_UUID_1); // The only call in this test, with the default call id
     string received_connection_type = get_json_value(call->telemetries, "MOBILECONNECTIONTYPE");
@@ -123,7 +121,6 @@ BB_TEST_F(CallTest, SignalStrength)
     }
     
     call_and_hangup(false);
-    unregister_voxip();
     
     Call *call = get_call(CALL_UUID_1); // The only call in this test, with the default call id
     int received_sig_strength = stoi(get_json_value(call->telemetries, "SIGNALSTRENGTH"));

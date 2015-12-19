@@ -3,4 +3,3 @@ run_scenario file=register.scr
 run_scenario file=receive_invite.scr
 run_scenario file=receive_hold.scr
 run_scenario file=send_bye.scr
-run_scenario file=unregister.scr

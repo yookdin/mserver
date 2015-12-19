@@ -10,5 +10,3 @@ run_scenario file=receive_unhold.scr unhold_request=recvonly unhold_response=sen
 pause for 1 second
 run_scenario file=send_unhold.scr unhold_request=sendrecv unhold_response=sendrecv
 run_scenario file=receive_bye.scr
-
-run_scenario file=unregister.scr

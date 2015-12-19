@@ -17,5 +17,3 @@ send
 endsend
 
 recv message=200
-
-run_scenario file=unregister.scr

@@ -15,4 +15,4 @@ endsend
 
 move_to_next_ip
 
-run_scenario file=reg_unreg.scr
+run_scenario file=register.scr

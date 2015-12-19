@@ -12,6 +12,7 @@
 
 #include <fstream>
 #include <future>
+#include <regex>
 
 #include "PJLIBResources.h"
 

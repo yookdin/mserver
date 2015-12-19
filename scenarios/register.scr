@@ -2,6 +2,8 @@
 # Basic Register scenario
 
 recv message=REGISTER
+expect [Expires:value] != 0
+
 
 send
     SIP/2.0 401 Unauthorized

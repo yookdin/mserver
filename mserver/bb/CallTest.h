@@ -99,6 +99,7 @@ protected:
     void audio_call_all_states();
     void audio_call_without_answer();
     void video_call();
+    void call(string dest, string uuid, bool is_video);
     void reject_call();
     void hangup(string call_id = CALL_UUID_1, bool hasTraceId = false);
     void confirm_remote_hangup(bool hasTraceId = false);
@@ -131,7 +132,13 @@ protected:
     void enable_mute(string call_id);
     void disable_mute(string call_id);
     
+    // You need two wait_for_incoming_call() functions, and can't use default values for parameters,
+    // because if both will have default value, the comiler interpret wait_for_incoming_call(true) as
+    // wait_for_incoming_call(timeout = 1)! Yes, this is annoying.
     string wait_for_incoming_call(bool hasTraceId = false);
+    string wait_for_incoming_call(int timeout, bool has_trace_id = false);
+    void check_trace_id(string& data);
+    
     void answer_call(string call_id, bool hasTraceId = false);
     void call_waiting_answer_and_hold_out_in(int swaps);
     void hangup_active(string call_id = CALL_UUID_1);
@@ -154,8 +161,10 @@ protected:
 
     bool are_active_calls();
     void check_telemetries();
+
     virtual void post_internal_test_body();
     void compare_audio_files(string& src_audio_file, string& output_audio_file);
+    void convert_raw_to_wav(string raw_file);
 
 private:
     

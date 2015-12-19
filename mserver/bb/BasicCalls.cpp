@@ -16,7 +16,7 @@
 //==================================================================================================
 BB_TEST_F(CallTest, BasicAudioCall)
 {
-    run_mserver_scenario("complete_audio_call.scr");
+    run_mserver_scenario("complete_audio_call.scr", "unregister = true");
     register_voxip();
     call_and_hangup(false);
     expect_termination_reason(app_reason_ok);
@@ -33,7 +33,6 @@ BB_TEST_F(CallTest, OutboundAudioCallConfirmAllStates)
     register_voxip();
     audio_call_all_states();
     hangup();
-    unregister_voxip();
 }
 
 
@@ -42,7 +41,7 @@ BB_TEST_F(CallTest, OutboundAudioCallConfirmAllStates)
 //==================================================================================================
 BB_TEST_F(CallTest, BasicVideoCall)
 {
-    run_mserver_scenario("complete_video_call.scr");
+    run_mserver_scenario("complete_video_call.scr", "unregister = true");
     register_voxip();
     call_and_hangup(true);
     unregister_voxip();
@@ -93,7 +92,6 @@ BB_TEST_F(CallTest, BasicAudioCallRemoteBye)
     register_voxip();
     audio_call();
     confirm_remote_hangup();
-    unregister_voxip();
 }
 
 
@@ -108,7 +106,6 @@ BB_TEST_F(CallTest, OutboundAudioCallWithMute)
     enable_mute(CALL_UUID_1);
     disable_mute(CALL_UUID_1);
     hangup();
-    unregister_voxip();
 }
 
 
@@ -136,7 +133,6 @@ BB_TEST_F(CallTest, OutboundAudioCallWithTraceID)
     run_mserver_scenario("complete_audio_call_with_trace_id.scr");
     register_voxip();
     call_and_hangup(false, true);
-    unregister_voxip();
 }
 
 
@@ -150,7 +146,6 @@ BB_TEST_F(CallTest, OutboundAudioCallRemoteByeWithTraceID)
     register_voxip();
     audio_call(true);
     confirm_remote_hangup(true);
-    unregister_voxip();
 }
 
 
@@ -163,7 +158,6 @@ BB_TEST_F(CallTest, InboundAudioCallWithTraceID)
     run_mserver_scenario("complete_inbound_audio_call_trace_id.scr");
     register_voxip();
     answer_call_and_hangup(true);
-    unregister_voxip();
 }
 
 
@@ -178,6 +172,5 @@ BB_TEST_F(CallTest, InboundAudioCallRemoteByeWithTraceID)
     string call_id = wait_for_incoming_call(true);
     answer_call(call_id, true);
     confirm_remote_hangup(true);
-    unregister_voxip();
 }
 

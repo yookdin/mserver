@@ -42,6 +42,7 @@ private:
     vector<string> ips;
     int cur_ip_index = 0;
     
+    void reset_connection();
     void process_args(int argc, char * argv[]);
     void set_scenario_dir(char *argv_0);
     void process_control_message(string& ctrl_msg, map<string, string>& script_vars);

@@ -211,7 +211,8 @@ void SipMessage::check_call_params(int call_number, ScriptReader& reader)
     
     if(call_id != last->get_call_id())
     {
-        throw string("Received message " + kind + " call-id is different than the call call-id");
+        throw string("Received message " + kind + " call-id is: " + call_id + " but expected call-id for call "
+                     "number " + to_string(call_number) + " is: " + last->get_call_id());
     }
     
     // TODO: add checks on other headers?

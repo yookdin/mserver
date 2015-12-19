@@ -9,11 +9,11 @@
 #include "RegisterTest.h"
 
 
-//BB_TEST_F(RegisterTest, debug_mserver)
-//{
-//    run_mserver_scenario("debug1.scr");
-//    ssleep(2);
-//}
+BB_TEST_F(RegisterTest, debug_mserver)
+{
+    run_mserver_scenario("debug1.scr");
+    ssleep(3);
+}
 
 
 //======================================================================================================================

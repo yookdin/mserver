@@ -43,4 +43,3 @@ send
     Content-Length: [len]
 endsend
 
-run_scenario file=unregister.scr

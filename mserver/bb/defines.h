@@ -135,11 +135,12 @@
 //--------------------------------------------------------------------------------------------------
 // Command line option
 //--------------------------------------------------------------------------------------------------
-#define SIPP_OPT "-sipp"
-#define PROXY_OPT "-proxy"
-#define MSERVER_OPT "-mserver"
-#define RUN_DIR_OPT "-run_dir"
-#define SCENARIO_DIR_OPT "-scenario_dir"
+#define SIPP_OPT "sipp"
+#define PROXY_OPT "proxy"
+#define RUN_DIR_OPT "run_dir"
+#define SCENARIO_DIR_OPT "scenario_dir"
+#define REAL_SERVER_OPT "real_server"
+#define MSERVER_OPT "mserver"
 
 //--------------------------------------------------------------------------------------------------
 // Linux machine stuff. This is needed to run audio comparisons using aqua, which runs only on linux

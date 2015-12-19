@@ -87,28 +87,7 @@ private:
     void launch_mserver();
     void set_log_file(string dir);
     void create_dir(string dir);
-    void check_options();
-
-    
-    //==============================================================================================
-    // Helper class for parsing command line args
-    //==============================================================================================
-    class CommandLineParser
-    {
-    public:
-        CommandLineParser();
-        void parse_args(int argc, char **argv, map<string, string> &m);
-        
-    private:
-        map<string, bool> arg_options;
-        map<string, bool> non_arg_options;
-        
-        bool needs_arg(string opt);
-        bool option_exists(string opt);
-    };
-
-    CommandLineParser parser;
-
+    void parse_args(int argc, char **argv);
 };
 
 #endif /* defined(__VoxipBBTests__TestsEnv__) */

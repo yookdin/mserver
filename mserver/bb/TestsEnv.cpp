@@ -9,6 +9,7 @@
 #include "common_headers.h"
 #include "MediaCodecMgr.h"
 #include "BBTest.h"
+#include "OptionParser.hpp"
 
 #undef __CLASS__
 #define __CLASS__ "TestsEnv"
@@ -51,50 +52,66 @@ void TestsEnv::init(int argc, char **argv)
 {
     try
     {
-        parser.parse_args(argc, argv, opt_val_map);
-        check_options();
+        parse_args(argc, argv);
         set_log_file(get_run_dir()); // This is a general log; when running tests each test will have its own log
-        
+
         // The resolver is needed for mserver launch, so it is created here, and this pointer will be used in VoXIPDeviceLayer
         resolver = voxip_make_shared<BBSimulatedDNSResolver>();
         launch_mserver();
     }
     catch(string err)
     {
-        cout << "Error: " << err << endl;
+        cout << "Fatal error: " << err << endl;
         exit(PERIPHERAL_ERR);
     }
 }
 
+
 //======================================================================================================================
-// Check the options given and take actions if needed (like creating run dir)
 //======================================================================================================================
-void TestsEnv::check_options()
+void TestsEnv::parse_args(int argc, char **argv)
 {
+    map<string, Option> options;
+    
+    options.emplace(RUN_DIR_OPT, Option(true, true));
+    options.emplace(SCENARIO_DIR_OPT, Option(false, true));
+    options.emplace(REAL_SERVER_OPT, Option(false, false));
+    options.emplace(MSERVER_OPT, Option(true, true));
+    
+    OptionParser parser(argc, argv, options); // Parse command line option and put values in the map
+
+    bool real_server = options.at(REAL_SERVER_OPT).was_found();
+    
+    //------------------------------------------------------------------------------------------------------
+    // Check needed options given
+    //------------------------------------------------------------------------------------------------------
+    if(!real_server && !options.at(SCENARIO_DIR_OPT).was_found())
+    {
+        throw string("Missing scenario dir option");
+    }
+    
+    //------------------------------------------------------------------------------------------------------
+    // Put values in opt_val_map
+    //------------------------------------------------------------------------------------------------------
+    for(auto pair: options)
+    {
+        opt_val_map[pair.first] = pair.second.get_value();
+    }
+
+    
+    //------------------------------------------------------------------------------------------------------
     // Check needed files and dirs
+    //------------------------------------------------------------------------------------------------------
     for(auto it : opt_val_map)
     {
-        if(!ifstream(it.second))
+        if(it.first == RUN_DIR_OPT && !ifstream(it.second))
         {
-            if(it.first == RUN_DIR_OPT)   // Try to create dir
-            {
-                create_dir(it.second); // will exit if fails
-            }
-            else     // Error, file or dir not found
-            {
-                string file_or_dir;
-
-                if(it.first == SCENARIO_DIR_OPT)
-                {
-                    file_or_dir = "Directory";
-                }
-                else
-                {
-                    file_or_dir = "File";
-                }
-
-                throw string(file_or_dir + " \"" + it.second + "\" doesn't exists");
-            }
+            create_dir(it.second);
+        }
+        else if(!real_server && (it.first == SIPP_OPT || it.first == PROXY_OPT || it.first == SCENARIO_DIR_OPT) &&
+                !ifstream(it.second))
+        {
+            throw string("Directory/file \"" + it.second + "\" doesn't exists");
         }
     }
 }
@@ -105,27 +122,34 @@ void TestsEnv::check_options()
 //======================================================================================================================
 void TestsEnv::setup_test(BBTest *cur_test)
 {
-    this->cur_test = cur_test;
-    const testing::TestInfo *test_info = testing::UnitTest::GetInstance()->current_test_info();
-    string test_name = string(test_info->test_case_name()) + "." + test_info->name();
-    test_dir = test_name + "." + to_string(++test_serial_num);
-
-    create_dir(get_test_dir()); // Will exit if fails
-    set_log_file(get_test_dir()); // To <test-dir>/voxip.log
-    printf("Running test: %s\n", test_name.c_str());
-    
-    // Init the simulate device layer
-    BBSimulatedDeviceLayer::Inst()->Init();
-
-    // Reset ips to initial values, just in case previous test changed them and forgot to reset them
-    resolver->reset_ip();
-    auto connectivity = voxip_pointer_cast<BBSimulatedConnectivity>(VxConnectivity::Inst());
-    connectivity->setCurrentIP(resolver->get_real_ip());
-    
-    // Init voxip
-    VOIPManager::Inst()->SetUICallback(TestsEnv::static_voxip_ui_callback);
-    VOIPManager::Inst()->Start();
-    VOIPManager::Inst()->InitServices();
+    try
+    {
+        this->cur_test = cur_test;
+        const testing::TestInfo *test_info = testing::UnitTest::GetInstance()->current_test_info();
+        string test_name = string(test_info->test_case_name()) + "." + test_info->name();
+        test_dir = test_name + "." + to_string(++test_serial_num);
+        create_dir(get_test_dir());
+        set_log_file(get_test_dir()); // To <test-dir>/voxip.log
+        printf("Running test: %s\n", test_name.c_str());
+        
+        // Init the simulate device layer
+        BBSimulatedDeviceLayer::Inst()->Init();
+        
+        // Reset ips to initial values, just in case previous test changed them and forgot to reset them
+        resolver->reset_ip();
+        auto connectivity = voxip_pointer_cast<BBSimulatedConnectivity>(VxConnectivity::Inst());
+        connectivity->setCurrentIP(resolver->get_real_ip());
+        
+        // Init voxip
+        VOIPManager::Inst()->SetUICallback(TestsEnv::static_voxip_ui_callback);
+        VOIPManager::Inst()->Start();
+        VOIPManager::Inst()->InitServices();
+    }
+    catch(string err)
+    {
+        cout << "Fatal error: " << err << endl;
+        exit(PERIPHERAL_ERR);
+    }
 }
 
 //======================================================================================================================
@@ -198,9 +222,6 @@ void TestsEnv::voxip_ui_callback(int eventid, const char* data)
 
 
 //======================================================================================================================
-// Wait max <timeout> seconds for the event to appear in the list. This is a little tricky because an old event might be
-// there, and sometimes it's ok and sometimes not. So the caller should decide that, and if erase_old is true, erase old
-// event before waiting.
 //======================================================================================================================
 bool TestsEnv::wait_for_event(EVoXIPUIEvent event, int timeout)
 {
@@ -222,6 +243,9 @@ bool TestsEnv::wait_for_event(EVoXIPUIEvent event, int timeout, string *pdata)
 }
 
 //======================================================================================================================
+// Wait max <timeout> seconds for the event to appear in the list. This is a little tricky because an old event might be
+// there, and sometimes it's ok and sometimes not. So the caller should decide that, and if erase_old is true, erase old
+// event before waiting.
 //======================================================================================================================
 bool TestsEnv::wait_for_event(EVoXIPUIEvent event, int timeout, bool erase_old, string *pdata)
 {
@@ -286,9 +310,11 @@ void TestsEnv::create_dir(string dir)
 {
     if(!ifstream(dir))
     {
-        if(mkdir(dir.c_str(), 0777) != 0)
+        // Don't fail the test if directory already exists. This can happen if another instance of bb created it between
+        // the check and the call to mkdir()
+        if(mkdir(dir.c_str(), 0777) != 0 && errno != EEXIST)
         {
-            throw string("Couldn't create run directory: " + dir);
+            throw string("Couldn't create run directory: " + dir + ", strerror(): " + strerror(errno));
         }
     }
 }
@@ -351,99 +377,6 @@ string TestsEnv::get_sipp_partial_call_script()
 string TestsEnv::get_proxy_log()
 {
     return get_test_dir() + "/" + PROXY_LOG;
-}
-
-
-//==================================================================================================
-//==================================================================================================
-TestsEnv::CommandLineParser::CommandLineParser()
-{
-    // Populate map with options; false indicates that the option wasn't received yet
-    arg_options[MSERVER_OPT] = false;
-    arg_options[RUN_DIR_OPT] = false;
-    arg_options[SCENARIO_DIR_OPT] = false;
-}
-
-
-
-//==================================================================================================
-// Parse command line argument, put result in opt_val_map (option to values map), and tests (list of
-// test names)
-//==================================================================================================
-void TestsEnv::CommandLineParser::parse_args(int argc, char **argv, map<string, string> &opt_val_map)
-{
-    for(int i = 1; i < argc; i++)
-    {
-        bool last_arg = (i == argc - 1);
-        string opt = argv[i];
-        
-        if(!option_exists(opt))
-        {
-            throw string("Unknown option: " + opt);
-        }
-        
-        if(needs_arg(opt))   // This option requires an argument
-        {
-            if(last_arg)
-            {
-                throw string("Option " + opt + " needs an argument");
-            }
-            
-            opt_val_map[opt] = argv[++i]; // Increment i to skip over the arg for this option
-            arg_options[opt] = true;
-        }
-        else
-        {
-            opt_val_map[opt] = "";
-        }
-    }
-    
-    vector<string> missing_args;
-    
-    for(auto it : arg_options)
-    {
-        if(it.second == false)
-        {
-            missing_args.push_back(it.first);
-        }
-    }
-    
-    for(auto it : non_arg_options)
-    {
-        if(it.second == false)
-        {
-            missing_args.push_back(it.first);
-        }
-    }
-    
-    if(!missing_args.empty())
-    {
-        string msg = "Missing arguments: ";
-        
-        for(int i = 0; i < missing_args.size(); i++)
-        {
-            msg += missing_args[i] + " ";
-        }
-        
-        throw msg;
-    }
-}
-
-
-//==================================================================================================
-// Does the given option need an argument?
-//==================================================================================================
-bool TestsEnv::CommandLineParser::needs_arg(string opt)
-{
-    return arg_options.count(opt) != 0;
-}
-
-//==================================================================================================
-// Does this option exists?
-//==================================================================================================
-bool TestsEnv::CommandLineParser::option_exists(string opt)
-{
-    return arg_options.count(opt) != 0 || non_arg_options.count(opt) != 0;
 }
 
 
@@ -518,45 +451,3 @@ void TestsEnv::launch_mserver()
         }
     } // switch
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

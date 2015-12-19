@@ -11,4 +11,3 @@ pause for 1 second
 
 run_scenario file=send_unhold.scr        # From INVITE to ACK
 run_scenario file=receive_bye.scr        # From BYE to OK
-run_scenario file=unregister.scr

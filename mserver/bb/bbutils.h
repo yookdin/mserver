@@ -49,6 +49,7 @@ string get_json_value(string &data, string field_name, string subfield_name);
 
 string quote(string str);
 string basename(string& path);
+string strip_extension(string& path);
 
 bool wait_true(bool &condition, int timeout = -1);
 bool wait_false(bool &condition, int timeout = -1);

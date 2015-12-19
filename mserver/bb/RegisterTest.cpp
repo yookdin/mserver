@@ -33,6 +33,5 @@ void RegisterTest::test_register_fail(string error_code)
     // quotes because it may contain spaces (e.g. "400 Bad Request")
     run_mserver_scenario("reg_fail.scr", "error_code=" + quote(error_code));
     register_voxip();
-    unregister_voxip();
 }
 

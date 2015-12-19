@@ -52,7 +52,7 @@ void MServer::run(int argc, char * argv[])
         while(true)
         {
             set_log_file(get_value(RUN_DIR) + "/mserver.log"); // Set the log file back to the global log file between tests
-            reset_ip(); // In case it was change in the previous test. This will also restart listening in case it was stopped
+            reset_connection(); // In case it was changed in the previous test. This will also restart listening in case it was stopped
             
             //----------------------------------------------------------------------------------------------
             // Get and process a control message (indicating which scenario to run, etc.)
@@ -307,6 +307,16 @@ void MServer::reset_ip()
     vars[SERVER_IP] = ips[cur_ip_index = 0];
     sip_connection->start(vars[SERVER_IP]);
 }
+
+
+//==========================================================================================================
+//==========================================================================================================
+void MServer::reset_connection()
+{
+    sip_connection->clear();
+    reset_ip();
+}
+
 
 
 //==========================================================================================================

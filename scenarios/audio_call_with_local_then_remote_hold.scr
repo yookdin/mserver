@@ -9,5 +9,3 @@ run_scenario file=send_hold.scr
 pause for 1 second
 run_scenario file=send_unhold.scr
 run_scenario file=receive_bye.scr
-run_scenario file=unregister.scr
-

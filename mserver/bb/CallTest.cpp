@@ -539,6 +539,20 @@ void CallTest::answer_call_and_remote_hangup_while_on_hold(bool local_hold)
     confirm_remote_hangup();
 }
 
+
+//======================================================================================================================
+//======================================================================================================================
+void CallTest::call(string dest, string uuid, bool is_video)
+{
+    VOIPManager::Inst()->MakeCall(dest.c_str(), uuid.c_str(), is_video);
+    
+    if(!TestsEnv::inst()->wait_for_event(CallState_Connected, 20))
+    {
+        throw string("Call failed to connect");
+    }
+}
+
+
 //======================================================================================================================
 // Tell voxip to make audio call. If it fails, create error message, kill external processes and return false, o/w return true
 // If hasTraceId = false (default value) nothing is done, if it is true the JSON value wil be checked to make sure it is present.
@@ -1191,11 +1205,32 @@ void CallTest::disable_mute(string call_id)
 }
 
 
+
+//======================================================================================================================
+//======================================================================================================================
+string CallTest::wait_for_incoming_call(int timeout, bool has_trace_id)
+{
+    string data;
+    
+    if(!TestsEnv::inst()->wait_for_event(CallState_AlertIncoming, timeout, &data))
+    {
+        throw string("Call Not received");
+    }
+    
+    if(has_trace_id)
+    {
+        check_trace_id(data);
+    }
+    
+    return get_json_value(data, "CID");
+}
+
+
 //======================================================================================================================
 // Wait for incoming call and return its call id
 // If hasTraceId = false (default value) nothing is done, if it is true the JSON value wil be checked to make sure it is present.
 //======================================================================================================================
-string CallTest::wait_for_incoming_call(bool hasTraceId)
+string CallTest::wait_for_incoming_call(bool has_trace_id)
 {
     string data;
     
@@ -1203,19 +1238,29 @@ string CallTest::wait_for_incoming_call(bool hasTraceId)
     {
         throw string("Call Not received");
     }
-    if(hasTraceId)
+
+    if(has_trace_id)
     {
-        string traceId1 = TRACE_ID;
-        string traceId2 = get_json_value(data, "headers", "X-HDAP-TraceId");
-        
-        if(traceId1 != traceId2)
-        {
-            string err = "Expected X-HDAP TraceID : " + traceId1 + " in event CallState_AlertIncoming data but received X-HDAP TraceID : " + traceId2;
-            throw err ;
-        }
+        check_trace_id(data);
     }
+    
     return get_json_value(data, "CID");
 }
+
+
+//======================================================================================================================
+//======================================================================================================================
+void CallTest::check_trace_id(string& data)
+{
+    string traceId1 = TRACE_ID;
+    string traceId2 = get_json_value(data, "headers", "X-HDAP-TraceId");
+    
+    if(traceId1 != traceId2)
+    {
+        throw string("Expected X-HDAP TraceID : " + traceId1 + " in event CallState_AlertIncoming data but received X-HDAP TraceID : " + traceId2);
+    }
+}
+
 
 //======================================================================================================================
 // Tell voxip to answer audio call for a specific call ID. If it fails, create error message, kill external processes and return false, o/w return true

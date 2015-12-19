@@ -23,6 +23,7 @@ public:
     
     SipMessage* get_message(string kind, bool optional, int timeout); // Message kind is either method or status code
     bool send_message(SipMessage &message);
+    void clear();
     void start();
     void stop();
     void start(string in_ip);

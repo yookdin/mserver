@@ -165,3 +165,25 @@ string basename(string& path)
     return path.substr(path.find_last_of('/') + 1);
 }
 
+
+//======================================================================================================================
+// Retrun the path without the extension if it exists. The extension is the last '.', possibly followed be a sequence of
+// characters not including '/'.
+//======================================================================================================================
+string strip_extension(string& path)
+{
+    for(long i = path.length() - 1; i >= 0; --i)
+    {
+        if(path[i] == '.')
+        {
+            return path.substr(0, i);
+        }
+        
+        if(path[i] == '/')
+        {
+            break;
+        }
+    }
+    
+    return path;
+}

@@ -68,7 +68,6 @@ BB_TEST_F(CallTest, ThreeWay_In_Out_No_Swap_or_Merge)
     string incoming_call_id = wait_for_incoming_call();
     answer_call(incoming_call_id);
     add_call(incoming_call_id);
-    //ssleep(2);
     hangup_both(CALL_UUID_2, incoming_call_id);
 }
 

@@ -23,5 +23,4 @@ endsend
 recv message=ACK
 
 run_scenario file=receive_bye.scr
-run_scenario file=unregister.scr
 

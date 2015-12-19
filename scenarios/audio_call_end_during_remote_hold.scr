@@ -5,4 +5,3 @@ run_scenario file=register.scr
 run_scenario file=receive_invite.scr     # Incoming call, from INVITE to OK
 run_scenario file=send_hold.scr          # From INVITE to ACK
 run_scenario file=receive_bye.scr        # From BYE to OK
-run_scenario file=unregister.scr

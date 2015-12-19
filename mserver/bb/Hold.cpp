@@ -16,7 +16,6 @@ BB_TEST_F(CallTest, AudioCallWithLocalHold)
     run_mserver_scenario("audio_call_with_local_hold.scr");
     register_voxip();
     call_and_hangup_with_local_hold_unhold(false, 1);
-    unregister_voxip();
 }
 
 //==================================================================================================
@@ -28,7 +27,6 @@ BB_TEST_F(CallTest, AudioCallWithGSMLocalHold)
     run_mserver_scenario("audio_call_with_local_hold.scr");
     register_voxip();
     call_and_hangup_with_local_hold_unhold(false, 2);
-    unregister_voxip();
 }
 
 
@@ -41,7 +39,6 @@ BB_TEST_F(CallTest, AudioCallWithSiriLocalHold)
     run_mserver_scenario("audio_call_with_local_hold.scr");
     register_voxip();
     call_and_hangup_with_local_hold_unhold(false, 3);
-    unregister_voxip();
 }
 
 
@@ -55,7 +52,6 @@ BB_TEST_F(CallTest, AttemptCallWithGSMActive)
     register_voxip();
     attempt_call_on_hold();
     call_and_hangup(false);
-    unregister_voxip();    
 }
 
 
@@ -68,7 +64,6 @@ BB_TEST_F(CallTest, AudioCallEndedDuringGSMLocalHold)
     run_mserver_scenario("audio_call_end_during_hold.scr");
     register_voxip();
     call_and_hangup_while_on_local_hold(false, 2);
-    unregister_voxip();
 }
 
 
@@ -81,7 +76,6 @@ BB_TEST_F(CallTest, AudioCallWithRemoteHold)
     run_mserver_scenario("audio_call_with_remote_hold.scr");
     register_voxip();
     call_and_hangup_with_remote_hold(false, true);
-    unregister_voxip();
 }
 
 
@@ -94,7 +88,6 @@ BB_TEST_F(CallTest, AudioCallEndDuringRemoteHold)
     run_mserver_scenario("audio_call_end_during_remote_hold.scr");
     register_voxip();
     call_and_hangup_with_remote_hold(false, false);
-    unregister_voxip();
 }
 
 
@@ -122,7 +115,6 @@ BB_TEST_F(CallTest, AudioCallWithLocalThenRemoteHold)
     run_mserver_scenario("audio_call_with_local_then_remote_hold.scr");
     register_voxip();
     call_and_hangup_with_sequential_hold(false, true);
-    unregister_voxip();
 }
 
 
@@ -136,7 +128,6 @@ BB_TEST_F(CallTest, AudioCallWithRemoteThenLocalHold)
     run_mserver_scenario("audio_call_with_remote_then_local_hold.scr");
     register_voxip();
     call_and_hangup_with_sequential_hold(false, false);
-    unregister_voxip();
 }
 
 
@@ -150,7 +141,6 @@ BB_TEST_F(CallTest, AudioCallWithLocalHoldRemoteHoldAtSameTimeEndLocalFirst)
     run_mserver_scenario("audio_call_with_local_hold_remote_hold_at_same_time_end_local_first.scr");
     register_voxip();
     call_and_hangup_with_parallel_hold(true, true);
-    unregister_voxip();
 }
 
 
@@ -164,7 +154,6 @@ BB_TEST_F(CallTest, AudioCallWithLocalHoldRemoteHoldAtSameTimeEndRemoteFirst)
     run_mserver_scenario("audio_call_with_local_hold_remote_hold_at_same_time_end_remote_first.scr");
     register_voxip();
     call_and_hangup_with_parallel_hold(true, false);
-    unregister_voxip();
 }
 
 
@@ -178,7 +167,6 @@ BB_TEST_F(CallTest, AudioCallWithRemoteHoldLocalHoldAtSameTimeEndLocalFirst)
     run_mserver_scenario("audio_call_with_remote_hold_local_hold_at_same_time_end_local_first.scr");
     register_voxip();
     call_and_hangup_with_parallel_hold(false, true);
-    unregister_voxip();
 }
 
 
@@ -192,7 +180,6 @@ BB_TEST_F(CallTest, AudioCallWithRemoteHoldLocalHoldAtSameTimeEndRemoteFirst)
     run_mserver_scenario("audio_call_with_remote_hold_local_hold_at_same_time_end_remote_first.scr");
     register_voxip();
     call_and_hangup_with_parallel_hold(false, false);
-    unregister_voxip();
 }
 
 
@@ -207,7 +194,6 @@ BB_TEST_F(CallTest, AudioCallEndDuringLocalHoldRemoteBye)
     audio_call();
     gsm_hold(true);
     confirm_remote_hangup();
-    unregister_voxip();
 }
 
 
@@ -222,7 +208,6 @@ BB_TEST_F(CallTest, AudioCallEndDuringRemoteHoldRemoteBye)
     audio_call();
     expect_remote_hold();
     confirm_remote_hangup();
-    unregister_voxip();
 }
 
 
@@ -247,7 +232,6 @@ BB_TEST_F(CallTest, InboundAudioCallLocalByeWhileInLocalHold)
     run_mserver_scenario("inbound_audio_call_local_bye_while_in_local_hold.scr");
     register_voxip();
     answer_call_and_hangup_while_on_hold(true);
-    unregister_voxip();
 }
 
 
@@ -290,8 +274,6 @@ BB_TEST_F(CallTest, AudioCallWithLocalHoldFails408)
     {
         throw string("Call was not diconnected after hold failure");
     }
-    
-    unregister_voxip();
 }
 
 
@@ -312,8 +294,6 @@ BB_TEST_F(CallTest, AudioCallWithLocalUnholdFails408)
     {
         throw string("Call was not diconnected after unhold failure");
     }
-    
-    unregister_voxip();
 }
 
 
