@@ -2,6 +2,7 @@
 #include "ScenarioCommand.h"
 #include "ScriptReader.h"
 #include "mserver_utils.hpp"
+#include "AssignmentEvaluator.hpp"
 
 
 //==========================================================================================================
@@ -28,29 +29,18 @@ void ScenarioCommand::process_args(string& line, ScriptReader &reader)
 {
     scenario_file.clear();
     args.clear();
-    map<string, Option> options;
-    options.emplace("file", Option(true, true));
-    options.emplace(DEFAULT_PV_NAME, ParamValOption()); // Will match any var=val and put it as a new option in the map
-    
-    OptionParser parser(line, options, "/>");
-    
-    for(auto pair: options)
+    string file_opt = "file";
+    AssignmentEvaluator::inst()->eval(line, args, reader);
+
+    if(args.count(file_opt) == 0)
     {
-        if(pair.first == "file")
-        {
-            scenario_file = reader.get_replaced_str(pair.second.get_value());
-        }
-        else
-        {
-            args[pair.first] = reader.get_replaced_str(pair.second.get_value());
-        }
+        throw string("No 'file' option to scenario command");
+    }
+    else
+    {
+        scenario_file = args[file_opt];
+        args.erase(file_opt);
     }
 }
 
 
-//==========================================================================================================
-//==========================================================================================================
-string ScenarioCommand::get_start_regex_str()
-{
-    return "<(scenario)";
-}

@@ -1,13 +1,12 @@
 
-Send hold scenario
+# Send hold scenario
 
-<set>
-    default user_number = 12345678900 // Default value of user_number
-    default hold_request = sendonly
-    default hold_response = recvonly
-</set>
+default user_number = 12345678900 # Default value of user_number
+default hold_request = sendonly
+default hold_response = recvonly
 
-<send>
+
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: [last_me]
@@ -36,15 +35,12 @@ Send hold scenario
     a=rtpmap:0 PCMU/8000
     a=rtpmap:101 telephone-event/8000
     a=fmtp:101 0-15
-</send>
+endsend
 
-<recv message=200>
-    <expect>
-        [sdp_send_recv] == [hold_response]
-    </expect>
-</recv>
-
-<send>
+recv message=200
+expect [sdp_send_recv] == [hold_response]
+    
+send
     [default_ack]
-</send>
+endsend
 

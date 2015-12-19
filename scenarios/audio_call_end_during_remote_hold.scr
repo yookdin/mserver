@@ -1,8 +1,8 @@
 
-Receive audio call, place call on hold and then receive a hangup
+# Receive audio call, place call on hold and then receive a hangup
 
-<scenario file=register.scr/>
-<scenario file=receive_invite.scr/>     (Incoming call, from INVITE to OK)
-<scenario file=send_hold.scr/>          (From INVITE to ACK)
-<scenario file=receive_bye.scr/>        (From BYE to OK)
-<scenario file=unregister.scr/>
+run_scenario file=register.scr
+run_scenario file=receive_invite.scr     # Incoming call, from INVITE to OK
+run_scenario file=send_hold.scr          # From INVITE to ACK
+run_scenario file=receive_bye.scr        # From BYE to OK
+run_scenario file=unregister.scr

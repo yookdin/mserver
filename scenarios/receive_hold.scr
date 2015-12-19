@@ -1,21 +1,18 @@
 
-Receive hold, answer it with ok
+# Receive hold, answer it with ok
 
-<set>
-    default user_number = 12345678900 // Default value of user_number
-    default call_number = -1
-    default hold_request = sendonly
-    default hold_response = recvonly
-</set>
 
-<recv message=INVITE call_number=[call_number]>  Expect the message to have a=sendonly in SDP
-    <expect>
-        [sdp_send_recv] == [hold_request]
-    </expect>
-</recv>
+default user_number = 12345678900 # Default value of user_number
+default call_number = -1
+default hold_request = sendonly
+default hold_response = recvonly
 
-Note the a=recvonly
-<send>
+recv message=INVITE call_number=[call_number]  # Expect the message to have a=sendonly in SDP
+expect [sdp_send_recv] == [hold_request]
+    
+
+# Note the a=recvonly
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -44,6 +41,6 @@ Note the a=recvonly
     a=rtpmap:0 PCMU/8000
     a=rtpmap:101 telephone-event/8000
     a=fmtp:101 0-15
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK

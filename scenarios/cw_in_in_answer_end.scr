@@ -1,22 +1,22 @@
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-<scenario file=send_invite.scr/>                                    Call to voxip that is answered
-<scenario file=send_invite_partial.scr user_number=12345678901/>    Call number 2: invite sent but doesn't receive OK
-<scenario file=receive_bye.scr call_number = 1/>                    First call is ended
+run_scenario file=send_invite.scr                                    # Call to voxip that is answered
+run_scenario file=send_invite_partial.scr user_number=12345678901    # Call number 2: invite sent but doesn't receive OK
+run_scenario file=receive_bye.scr call_number = 1                    # First call is ended
 
-----------------------------------------------------------------------------------------------------
-Second call answered
-----------------------------------------------------------------------------------------------------
-Sometimes there's another 183 before the second call is answered. The first alert-info is ring-waiting,
-and the second is ringing
-<recv message=183 optional call_number= 2>
-</recv>
-<recv message=200 call_number = 2>
-</recv>
+#----------------------------------------------------------------------------------------------------
+# Second call answered
+#----------------------------------------------------------------------------------------------------
+# Sometimes there's another 183 before the second call is answered. The first alert-info is ring-waiting,
+# and the second is ringing
+recv message=183 optional=true call_number = 2
 
-<send>
+recv message=200 call_number = 2
+
+
+send
     [default_ack]
-</send>
+endsend
 
-<scenario file=receive_bye.scr user_number=12345678901/>    Second call ended
+run_scenario file=receive_bye.scr user_number=12345678901    # Second call ended

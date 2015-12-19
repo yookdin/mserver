@@ -1,8 +1,8 @@
 
 
-No network with just one IP available - voixp should just try to register again to the same IP
+# No network with just one IP available - voixp should just try to register again to the same IP
 
-<stop_listening/>
-<pause for 1 second/>
-<start_listening/>
-<scenario file=register.scr/>
+stop_listening
+pause for 1 second
+start_listening
+run_scenario file=register.scr

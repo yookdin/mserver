@@ -1,40 +1,38 @@
 
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-<scenario file=receive_invite.scr/>       Call number 1
-<scenario file=send_invite_partial.scr user_number=12345678901/>  Call number 2: invite sent but doesn't receive OK
+run_scenario file=receive_invite.scr       # Call number 1
+run_scenario file=send_invite_partial.scr user_number=12345678901  # Call number 2: invite sent but doesn't receive OK
 
-----------------------------------------------------------------------------------------------------
-First call put on hold, second call answered and put on hold too
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_hold.scr call_number=1/>
+#----------------------------------------------------------------------------------------------------
+# First call put on hold, second call answered and put on hold too
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_hold.scr call_number=1
 
-<recv message=200 call_number = 2>
-</recv>
+recv message=200 call_number = 2
 
-<send>
+send
     [default_ack]
-</send>
+endsend
 
-<scenario file=receive_hold.scr call_number = 2 user_number = 12345678901/>     Second call put on hold
+run_scenario file=receive_hold.scr call_number = 2 user_number = 12345678901     # Second call put on hold
 
-
-----------------------------------------------------------------------------------------------------
-Third incoming call is rejected
-----------------------------------------------------------------------------------------------------
-<scenario file=send_invite_rejected.scr usr_number = 12345678902/>
-
-
-----------------------------------------------------------------------------------------------------
-Unhold and end call 1
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_unhold.scr call_number = 1 />
-<scenario file=receive_bye.scr/>
+#----------------------------------------------------------------------------------------------------
+# Third incoming call is rejected
+#----------------------------------------------------------------------------------------------------
+run_scenario file=send_invite_rejected.scr usr_number = 12345678902
 
 
-----------------------------------------------------------------------------------------------------
-Unhold and end call 2
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_unhold.scr call_number = 2 user_number = 12345678901/>
-<scenario file=receive_bye.scr user_number = 12345678901/>
+#----------------------------------------------------------------------------------------------------
+# Unhold and end call 1
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_unhold.scr call_number = 1 
+run_scenario file=receive_bye.scr
+
+
+#----------------------------------------------------------------------------------------------------
+# Unhold and end call 2
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_unhold.scr call_number = 2 user_number = 12345678901
+run_scenario file=receive_bye.scr user_number = 12345678901

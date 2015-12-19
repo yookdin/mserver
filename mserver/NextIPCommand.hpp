@@ -16,9 +16,8 @@
 class NextIPCommand: public Command
 {
 public:
-    NextIPCommand(){}
+    NextIPCommand(): Command("move_to_next_ip") {}
     virtual void interpret(string &line, ifstream &file, ScriptReader &reader);
-    virtual string get_start_regex_str();
 };
 
 #endif /* NextIPCommand_hpp */

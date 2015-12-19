@@ -1,10 +1,10 @@
 
-After a received call, make a call to voxip and cancel it
+# After a received call, make a call to voxip and cancel it
 
-<scenario file=register.scr/>
-<scenario file=receive_invite.scr/>
+run_scenario file=register.scr
+run_scenario file=receive_invite.scr
 
-<send>
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: Yuk <sip:12345678901@[client_ip]:[client_port]>;tag=[tag]
@@ -18,12 +18,9 @@ After a received call, make a call to voxip and cancel it
     Content-Length: [len]
 
     [default_request_body]
-</send>
+endsend
 
-<recv message=100 optional>
-</recv>
+recv message=100 optional=true
+recv message=183
 
-<recv message=183>
-</recv>
-
-<scenario file = send_cancel.scr/>
+run_scenario file = send_cancel.scr

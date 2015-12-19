@@ -1,26 +1,25 @@
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
 
-<scenario file=receive_invite.scr  user_number=12345678900/>      Call number 1
-<scenario file=send_invite_partial.scr user_number=12345678901/>  Call number 2: Invite sent but doesn't receive OK
-<scenario file=receive_hold.scr call_number = 1 />                Receive hold for call 1
+run_scenario file=receive_invite.scr  user_number=12345678900      # Call number 1
+run_scenario file=send_invite_partial.scr user_number=12345678901  # Call number 2: Invite sent but doesn't receive OK
+run_scenario file=receive_hold.scr call_number = 1                 # Receive hold for call 1
 
-----------------------------------------------------------------------------------------------------
-Receive 200-OK and then BYE for call 2
-----------------------------------------------------------------------------------------------------
-<recv message=200 call_number = 2>
-</recv>
+#----------------------------------------------------------------------------------------------------
+# Receive 200-OK and then BYE for call 2
+#----------------------------------------------------------------------------------------------------
+recv message=200 call_number = 2
 
-<send>
+send
     [default_ack]
-</send>
+endsend
 
-<scenario file=receive_bye.scr user_number=12345678901/>
+run_scenario file=receive_bye.scr user_number=12345678901
 
 
-----------------------------------------------------------------------------------------------------
-Unhold and end call 1
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_unhold.scr call_number = 1 />
-<scenario file=receive_bye.scr/>
+#----------------------------------------------------------------------------------------------------
+# Unhold and end call 1
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_unhold.scr call_number = 1 
+run_scenario file=receive_bye.scr

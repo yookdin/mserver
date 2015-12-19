@@ -17,9 +17,3 @@ void StopListeningCommand::interpret(string &line, ifstream &file, ScriptReader 
 }
 
 
-//==========================================================================================================
-//==========================================================================================================
-string StopListeningCommand::get_start_regex_str()
-{
-    return "<(stop_listening)/>";
-}

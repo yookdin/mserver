@@ -39,6 +39,8 @@ private:
 
     static const regex var_regex;
     static const regex command_start_regex;
+    static const regex assignment_regex;
+    
     static map<string, Command*> commands;
     static map<string, Command*> init_commands();
     static regex init_command_start_regex();

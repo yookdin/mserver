@@ -64,7 +64,7 @@ ExpressionEvaluator::ExpressionEvaluator():
 //==========================================================================================================
 // Evaluate an expression that is expected to be boolean
 //==========================================================================================================
-bool ExpressionEvaluator::eval_bool(string& exp, ScriptReader* reader)
+bool ExpressionEvaluator::eval_bool(string exp, ScriptReader& reader)
 {
     Value* val = eval(exp, reader);
     
@@ -80,7 +80,7 @@ bool ExpressionEvaluator::eval_bool(string& exp, ScriptReader* reader)
 //==========================================================================================================
 // Evaluate an expression that is expected to be integer
 //==========================================================================================================
-int ExpressionEvaluator::eval_int(string& exp, ScriptReader* reader)
+int ExpressionEvaluator::eval_int(string exp, ScriptReader& reader)
 {
     Value* val = eval(exp, reader);
     
@@ -96,7 +96,7 @@ int ExpressionEvaluator::eval_int(string& exp, ScriptReader* reader)
 //==========================================================================================================
 // Evaluate an expression that is expected to be string
 //==========================================================================================================
-string ExpressionEvaluator::eval_string(string& exp, ScriptReader* reader)
+string ExpressionEvaluator::eval_string(string exp, ScriptReader& reader)
 {
     Value* val = eval(exp, reader);
     
@@ -112,7 +112,7 @@ string ExpressionEvaluator::eval_string(string& exp, ScriptReader* reader)
 //==========================================================================================================
 // Evaluate expression not caring about its type, and return its string representation
 //==========================================================================================================
-string ExpressionEvaluator::eval_as_string(string& exp, ScriptReader* reader)
+string ExpressionEvaluator::eval_as_string(string exp, ScriptReader& reader)
 {
     Value* val = eval(exp, reader);
     return val->to_string();
@@ -121,9 +121,9 @@ string ExpressionEvaluator::eval_as_string(string& exp, ScriptReader* reader)
 
 //==========================================================================================================
 //==========================================================================================================
-Value* ExpressionEvaluator::eval(string& exp, ScriptReader* _reader)
+Value* ExpressionEvaluator::eval(string exp, ScriptReader& _reader)
 {
-    reader = _reader;
+    reader = &_reader;
     vector<Token*> tokens;
     deque<Token*> output;
     convert_to_tokens(exp, tokens);
@@ -273,7 +273,7 @@ Token* ExpressionEvaluator::try_num(string &exp, int &pos)
     if(regex_search(exp.cbegin() + pos, exp.cend(), match, num_regex))
     {
         pos += match.length();
-        return new Int(stoi(match.str()));
+        return new Int(stoll(match.str()));
     }
     
     return nullptr;
@@ -364,7 +364,7 @@ Token* ExpressionEvaluator::interpret_value(string& val)
 {
     if(regex_match(val, num_regex))
     {
-        return new Int(stoi(val));
+        return new Int(stoll(val));
     }
     else if(regex_match(val, bool_regex))
     {

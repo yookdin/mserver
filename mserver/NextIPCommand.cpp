@@ -20,9 +20,3 @@ void NextIPCommand::interpret(string &line, ifstream &file, ScriptReader &reader
 }
 
 
-//==========================================================================================================
-//==========================================================================================================
-string NextIPCommand::get_start_regex_str()
-{
-    return "<(move_to_next_ip)/>";
-}

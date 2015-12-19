@@ -1,20 +1,20 @@
 
 
-Voxip sends a video invite.
-Other side sends an audio invite, which loses.
+# Voxip sends a video invite.
+# Other side sends an audio invite, which loses.
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-----------------------------------------------------------------------------------------------------
-Receive invitation but don't send OK
-----------------------------------------------------------------------------------------------------
-<recv message=INVITE></recv>
+#----------------------------------------------------------------------------------------------------
+# Receive invitation but don't send OK
+#----------------------------------------------------------------------------------------------------
+recv message=INVITE
 
-<send>
+send
   [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 180 Ringing
     [last_Via]
     [last_From]
@@ -23,13 +23,13 @@ Receive invitation but don't send OK
     [last_CSeq]
     Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
     Content-Length: 0
-</send>
+endsend
 
 
-----------------------------------------------------------------------------------------------------
-Send an audio invite to create the intersecting scenario
-----------------------------------------------------------------------------------------------------
-<send>
+#----------------------------------------------------------------------------------------------------
+# Send an audio invite to create the intersecting scenario
+#----------------------------------------------------------------------------------------------------
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:12345678900@[client_ip]:[client_port]>;tag=[tag]
@@ -43,15 +43,15 @@ Send an audio invite to create the intersecting scenario
     Content-Length: [len]
 
     [default_request_body]
-</send>
+endsend
 
-<recv message=100></recv>
+recv message=100
 
 
-----------------------------------------------------------------------------------------------------
-Send a 200/OK for the original invite (call 1), which wins because its video and other one is audio
-----------------------------------------------------------------------------------------------------
-<send call_number=1>
+#----------------------------------------------------------------------------------------------------
+# Send a 200/OK for the original invite (call 1), which wins because its video and other one is audio
+#----------------------------------------------------------------------------------------------------
+send call_number=1
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -68,12 +68,12 @@ Send a 200/OK for the original invite (call 1), which wins because its video and
     Content-Length: [len]
 
     [default_video_response_body]
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK
 
 
-----------------------------------------------------------------------------------------------------
-Cancel the second call
-----------------------------------------------------------------------------------------------------
-<scenario file = send_cancel.scr call_number = 2/>
+#----------------------------------------------------------------------------------------------------
+# Cancel the second call
+#----------------------------------------------------------------------------------------------------
+run_scenario file = send_cancel.scr call_number = 2

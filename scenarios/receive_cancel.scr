@@ -1,17 +1,13 @@
 
 
-Receive a cancel, answer it with OK, then send 487 (request terminated) and receive ack.
+# Receive a cancel, answer it with OK, then send 487 (request terminated) and receive ack.
 
-<set>
-    default user_number = 12345678900 // Default value of user_number
-    default call_number = -1
-</set>
+default user_number = 12345678900 # Default value of user_number
+default call_number = -1
 
+recv message = CANCEL call_number = [call_number]
 
-<recv message = CANCEL call_number = [call_number]>
-</recv>
-
-<send>
+send
   SIP/2.0 200 OK
   [last_Via]
   [last_From]
@@ -20,9 +16,9 @@ Receive a cancel, answer it with OK, then send 487 (request terminated) and rece
   [last_CSeq]
   Contact: <sip:[user_number]@[server_ip]:[server_port];transport=[transport]>
   Content-Length: 0
-</send>
+endsend
 
-<send>
+send
   SIP/2.0 487 Request Terminated
   [last_Via]
   [last_From]
@@ -30,6 +26,6 @@ Receive a cancel, answer it with OK, then send 487 (request terminated) and rece
   [last_Call-ID]
   CSeq: [last_cseq] INVITE
   Content-Length: 0
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK

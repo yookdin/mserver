@@ -1,9 +1,10 @@
 
 
-<scenario file=register.scr/>
-<scenario file=receive_invite.scr/>
+run_scenario file=register.scr
+run_scenario file=receive_invite.scr
 
-Kill TCP connection and wait for voxip audio timeout which is 20 seconds before reconnecting (which happens automatically when test ends),
-otherwise voxip will wait some more before comletely ending the call and sending the ARS message
-<stop_listening/>
-<pause for 21 seconds/>
+# Kill TCP connection and wait for voxip audio timeout which is 20 seconds before reconnecting (which happens automatically when test ends),
+# otherwise voxip will wait some more before comletely ending the call and sending the ARS message
+
+# stop_listening
+pause for 60 seconds

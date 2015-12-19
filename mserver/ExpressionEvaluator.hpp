@@ -19,10 +19,10 @@ class ExpressionEvaluator
 public:
     static ExpressionEvaluator* inst();
 
-    bool eval_bool(string& exp, ScriptReader* reader);
-    int eval_int(string& exp, ScriptReader* reader);
-    string eval_string(string& exp, ScriptReader* reader);
-    string eval_as_string(string& exp, ScriptReader* reader);
+    bool eval_bool(string exp, ScriptReader& reader);
+    int eval_int(string exp, ScriptReader& reader);
+    string eval_string(string exp, ScriptReader& reader);
+    string eval_as_string(string exp, ScriptReader& reader);
     
 private:
     static ExpressionEvaluator* the_inst;
@@ -36,7 +36,7 @@ private:
     
     ScriptReader* reader = nullptr;
     
-    Value* eval(string& exp, ScriptReader* reader);
+    Value* eval(string exp, ScriptReader& reader);
     void convert_to_tokens(string &line, vector<Token*>& tokens);
     void convert_to_rpn(vector<Token*>& tokens, deque<Token*>& output);
     Value* eval_rpn(deque<Token*>& output);

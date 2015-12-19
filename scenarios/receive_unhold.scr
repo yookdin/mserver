@@ -1,20 +1,15 @@
 
-Receive unhold, answer it with ok
+# Receive unhold, answer it with ok
 
-<set>
-    default user_number = 12345678900 // Default value of user_number
-    default call_number = -1
-    default unhold_request = sendrecv
-    default unhold_response = sendrecv
-</set>
+default user_number = 12345678900 # Default value of user_number
+default call_number = -1
+default unhold_request = sendrecv
+default unhold_response = sendrecv
 
-<recv message=INVITE call_number=[call_number]>  Expect the message to have a=sendrecv in SDP
-    <expect>
-        [sdp_send_recv] == [unhold_request]
-    </expect>
-</recv>
-
-<send>
+recv message=INVITE call_number=[call_number]  # Expect the message to have a=sendrecv in SDP
+expect [sdp_send_recv] == [unhold_request]
+    
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -43,6 +38,6 @@ Receive unhold, answer it with ok
     a=rtpmap:0 PCMU/8000
     a=rtpmap:101 telephone-event/8000
     a=fmtp:101 0-15
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK

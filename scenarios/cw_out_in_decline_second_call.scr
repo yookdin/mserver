@@ -1,10 +1,10 @@
 
-After a received call, make a call to voxip and have it rejected
+# After a received call, make a call to voxip and have it rejected
 
-<scenario file=register.scr/>
-<scenario file=receive_invite.scr/>
+run_scenario file=register.scr
+run_scenario file=receive_invite.scr
 
-<send>
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:12345678901@[client_ip]:[client_port]>;tag=[tag]
@@ -18,17 +18,13 @@ After a received call, make a call to voxip and have it rejected
     Content-Length: [len]
 
     [default_request_body]
-</send>
+endsend
 
-<recv message=100 optional>
-</recv>
+recv message=100 optional=true
+recv message=183
 
-<recv message=183>
-</recv>
+recv message=486
 
-<recv message=486>
-</recv>
-
-<send>
+send
     [default_ack]
-</send>
+endsend

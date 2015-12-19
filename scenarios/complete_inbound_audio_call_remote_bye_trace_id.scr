@@ -1,9 +1,9 @@
 
-Inbound call to VoXIP that is answered and ended by other side
+# Inbound call to VoXIP that is answered and ended by other side
  
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-<send>
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:12345678900@[client_ip]:[client_port]>;tag=[tag]
@@ -18,17 +18,17 @@ Inbound call to VoXIP that is answered and ended by other side
     Content-Length: [len]
 
     [default_request_body]
-</send>
+endsend
 
-<recv message=100 optional></recv>
-<recv message=183></recv>
-<recv message=200></recv>
+recv message=100 optional=true
+recv message=183
+recv message=200
 
-<send>
+send
     [default_ack]
-</send>
+endsend
   
-<send>
+send
     BYE sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
     [last_Via]
     [last_From]
@@ -38,10 +38,10 @@ Inbound call to VoXIP that is answered and ended by other side
     CSeq: 3 BYE
     X-HDAP-TraceId: 17209172011445449877235
     Content-Length: 0
-</send>
+endsend
 
-<recv message=200></recv>
+recv message=200
 
-<scenario file=unregister.scr/>
+run_scenario file=unregister.scr
 
 

@@ -1,6 +1,6 @@
 
-Inbound call that is answered and ended by client
+# Inbound call that is answered and ended by client
 
-<scenario file=register.scr/>
-<scenario file=send_invite.scr/>
-<scenario file=receive_bye.scr/>
+run_scenario file=register.scr
+run_scenario file=send_invite.scr
+run_scenario file=receive_bye.scr

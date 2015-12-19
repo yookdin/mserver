@@ -1,10 +1,9 @@
 
-Registration failure with given error code
+# Registration failure with given error code
 
-<recv message=REGISTER>
-</recv>
+recv message=REGISTER
 
-<send>
+send
     SIP/2.0 [error_code]
     [last_Via]
     [last_From]
@@ -12,8 +11,8 @@ Registration failure with given error code
     [last_Call-ID]
     [last_CSeq]
     Content-Length: 0
-</send>
+endsend
 
-<move_to_next_ip/>
+move_to_next_ip
 
-<scenario file=reg_unreg.scr/>
+run_scenario file=reg_unreg.scr

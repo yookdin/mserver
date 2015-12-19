@@ -1,46 +1,45 @@
 
 
-Intersect scenario:
-second      - voxip sends the invite second
-audio/video - depends on parameter is_video
-lose        - voxip should lose due to lower call-id
-
-<set>
-    request_body = [is_video] ? [default_video_request_body] : [default_request_body]
-    response_body = [is_video] ? [default_video_response_body] : [default_response_body]
-</set>
-
-<scenario file=register.scr/>
-
-----------------------------------------------------------------------------------------------------
-Start a call which will eventually be answered due to higher call-id
-----------------------------------------------------------------------------------------------------
-<scenario file=send_invite_partial.scr is_video=[is_video] call_id_param=[max_call_id]/>
+# Intersect scenario:
+# second      - voxip sends the invite second
+# audio/video - depends on parameter is_video
+# lose        - voxip should lose due to lower call-id
 
 
-----------------------------------------------------------------------------------------------------
-Second call is coming in before first call got connected
-----------------------------------------------------------------------------------------------------
-<recv message=INVITE></recv>
+request_body = [is_video] ? [default_video_request_body] : [default_request_body]
+response_body = [is_video] ? [default_video_response_body] : [default_response_body]
+
+
+run_scenario file=register.scr
+
+#----------------------------------------------------------------------------------------------------
+# Start a call which will eventually be answered due to higher call-id
+#----------------------------------------------------------------------------------------------------
+run_scenario file=send_invite_partial.scr is_video=[is_video] call_id_param=[max_call_id]
+
+
+#----------------------------------------------------------------------------------------------------
+# Second call is coming in before first call got connected
+#----------------------------------------------------------------------------------------------------
+recv message=INVITE
   
-<send>
+send
   [default_100_trying]
-</send>
+endsend
 
 
-----------------------------------------------------------------------------------------------------
-voxip should send an OK for the first invite, because it has a higher call-id.
-call_number = 1 indicates that this is expected to be for the first call
-----------------------------------------------------------------------------------------------------
-<recv message=200 call_number = 1>
-</recv>
+#----------------------------------------------------------------------------------------------------
+# voxip should send an OK for the first invite, because it has a higher call-id.
+# call_number = 1 indicates that this is expected to be for the first call
+#----------------------------------------------------------------------------------------------------
+recv message=200 call_number = 1
 
-<send>
+send
   [default_ack]
-</send>
+endsend
 
 
-----------------------------------------------------------------------------------------------------
-CANCEL of the second call
-----------------------------------------------------------------------------------------------------
-<scenario file = receive_cancel.scr call_number = 2/>
+#----------------------------------------------------------------------------------------------------
+# CANCEL of the second call
+#----------------------------------------------------------------------------------------------------
+run_scenario file = receive_cancel.scr call_number = 2

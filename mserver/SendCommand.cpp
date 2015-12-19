@@ -12,11 +12,11 @@
 #include "MServer.hpp"
 #include "ScriptReader.h"
 #include "mserver_utils.hpp"
-
+#include "AssignmentEvaluator.hpp"
 
 //==========================================================================================================
 //==========================================================================================================
-SendCommand::SendCommand(): end_regex("</send>") {}
+SendCommand::SendCommand(): Command("send"), end_regex("\\bendsend\\b") {}
 
 
 //==========================================================================================================
@@ -114,51 +114,33 @@ void SendCommand::replcae_vars(ifstream &file, vector<string>& msg_lines, Script
 void SendCommand::process_args(string& line, ScriptReader &reader)
 {
     call_number = -1;
-    string opt = "call_number";
-    map<string, Option> options;
-    options.emplace(opt, Option(false, true));
-    OptionParser parser(line, options, ">");
-
-    if(options.at(opt).was_found())
+    string call_number_opt = "call_number";
+    map<string, string> vars;
+    AssignmentEvaluator::inst()->eval(line, vars, reader);
+    
+    if(vars.count(call_number_opt))
     {
-        call_number = stoi(reader.get_replaced_str( options.at(opt).get_value() ));
+        call_number = stoi(vars[call_number_opt]);
     }
 }
 
-
 //==========================================================================================================
+// Replace occurences of [len] with the given string
 //==========================================================================================================
-string SendCommand::get_start_regex_str()
+void SendCommand::replace_len(string &line, string& len)
 {
-    return "<(send)";
+    string line2 = line;
+    regex var_re("\\[len\\]");
+    sregex_iterator iter(line.begin(), line.end(), var_re);
+    sregex_iterator end;
+    long offset = 0;
+    
+    while(iter != end) {
+        line2.replace(iter->position() + offset, iter->length(), len);
+        offset += len.length() - iter->length();
+        iter++;
+    }
+    
+    line = line2;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

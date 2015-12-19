@@ -1,15 +1,11 @@
 
 
-<set>
-    default user_number = 12345678900   // Default value of user_number
-    default call_number = -1            // -1: current message considered belonging to the call of the previous message
-</set>
+default user_number = 12345678900   # Default value of user_number
+default call_number = -1            # -1: current message considered belonging to the call of the previous message
 
+recv message=BYE call_number = [call_number]
 
-<recv message=BYE call_number = [call_number]>
-</recv>
-
-<send>
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -20,4 +16,4 @@
     Contact: <sip:[user_number]@[server_ip]:[server_port];transport=[transport]>
     Content-Type: application/sdp
     Content-Length: 0
-</send>
+endsend

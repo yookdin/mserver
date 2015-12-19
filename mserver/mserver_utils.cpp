@@ -13,6 +13,8 @@ const string string_regex_str = "\"((\\\\\"|[^\"])*)\""; // 2 submatches
 const string var_regex_str = "(last_)?(((" + string(CSEQ) + ")\\+(\\d+))|([-\\w]+))(:value)?"; // 7 submatches
 const string brackets_var_regex_str = "\\[" + var_regex_str + "\\]"; // 7 submatches
 
+//==========================================================================================================
+//==========================================================================================================
 string unquote(string s)
 {
     if(s.front() == '"' && s.back() == '"')
@@ -52,3 +54,48 @@ int find_end_str_position(string& line, string end_str)
     
     return -1;
 }
+
+
+//==========================================================================================================
+//==========================================================================================================
+bool stob(string s)
+{
+    if(s == "true")
+    {
+        return true;
+    }
+    else if(s == "false")
+    {
+        return false;
+    }
+    else
+    {
+        throw string("Wrong format of string for stob(): " + s);
+    }
+}
+
+//==========================================================================================================
+// Remove leading and trailing spaces and comment (#...)
+//==========================================================================================================
+void trim(string &line)
+{
+    if(line.empty())
+    {
+        return;
+    }
+    
+    string spaces = " \t\n\r";
+    line.erase(0, line.find_first_not_of(spaces));
+    
+    size_t pos = line.find("#");
+    if(pos != string::npos)
+    {
+        line.erase(pos);
+    }
+    
+    line.erase(line.find_last_not_of(spaces) + 1);
+}
+
+
+
+

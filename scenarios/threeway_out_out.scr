@@ -1,20 +1,20 @@
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-----------------------------------------------------------------------------------------------------
-First call received and put on hold
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_invite.scr/>
-<scenario file=receive_hold.scr/>
+#----------------------------------------------------------------------------------------------------
+# First call received and put on hold
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_invite.scr
+run_scenario file=receive_hold.scr
 
-----------------------------------------------------------------------------------------------------
-Second call received and ended
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_invite.scr user_number=12345678902/>
-<scenario file=receive_bye.scr user_number=12345678902/>
+#----------------------------------------------------------------------------------------------------
+# Second call received and ended
+#----------------------------------------------------------------------------------------------------
+run_scenario: file = receive_invite.scr, user_number = 12345678902
+run_scenario: file = receive_bye.scr,    user_number=12345678902
 
-----------------------------------------------------------------------------------------------------
-First call unholded and ended
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_unhold.scr call_number=1/>
-<scenario file=receive_bye.scr/>
+#----------------------------------------------------------------------------------------------------
+# First call unholded and ended
+#----------------------------------------------------------------------------------------------------
+run_scenario: file = receive_unhold.scr, call_number=1
+run_scenario: file = receive_bye.scr

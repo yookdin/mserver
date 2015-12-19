@@ -1,10 +1,9 @@
 
-Basic Register scenario
+# Basic Register scenario
 
-<recv message=REGISTER>
-</recv>
+recv message=REGISTER
 
-<send>
+send
     SIP/2.0 401 Unauthorized
     [last_Via]
     [last_From]
@@ -13,12 +12,11 @@ Basic Register scenario
     [last_CSeq]
     WWW-Authenticate: Digest realm="10.116.0.140", domain="10.116.0.140", nonce="603317111", algorithm=MD5
     Content-Length: 0
-</send>
+endsend
 
-<recv message=REGISTER>
-</recv>
+recv message=REGISTER
 
-<send>
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -27,4 +25,4 @@ Basic Register scenario
     [last_CSeq]
     Contact: <sip:[server_ip]:[server_port];transport=[transport]>;expires=300
     Content-Length: 0
-</send>
+endsend

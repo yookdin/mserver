@@ -1,14 +1,17 @@
-Receive video call
+
+# Receive video call
   
-<scenario file=register.scr/>   Run the registration scenario
+default unregister = false
 
-<recv message=INVITE></recv>
+run_scenario file=register.scr   # Run the registration scenario
 
-<send>
+recv message=INVITE
+
+send
     [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 183 Session Progress
     [last_Via]
     [last_From]
@@ -21,30 +24,10 @@ Receive video call
     Content-Type: application/sdp
     Content-Length: [len]
 
-    v=0
-    o=- 3607660610 3607660611 IN IP[sip_ip_type] [server_ip]
-    s=voxip_media
-    b=AS:174
-    t=0 0
-    a=X-nat:0
-    m=audio [audio_port] RTP/AVP 104 101
-    c=IN IP[audio_ip_type] [audio_ip]
-    b=TIAS:150000
-    a=sendrecv
-    a=rtpmap:104 ISAC/16000
-    a=rtpmap:101 telephone-event/8000
-    a=fmtp:101 0-15
-    m=video [video_port] RTP/AVP 110 111 112
-    c=IN IP[video_ip_type] [video_ip]
-    b=TIAS:2000000
-    a=sendrecv
-    a=rtpmap:110 VP8/90000
-    a=fmtp:110 max-fs=300; max-fr=15; width=212; height=362
-    a=rtpmap:111 red/90000
-    a=rtpmap:112 ulpfec/90000
-</send>
+    [default_video_response_body]
+endsend
 
-<send>
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -60,35 +43,13 @@ Receive video call
     Content-Type: application/sdp
     Content-Length: [len]
 
-    v=0
-    o=- 3607660610 3607660611 IN IP[sip_ip_type] [server_ip]
-    s=voxip_media
-    c=IN IP[sip_ip_type] [server_ip]
-    b=AS:174
-    t=0 0
-    a=X-nat:0
-    m=audio [audio_port] RTP/AVP 104 101
-    c=IN IP[audio_ip_type] [audio_ip]
-    b=TIAS:150000
-    a=sendrecv
-    a=rtpmap:104 ISAC/16000
-    a=rtpmap:101 telephone-event/8000
-    a=fmtp:101 0-15
-    m=video [video_port] RTP/AVP 110 111 112
-    c=IN IP[video_ip_type] [video_ip]
-    b=TIAS:2000000
-    a=sendrecv
-    a=rtpmap:110 VP8/90000
-    a=fmtp:110 max-fs=300; max-fr=15; width=212; height=362
-    a=rtpmap:111 red/90000
-    a=rtpmap:112 ulpfec/90000
-    ]]>
-</send>
+    [default_video_response_body]
+endsend
 
-<recv message=ACK></recv>
-<recv message=BYE></recv>
+recv message=ACK
+recv message=BYE
 
-<send>
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -99,6 +60,8 @@ Receive video call
     Contact: <sip:[server_ip]:[server_port];transport=[transport]>
     Content-Type: application/sdp
     Content-Length: [len]
-</send>
+endsend
 
-<scenario file=unregister.scr/>   Run the unregistration scenario
+if [unregister]
+    run_scenario file=unregister.scr   # Run the unregistration scenario
+endif

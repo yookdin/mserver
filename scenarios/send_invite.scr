@@ -1,11 +1,9 @@
 
-Sunny day INVITE scenario (invite sent and receives OK)
+# Sunny day INVITE scenario (invite sent and receives OK)
 
-<set>
-    default user_number = 12345678900 // Default value of user_number
-</set>
+default user_number = 12345678900 # Default value of user_number
 
-<send>
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:[user_number]@[client_ip]:[client_port]>;tag=[tag]
@@ -19,13 +17,13 @@ Sunny day INVITE scenario (invite sent and receives OK)
     Content-Length: [len]
 
     [default_request_body]
-</send>
+endsend
 
-<recv message=100></recv>
-<recv message=180 optional></recv>
-<recv message=183></recv>
-<recv message=200></recv>
+recv message=100
+recv message=180 optional=true
+recv message=183
+recv message=200
 
-<send>
+send
     [default_ack]
-</send>
+endsend

@@ -18,9 +18,3 @@ void StartListeningCommand::interpret(string &line, ifstream &file, ScriptReader
 }
 
 
-//==========================================================================================================
-//==========================================================================================================
-string StartListeningCommand::get_start_regex_str()
-{
-    return "<(start_listening)/>";
-}

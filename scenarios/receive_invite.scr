@@ -1,17 +1,15 @@
 
-A common receive and answer scenario that appears in many other scripts
+# A common receive and answer scenario that appears in many other scripts
 
-<set>
-    default user_number = 12345678900 // Default value of user_number
-</set>
+default user_number = 12345678900 # Default value of user_number
 
-<recv message=INVITE></recv>
+recv message=INVITE
 
-<send>
+send
     [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 183 Session Progress
     [last_Via]
     [last_From]
@@ -25,9 +23,9 @@ A common receive and answer scenario that appears in many other scripts
     Content-Length: [len]
 
     [default_response_body]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -44,6 +42,6 @@ A common receive and answer scenario that appears in many other scripts
     Content-Length: [len]
 
     [default_response_body]
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK

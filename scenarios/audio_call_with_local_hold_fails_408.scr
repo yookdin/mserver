@@ -1,18 +1,15 @@
 
 
-<scenario file=register.scr/>
-<scenario file=receive_invite.scr/>
+run_scenario file=register.scr
+run_scenario file=receive_invite.scr
 
-----------------------------------------------------------------------------------------------------
-Receive hold message and answer it with 408 Timeout
-----------------------------------------------------------------------------------------------------
-<recv message=INVITE>
-    <expect>
-        [sdp_send_recv] == "sendonly"
-    </expect>
-</recv>
-
-<send>
+#----------------------------------------------------------------------------------------------------
+# Receive hold message and answer it with 408 Timeout
+#----------------------------------------------------------------------------------------------------
+recv message=INVITE
+expect [sdp_send_recv] == "sendonly"
+    
+send
   SIP/2.0 408 Timeout
   [last_Via]
   [last_From]
@@ -20,11 +17,11 @@ Receive hold message and answer it with 408 Timeout
   [last_Call-ID]
   [last_CSeq]
   Content-Length: 0
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK
 
-<scenario file=receive_bye.scr/>
-<scenario file=unregister.scr/>
+run_scenario file=receive_bye.scr
+run_scenario file=unregister.scr
 
 

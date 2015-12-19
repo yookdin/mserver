@@ -1,12 +1,11 @@
 
 
-<scenario file=register.scr/>
-<scenario file=receive_invite.scr/>
+run_scenario file=register.scr
+run_scenario file=receive_invite.scr
 
-<recv message=REFER>
-</recv>
+recv message=REFER
 
-<send>
+send
     SIP/2.0 202 Accepted
     [last_Via]
     [last_From]
@@ -16,7 +15,7 @@
     Max-Forwards: 68
     Server: VocalOS/6.2.2.252
     Content-Length: 0
-</send>
+endsend
 
-<scenario file=receive_bye.scr/>
+run_scenario file=receive_bye.scr
 

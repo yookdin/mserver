@@ -1,14 +1,14 @@
 
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-<recv message=INVITE></recv>
+recv message=INVITE
 
-<send>
+send
     [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 183 Session Progress
     [last_Via]
     [last_From]
@@ -35,9 +35,9 @@
     a=fmtp:114 mode=30
     a=rtpmap:101 telephone-event/8000
     a=fmtp:101 0-15
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -67,8 +67,8 @@
     a=fmtp:114 mode=30
     a=rtpmap:101 telephone-event/8000
     a=fmtp:101 0-15
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK
 
-<scenario file=receive_bye.scr/>
+run_scenario file=receive_bye.scr

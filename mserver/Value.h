@@ -36,7 +36,7 @@ public:
     //------------------------------------------------------------------------------------------------------
     // Get value methods; derived classes will override only the one appropriate for them
     //------------------------------------------------------------------------------------------------------
-    virtual int get_int() { throw string("Can't call get_int() for type " + get_type_name()); }
+    virtual long long get_int() { throw string("Can't call get_int() for type " + get_type_name()); }
     virtual string get_string() { throw string("Can't call get_string() for type " + get_type_name()); }
     virtual bool get_bool() { throw string("Can't call get_bool() for type " + get_type_name()); }
     virtual string to_string() = 0;

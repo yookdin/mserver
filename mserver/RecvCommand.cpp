@@ -17,20 +17,9 @@ TODO:
 #include "MServer.hpp"
 #include "mserver_utils.hpp"
 #include "ScriptReader.h"
-
+#include "AssignmentEvaluator.hpp"
 
 //==========================================================================================================
-// The recv command is actually a one liner, and could have been written like this:
-// <recv message=NAME ... />
-// But its written between begin and end tags to enable nesting expect commands in it:
-// <recv ...>
-//     <expect> ... </exepct>
-//     <expect> ... </exepct>
-//     ...
-// </recv>
-//
-// There is no difference between nesting the expects and writing them after the recv command, it just seems
-// more clear in the nested syntax.
 //==========================================================================================================
 void RecvCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
@@ -74,40 +63,33 @@ void RecvCommand::process_args(string& line, ScriptReader &reader)
     timeout = 2;
     call_number = -1;
 
+    map<string, string> vars;
+    AssignmentEvaluator::inst()->eval(line, vars, reader);
     string msg_opt = "message", optional_opt = "optional", timeout_opt = "timeout", call_number_opt = "call_number";
     
-    map<string, Option> options;
-    options.emplace(msg_opt, Option(true, true));
-    options.emplace(optional_opt, Option(false, false));
-    options.emplace(timeout_opt, Option(false, true));
-    options.emplace(call_number_opt, Option(false, true));
-    
-    OptionParser parser(line, options, ">");
-    
-    if(options.at(call_number_opt).was_found())
+    if(vars.count(msg_opt) == 0)
     {
-        string call_number_str = options.at(call_number_opt).get_value();
-        call_number = stoi( reader.get_replaced_str(call_number_str) );
+        throw string("No 'message' option to recv command");
     }
-
-    message_kind = options.at(msg_opt).get_value();
-    reader.replace_vars(message_kind, call_number);
-    
-    optional = options.at(optional_opt).was_found();
-    
-    if(options.at(timeout_opt).was_found())
+    else
     {
-        string timeout_str = options.at(timeout_opt).get_value();
-        timeout = stoi( reader.get_replaced_str(timeout_str) );
+        message_kind = vars[msg_opt];
     }
-}
-
-
-//==========================================================================================================
-//==========================================================================================================
-string RecvCommand::get_start_regex_str()
-{
-    return "<(recv)";
+    
+    if(vars.count(call_number_opt))
+    {
+        call_number = stoi(vars[call_number_opt]);
+    }
+    
+    if(vars.count(optional_opt) > 0)
+    {
+        optional = stob(vars[optional_opt]);
+    }
+    
+    if(vars.count(timeout_opt) > 0)
+    {
+        timeout = stoi(vars[timeout_opt]);
+    }
 }
 
 

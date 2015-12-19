@@ -19,15 +19,7 @@ class Bool: public Value
 public:
     Bool(bool _val = false): Value(BOOL), val(_val) {}
 
-    Bool(string val_str): Value(BOOL)
-    {
-        if(val_str != "true" && val_str != "false")
-        {
-            throw string("Invalid string given to Bool(): " + val_str);
-        }
-        
-        val = (val_str == "true");
-    }
+    Bool(string val_str): Value(BOOL), val(stob(val_str)) {}
 
     bool get_bool() { return val; }
 

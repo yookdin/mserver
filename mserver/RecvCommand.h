@@ -4,10 +4,9 @@
 class RecvCommand :	public Command
 {
 public:
-    RecvCommand(){}
+    RecvCommand(): Command("recv") {}
 
 	virtual void interpret(string &line, ifstream &file, ScriptReader &reader);
-    virtual string get_start_regex_str();
 
 private:
     string message_kind; // Either a METHOD name of status code

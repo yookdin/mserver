@@ -75,6 +75,8 @@ ScriptReader::~ScriptReader()
 
 
 //==========================================================================================================
+// Go over the file line by line. If you see control flow keywords (if, else, etc.) call the appropriate
+// handler. Otherwise check if the line contains a command call, and if so execute it.
 //==========================================================================================================
 void ScriptReader::interpret(string filename)
 {
@@ -90,6 +92,8 @@ void ScriptReader::interpret(string filename)
     // Go over the lines of the file and execute commands
     //------------------------------------------------------------------------------------------------------
     for(string line; getline(file, line);) {
+        trim(line);
+
         if(line.empty())
         {
             continue;
@@ -97,17 +101,15 @@ void ScriptReader::interpret(string filename)
         
         keyword_func func = get_keyword_func(line);
         
-        if(func == nullptr)
-        {
-            if(should_execute())
-                search_command(line, file);
-        }
-        else
+        if(func != nullptr)
         {
             (this->*func)(line);
         }
+        else if(should_execute())
+        {
+            search_command(line, file);
+        }
     }
-    
 
     //------------------------------------------------------------------------------------------------------
     // Check that control flow structures (if-else) are closed properly
@@ -156,21 +158,14 @@ void ScriptReader::search_command(string& line, ifstream& file)
     
     if(regex_search(line, match, command_start_regex))
     {
-        string command_name;
-        
-        // Find the sub-match which succeeded; that is the command name
-        // Skip the first match, it is the entire match
-        for(auto iter = ++match.begin(); iter != match.end(); iter++)
-        {
-            if(! iter->str().empty())
-            {
-                command_name = iter->str();
-                break;
-            }
-        }
-        
+        string command_name = match[1];
         line = match.suffix(); // Skip the matched part, so the command won't need to deal with it
         commands[command_name]->interpret(line, file, *this);
+    }
+    // Search for an assignment. Assignment are implicit calls to the set command.
+    else if(regex_search(line, match, assignment_regex))
+    {
+        commands["set"]->interpret(line, file, *this);
     }
 }
 
@@ -180,7 +175,7 @@ void ScriptReader::search_command(string& line, ifstream& file)
 void ScriptReader::handle_if(string& line)
 {
     //cout << "handle_if " << line << endl;
-    if_stack.push(new IfStatement(should_execute(), line, this));
+    if_stack.push(new IfStatement(should_execute(), line, *this));
 }
 
 
@@ -210,7 +205,7 @@ void ScriptReader::handle_elseif(string& line)
     }
 
     if_stack.top()->switch_to_else();
-    if_stack.push(new IfStatement(should_execute(), line, this, true));
+    if_stack.push(new IfStatement(should_execute(), line, *this, true));
 }
 
 
@@ -234,14 +229,7 @@ void ScriptReader::handle_endif(string& line)
 // Should current line be executed, according to if statement status if one exists.
 //==========================================================================================================
 bool ScriptReader::should_execute() {
-    if(if_stack.empty())
-    {
-        return true;
-    }
-    else
-    {
-        return if_stack.top()->should_execute;
-    }
+    return if_stack.empty() || if_stack.top()->should_execute;
 }
 
 
@@ -689,16 +677,18 @@ const regex ScriptReader::command_start_regex = ScriptReader::init_command_start
 map<string, Command*> ScriptReader::init_commands()
 {
     map<string, Command*> local_commands;
-    local_commands["scenario"] = new ScenarioCommand();
-    local_commands["send"] = new SendCommand();
-    local_commands["recv"] = new RecvCommand();
-    local_commands["pause"] = new PauseCommand();
-    local_commands["expect"] = new ExpectCommand();
-    local_commands["move_to_next_ip"] = new NextIPCommand();
-    local_commands["stop_listening"] = new StopListeningCommand();
-    local_commands["start_listening"] = new StartListeningCommand();
-    local_commands["set"] = new SetCommand();
-    local_commands["print"] = new PrintCommand();
+    Command* cmd;
+    
+    cmd = new ScenarioCommand();        local_commands[cmd->name] = cmd;
+    cmd = new SendCommand();            local_commands[cmd->name] = cmd;
+    cmd = new RecvCommand();            local_commands[cmd->name] = cmd;
+    cmd = new PauseCommand();           local_commands[cmd->name] = cmd;
+    cmd = new ExpectCommand();          local_commands[cmd->name] = cmd;
+    cmd = new NextIPCommand();          local_commands[cmd->name] = cmd;
+    cmd = new StopListeningCommand();   local_commands[cmd->name] = cmd;
+    cmd = new StartListeningCommand();  local_commands[cmd->name] = cmd;
+    cmd = new SetCommand();             local_commands[cmd->name] = cmd;
+    cmd = new PrintCommand();           local_commands[cmd->name] = cmd;
     
     return local_commands;
 }
@@ -708,14 +698,15 @@ map<string, Command*> ScriptReader::init_commands()
 //==========================================================================================================
 regex ScriptReader::init_command_start_regex()
 {
-    string command_start_str;
+    string command_start_str = "^ *\\b(";
     
     for(auto com: commands)
     {
-        command_start_str += "^ *" + com.second->get_start_regex_str() + "|";
+        command_start_str += com.second->name + "|";
     }
     
     command_start_str.erase(command_start_str.length() - 1); // Remove the last '|'
+    command_start_str += ") *:? *";
     return regex(command_start_str);
 }
 
@@ -725,11 +716,22 @@ regex ScriptReader::init_command_start_regex()
 //==========================================================================================================
 const regex ScriptReader::var_regex(var_regex_str);
 
+
+//==========================================================================================================
 // Matches [var]
+//==========================================================================================================
 const regex ScriptReader::script_var_regex("\\[(" + var_regex_str + ")\\]");
 
+
+//==========================================================================================================
 // Matches \[var\]
+//==========================================================================================================
 const regex ScriptReader::literal_var_regex("\\\\\\[" + var_regex_str + "\\\\\\]");
+
+
+//==========================================================================================================
+//==========================================================================================================
+const regex ScriptReader::assignment_regex("^ *(default +)?\\w+ *=[^=]");
 
 
 //==========================================================================================================

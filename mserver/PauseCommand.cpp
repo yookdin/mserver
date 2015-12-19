@@ -7,7 +7,7 @@
 // Parameter string of the command is for example:
 // 1.5 seconds, 3 milliseconds, 1s, 1 second, 0.4 ms, etc.
 //==========================================================================================================
-PauseCommand::PauseCommand(): params_regex("(\\d+(\\.\\d+)?) *(\\w+) */>") {}
+PauseCommand::PauseCommand(): Command("pause"), params_regex("(\\d+(\\.\\d+)?) *(\\w+) *") {}
 
 
 //==========================================================================================================
@@ -54,14 +54,6 @@ int PauseCommand::get_factor_for_units(string units)
     }
     
     throw string("Invalid format for pause command units: " + units);
-}
-
-
-//==========================================================================================================
-//==========================================================================================================
-string PauseCommand::get_start_regex_str()
-{
-    return "<(pause)";
 }
 
 

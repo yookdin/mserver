@@ -1,21 +1,20 @@
 
-<set>
-    request_body = [is_video] ? [default_video_request_body] : [default_request_body]
-    response_body = [is_video] ? [default_video_response_body] : [default_response_body]
-</set>
 
-<scenario file=register.scr/>
+request_body = [is_video] ? [default_video_request_body] : [default_request_body]
+response_body = [is_video] ? [default_video_response_body] : [default_response_body]
 
-----------------------------------------------------------------------------------------------------
-Receive invitation but don't send OK (call_number = 1)
-----------------------------------------------------------------------------------------------------
-<recv message=INVITE></recv>
+run_scenario file=register.scr
 
-<send>
+#----------------------------------------------------------------------------------------------------
+# Receive invitation but don't send OK (call_number = 1)
+#----------------------------------------------------------------------------------------------------
+recv message=INVITE
+
+send
   [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 180 Ringing
     [last_Via]
     [last_From]
@@ -24,13 +23,13 @@ Receive invitation but don't send OK (call_number = 1)
     [last_CSeq]
     Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
     Content-Length: 0
-</send>
+endsend
 
-----------------------------------------------------------------------------------------------------
-Send an invite to create the intersecting scenario (call_number = 2). The invite gets OK because
-it has a higher call-id.
-----------------------------------------------------------------------------------------------------
-<send>
+#----------------------------------------------------------------------------------------------------
+# Send an invite to create the intersecting scenario (call_number = 2). The invite gets OK because
+# it has a higher call-id.
+#----------------------------------------------------------------------------------------------------
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:12345678900@[client_ip]:[client_port]>;tag=[tag]
@@ -44,16 +43,16 @@ it has a higher call-id.
     Content-Length: [len]
 
     [request_body]
-</send>
+endsend
 
-<recv message=100></recv>
-<recv message=200></recv>
+recv message=100
+recv message=200
 
-<send>
+send
     [default_ack]
-</send>
+endsend
 
-----------------------------------------------------------------------------------------------------
-voxip cancels its invitation due to lower call-id
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_cancel.scr call_number = 1/>
+#----------------------------------------------------------------------------------------------------
+# voxip cancels its invitation due to lower call-id
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_cancel.scr call_number = 1

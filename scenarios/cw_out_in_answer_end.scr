@@ -1,23 +1,19 @@
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
+
+run_scenario file=receive_invite.scr                               # Call number 1
+run_scenario file=send_invite_partial.scr user_number=12345678901  # Call number 2: invite sent but doesn't receive OK
+run_scenario file=receive_bye.scr call_number = 1                  # End call 1
 
 
-<scenario file=receive_invite.scr/>                               Call number 1
-<scenario file=send_invite_partial.scr user_number=12345678901/>  Call number 2: invite sent but doesn't receive OK
-<scenario file=receive_bye.scr call_number = 1/>                    End call 1
+#----------------------------------------------------------------------------------------------------
+# Second call is answered and ended
+#----------------------------------------------------------------------------------------------------
+recv message=183 call_number = 2 # There's another 183 for second call
+recv message=200
 
-
-----------------------------------------------------------------------------------------------------
-Second call is answered and ended
-----------------------------------------------------------------------------------------------------
-<recv message=183 call_number = 2> There's another 183 for second call
-</recv>
-
-<recv message=200>
-</recv>
-
-<send>
+send
     [default_ack]
-</send>
+endsend
 
-<scenario file=receive_bye.scr user_number=12345678901/>
+run_scenario file=receive_bye.scr user_number=12345678901

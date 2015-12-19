@@ -1,27 +1,26 @@
 
-<set>
-    request_body = [is_video] ? [default_video_request_body] : [default_request_body]
-    response_body = [is_video] ? [default_video_response_body] : [default_response_body]
-</set>
 
-<scenario file=register.scr/>
+request_body = [is_video] ? [default_video_request_body] : [default_request_body]
+response_body = [is_video] ? [default_video_response_body] : [default_response_body]
 
-----------------------------------------------------------------------------------------------------
-Start a call that will not be answered due to lower call-id
-----------------------------------------------------------------------------------------------------
-<scenario file=send_invite_partial.scr is_video=[is_video] call_id_param=[min_call_id]/>
 
-----------------------------------------------------------------------------------------------------
-Receive invite from voxip and answer it
-----------------------------------------------------------------------------------------------------
-<recv message=INVITE>
-</recv>
+run_scenario file=register.scr
 
-<send>
+#----------------------------------------------------------------------------------------------------
+# Start a call that will not be answered due to lower call-id
+#----------------------------------------------------------------------------------------------------
+run_scenario file=send_invite_partial.scr is_video=[is_video] call_id_param=[min_call_id]
+
+#----------------------------------------------------------------------------------------------------
+# Receive invite from voxip and answer it
+#----------------------------------------------------------------------------------------------------
+recv message=INVITE
+
+send
     [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -38,12 +37,12 @@ Receive invite from voxip and answer it
     Content-Length: [len]
 
     [response_body]
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK
 
-----------------------------------------------------------------------------------------------------
-Cancel the first call
-----------------------------------------------------------------------------------------------------
-<scenario file = send_cancel.scr call_number = 1/>
+#----------------------------------------------------------------------------------------------------
+# Cancel the first call
+#----------------------------------------------------------------------------------------------------
+run_scenario file = send_cancel.scr call_number = 1
 

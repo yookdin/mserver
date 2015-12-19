@@ -1,13 +1,12 @@
 
-Interval too brief (423)
-Responde to register request with 423 with Expires header = [min_exp_val],
-which is a parameter that should be given to this script.
-The next register should contain Expires value >= min_exp_val
+# Interval too brief (423)
+# Responde to register request with 423 with Expires header = [min_exp_val],
+# which is a parameter that should be given to this script.
+# The next register should contain Expires value >= min_exp_val
 
-<recv message=REGISTER>
-</recv>
+recv message=REGISTER
 
-<send>
+send
     SIP/2.0 423 Interval Too Brief
     [last_Via]
     [last_From]
@@ -16,16 +15,14 @@ The next register should contain Expires value >= min_exp_val
     [last_CSeq]
     Min-Expires: [min_exp_val]
     Content-Length: 0
-</send>
+endsend
 
-<recv message=REGISTER>
-  Check that the value of the 'Expires' field is greater or equal to <min_exp_val>, o/w fail the test
-  <expect>
-    [Expires:value] >= [min_exp_val]
-  </expect>
-</recv>
+recv message=REGISTER
 
-<send>
+# Check that the value of the 'Expires' field is greater or equal to <min_exp_val>, o/w fail the test
+expect [Expires:value] >= [min_exp_val]
+  
+send
     SIP/2.0 401 Unauthorized
     [last_Via]
     [last_From]
@@ -34,12 +31,11 @@ The next register should contain Expires value >= min_exp_val
     [last_CSeq]
     WWW-Authenticate: Digest realm="10.116.0.140", domain="10.116.0.140", nonce="603317111", algorithm=MD5
     Content-Length: 0
-</send>
+endsend
 
-<recv message=REGISTER>
-</recv>
+recv message=REGISTER
 
-<send>
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -48,6 +44,6 @@ The next register should contain Expires value >= min_exp_val
     [last_CSeq]
     Contact: <sip:[server_ip]:[server_port];transport=[transport]>;expires=300
     Content-Length: 0
-</send>
+endsend
 
-<scenario file=unregister.scr/>
+run_scenario file=unregister.scr

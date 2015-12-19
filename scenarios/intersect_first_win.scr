@@ -1,26 +1,25 @@
 
 
-VOXIP sends an invitation before it receives the other side's invitation.
-VOXIP wins due to higher call-id.
-Other sides answers voxip's invitation and cancels its invitation.
+# VOXIP sends an invitation before it receives the other side's invitation.
+# VOXIP wins due to higher call-id.
+# Other sides answers voxip's invitation and cancels its invitation.
 
-<set>
-    request_body = [is_video] ? [default_video_request_body] : [default_request_body]
-    response_body = [is_video] ? [default_video_response_body] : [default_response_body]
-</set>
 
-<scenario file=register.scr/>
+request_body = [is_video] ? [default_video_request_body] : [default_request_body]
+response_body = [is_video] ? [default_video_response_body] : [default_response_body]
 
-----------------------------------------------------------------------------------------------------
-Receive invitation but don't send OK
-----------------------------------------------------------------------------------------------------
-<recv message=INVITE></recv>
+run_scenario file=register.scr
 
-<send>
+#----------------------------------------------------------------------------------------------------
+# Receive invitation but don't send OK
+#----------------------------------------------------------------------------------------------------
+recv message=INVITE
+
+send
   [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 180 Ringing
     [last_Via]
     [last_From]
@@ -29,12 +28,12 @@ Receive invitation but don't send OK
     [last_CSeq]
     Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
     Content-Length: 0
-</send>
+endsend
 
-----------------------------------------------------------------------------------------------------
-Send an invite to create the intersecting scenario
-----------------------------------------------------------------------------------------------------
-<send>
+#----------------------------------------------------------------------------------------------------
+# Send an invite to create the intersecting scenario
+#----------------------------------------------------------------------------------------------------
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:12345678900@[client_ip]:[client_port]>;tag=[tag]
@@ -48,14 +47,14 @@ Send an invite to create the intersecting scenario
     Content-Length: [len]
 
     [request_body]
-</send>
+endsend
 
-<recv message=100></recv>
+recv message=100
 
-----------------------------------------------------------------------------------------------------
-Send a 200/OK for the original invite (call 1)
-----------------------------------------------------------------------------------------------------
-<send call_number=1>
+#----------------------------------------------------------------------------------------------------
+# Send a 200/OK for the original invite (call 1)
+#----------------------------------------------------------------------------------------------------
+send call_number=1
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -72,14 +71,14 @@ Send a 200/OK for the original invite (call 1)
     Content-Length: [len]
 
     [response_body]
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK
 
-----------------------------------------------------------------------------------------------------
-Cancel the second call because voxip should win due to higher call-id
-----------------------------------------------------------------------------------------------------
-<scenario file = send_cancel.scr call_number = 2/>
+#----------------------------------------------------------------------------------------------------
+# Cancel the second call because voxip should win due to higher call-id
+#----------------------------------------------------------------------------------------------------
+run_scenario file = send_cancel.scr call_number = 2
 
-<scenario file=receive_bye.scr/>
+run_scenario file=receive_bye.scr
 

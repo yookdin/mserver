@@ -1,15 +1,15 @@
 
-Receive a call, don't send 200, send invite to another call, get busy reply
+# Receive a call, don't send 200, send invite to another call, get busy reply
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-<recv message=INVITE></recv>
+recv message=INVITE
 
-<send>
+send
     [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 183 Session Progress
     [last_Via]
     [last_From]
@@ -23,9 +23,9 @@ Receive a call, don't send 200, send invite to another call, get busy reply
     Content-Length: [len]
 
     [default_response_body]
-</send>
+endsend
 
-<send>
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:12345678901@[client_ip]:[client_port]>;tag=[tag]
@@ -39,17 +39,13 @@ Receive a call, don't send 200, send invite to another call, get busy reply
     Content-Length: [len]
 
     [default_request_body]
-</send>
+endsend
 
-<recv message=100 optional>
-</recv>
+recv message=100 optional=true
+recv message=183 optional=true
 
-<recv message=183 optional>
-</recv>
+recv message=486
 
-<recv message=486>
-</recv>
-
-<send>
+send
     [default_ack]
-</send>
+endsend

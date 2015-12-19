@@ -1,9 +1,9 @@
 
-Registration bad credentials
+# Registration bad credentials
 
-<recv message=REGISTER></recv>
+recv message=REGISTER
 
-<send>
+send
     SIP/2.0 401 Unauthorized
     [last_Via]
     [last_From]
@@ -12,11 +12,11 @@ Registration bad credentials
     [last_CSeq]
     WWW-Authenticate: Digest realm="10.116.0.140", domain="10.116.0.140", nonce="603317111", algorithm=MD5
     Content-Length: 0
-</send>
+endsend
 
-<recv message=REGISTER></recv>
+recv message=REGISTER
 
-<send>
+send
     SIP/2.0 401 Unauthorized
     [last_Via]
     [last_From]
@@ -25,11 +25,11 @@ Registration bad credentials
     [last_CSeq]
     WWW-Authenticate: Digest realm="10.116.0.140", domain="10.116.0.140", nonce="603317112", algorithm=MD5
     Content-Length: 0
-</send>
+endsend
 
-<recv message=REGISTER></recv>
+recv message=REGISTER
 
-<send>
+send
     SIP/2.0 401 Unauthorized
     [last_Via]
     [last_From]
@@ -38,4 +38,4 @@ Registration bad credentials
     [last_CSeq]
     WWW-Authenticate: Digest realm="10.116.0.140", domain="10.116.0.140", nonce="603317112", algorithm=MD5
     Content-Length: 0
-</send>
+endsend

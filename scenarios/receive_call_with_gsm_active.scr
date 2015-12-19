@@ -1,12 +1,12 @@
 
 
-Inbound call while on hold that is rejected and then 2nd call that is answered and ended by client
+# Inbound call while on hold that is rejected and then 2nd call that is answered and ended by client
   
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-<pause for 1 second/>  Let voxip enter GSM hold
+pause for 1 second  # Let voxip enter GSM hold
 
-<send>
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:12345678900@[client_ip]:[client_port]>;tag=[tag]
@@ -20,15 +20,15 @@ Inbound call while on hold that is rejected and then 2nd call that is answered a
     Content-Length: [len]
 
     [default_request_body]
-</send>
+endsend
 
-<recv message=100></recv>
-<recv message=486></recv>
+recv message=100
+recv message=486
 
-<send>
+send
   [default_ack]
-</send>
+endsend
 
-<pause for 1 second/>  Let voxip exit the GSM hold
-<scenario file=send_invite.scr/>
-<scenario file=receive_bye.scr/>
+pause for 1 second  # Let voxip exit the GSM hold
+run_scenario file=send_invite.scr
+run_scenario file=receive_bye.scr

@@ -1,12 +1,11 @@
 
-Receive invite and send an error response
+# Receive invite and send an error response
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-<recv message=INVITE>
-</recv>
+recv message=INVITE
 
-<send>
+send
     SIP/2.0 [error_code]
     [last_Via]
     [last_From]
@@ -14,7 +13,7 @@ Receive invite and send an error response
     [last_Call-ID]
     [last_CSeq]
     Content-Length: 0
-</send>
+endsend
 
-<recv message=ACK>
-</recv>
+recv message=ACK
+

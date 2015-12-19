@@ -17,8 +17,8 @@
 class Int: public Value
 {
 public:
-    Int(int _val = 0): Value(INT), val(_val) {}
-    int get_int() { return val; }
+    Int(long long _val = 0): Value(INT), val(_val) {}
+    long long get_int() { return val; }
     
     Value& operator+ (Value& other) { return *(new Int(val  +  other.get_int())); }
     Value& operator- (Value& other) { return *(new Int(val  -  other.get_int())); }
@@ -35,7 +35,7 @@ public:
     virtual string to_string() { return std::to_string(val); }
     
 private:
-    const int val;
+    const long long val;
     
 };
 

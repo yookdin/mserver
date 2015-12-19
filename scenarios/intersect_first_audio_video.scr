@@ -1,19 +1,19 @@
 
-Voxip sends a audio invite.
-Other side sends a video invite, which wins.
+# Voxip sends a audio invite.
+# Other side sends a video invite, which wins.
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-----------------------------------------------------------------------------------------------------
-Receive invitation but don't send OK
-----------------------------------------------------------------------------------------------------
-<recv message=INVITE></recv>
+#----------------------------------------------------------------------------------------------------
+# Receive invitation but don't send OK
+#----------------------------------------------------------------------------------------------------
+recv message=INVITE
 
-<send>
+send
   [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 180 Ringing
     [last_Via]
     [last_From]
@@ -22,13 +22,13 @@ Receive invitation but don't send OK
     [last_CSeq]
     Contact: <sip:12345678900@[server_ip]:[server_port];transport=[transport]>
     Content-Length: 0
-</send>
+endsend
 
-----------------------------------------------------------------------------------------------------
-Send an invite to create the intersecting scenario (call_number = 2). The invite gets OK because it
-is a video call, and voxip's invite was for an audio call.
-----------------------------------------------------------------------------------------------------
-<send>
+#----------------------------------------------------------------------------------------------------
+# Send an invite to create the intersecting scenario (call_number = 2). The invite gets OK because it
+# is a video call, and voxip's invite was for an audio call.
+#----------------------------------------------------------------------------------------------------
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:12345678900@[client_ip]:[client_port]>;tag=[tag]
@@ -42,17 +42,17 @@ is a video call, and voxip's invite was for an audio call.
     Content-Length: [len]
 
     [default_video_request_body]
-</send>
+endsend
 
-<recv message=100></recv>
-<recv message=200></recv>
+recv message=100
+recv message=200
 
-<send>
+send
     [default_ack]
-</send>
+endsend
 
 
-----------------------------------------------------------------------------------------------------
-voxip cancels its invitation
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_cancel.scr call_number = 1/>
+#----------------------------------------------------------------------------------------------------
+# voxip cancels its invitation
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_cancel.scr call_number = 1

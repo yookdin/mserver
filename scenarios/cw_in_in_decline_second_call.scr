@@ -1,12 +1,12 @@
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-<scenario file=send_invite.scr/>  Call to voxip that is answered
+run_scenario file=send_invite.scr  # Call to voxip that is answered
 
-----------------------------------------------------------------------------------------------------
-Call to voxip that is rejected
-----------------------------------------------------------------------------------------------------
-<send>
+#----------------------------------------------------------------------------------------------------
+# Call to voxip that is rejected
+#----------------------------------------------------------------------------------------------------
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:12345678901@[client_ip]:[client_port]>;tag=[tag]
@@ -20,13 +20,13 @@ Call to voxip that is rejected
     Content-Length: [len]
 
     [default_request_body]
-</send>
+endsend
 
-<recv message=100 optional></recv>
-<recv message=183 optional></recv>
+recv message=100 optional=true
+recv message=183 optional=true
 
-<recv message=486></recv>  Call rejected
+recv message=486  # Call rejected
 
-<send>
+send
     [default_ack]
-</send>
+endsend

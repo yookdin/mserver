@@ -16,9 +16,8 @@
 class StopListeningCommand: public Command
 {
 public:
-    StopListeningCommand(){}
+    StopListeningCommand(): Command("stop_listening") {}
     virtual void interpret(string &line, ifstream &file, ScriptReader &reader);
-    virtual string get_start_regex_str();
 };
 
 

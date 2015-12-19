@@ -1,2 +1,2 @@
-<scenario file=register.scr/>   Run the registration scenario
-<scenario file=unregister.scr/> Run the unregistration scenario
+run_scenario file=register.scr   # Run the registration scenario
+run_scenario file=unregister.scr # Run the unregistration scenario

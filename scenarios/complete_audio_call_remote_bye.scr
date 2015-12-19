@@ -1,11 +1,11 @@
 
 
-Receive audio call and end it from mserver
+# Receive audio call and end it from mserver
 
-<scenario file=register.scr/>
-<scenario file=receive_invite.scr user_number=12345678900/>
+run_scenario file=register.scr
+run_scenario file=receive_invite.scr user_number=12345678900
 
-<send>
+send
       BYE sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
       [last_Via]
       From: [last_To:value]
@@ -14,8 +14,8 @@ Receive audio call and end it from mserver
       Max-Forwards: 9
       CSeq: 3 BYE
       Content-Length: 0
-</send>
+endsend
 
-<recv message=200></recv>
+recv message=200
 
-<scenario file=unregister.scr/>
+run_scenario file=unregister.scr

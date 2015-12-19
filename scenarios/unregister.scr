@@ -1,13 +1,11 @@
 
-Unregistration scenario
+# Unregistration scenario
 
-<recv message=REGISTER>
-  <expect>
-    [Expires:value] == 0  // Check that the value of the 'Expires' field is equal to 0, o/w fail the test
-  </expect>
-</recv>
-
-<send>
+recv: message=REGISTER
+  
+expect: [Expires:value] == 0  # Check that the value of the 'Expires' field is equal to 0, o/w fail the test
+  
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -16,4 +14,4 @@ Unregistration scenario
     [last_CSeq]
     Contact: <sip:[server_ip]:[server_port];transport=[transport]>;expires=0
     Content-Length: 0
-</send>
+endsend

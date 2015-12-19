@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FE0ECE6D1BDF832E00958E40 /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE5E1BDF832E00958E40 /* Command.cpp */; };
 		FE0ECE6E1BDF832E00958E40 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE611BDF832E00958E40 /* main.cpp */; };
 		FE0ECE721BDF832E00958E40 /* ScriptReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE681BDF832E00958E40 /* ScriptReader.cpp */; };
 		FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE7D1BDF882B00958E40 /* MServer.cpp */; };
 		FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE0ECE961BE0B76400958E40 /* SipParser.cpp */; };
 		FE1104B61C22B188001C5AC8 /* ExpressionEvaluator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE1104B41C22B188001C5AC8 /* ExpressionEvaluator.cpp */; };
 		FE1104B81C22B934001C5AC8 /* Paren.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE1104B71C22B934001C5AC8 /* Paren.cpp */; };
+		FE1104BE1C245A49001C5AC8 /* AssignmentEvaluator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE1104BC1C245A49001C5AC8 /* AssignmentEvaluator.cpp */; };
 		FE29A95A1C20DCAC0074C4D9 /* IfStatement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE29A9581C20DCAC0074C4D9 /* IfStatement.cpp */; };
 		FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */; };
 		FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC651BEB79A1004E05A2 /* SipConnection.cpp */; };
@@ -49,7 +49,6 @@
 
 /* Begin PBXFileReference section */
 		FE0ECE4C1BDF818E00958E40 /* mserver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mserver; sourceTree = BUILT_PRODUCTS_DIR; };
-		FE0ECE5E1BDF832E00958E40 /* Command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Command.cpp; sourceTree = "<group>"; };
 		FE0ECE5F1BDF832E00958E40 /* Command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Command.h; sourceTree = "<group>"; };
 		FE0ECE601BDF832E00958E40 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		FE0ECE611BDF832E00958E40 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -65,6 +64,8 @@
 		FE1104B51C22B188001C5AC8 /* ExpressionEvaluator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ExpressionEvaluator.hpp; sourceTree = "<group>"; };
 		FE1104B71C22B934001C5AC8 /* Paren.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Paren.cpp; sourceTree = "<group>"; };
 		FE1104B91C23050D001C5AC8 /* SCR.YAML-tmLanguage */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SCR.YAML-tmLanguage"; sourceTree = "<group>"; };
+		FE1104BC1C245A49001C5AC8 /* AssignmentEvaluator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssignmentEvaluator.cpp; sourceTree = "<group>"; };
+		FE1104BD1C245A49001C5AC8 /* AssignmentEvaluator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssignmentEvaluator.hpp; sourceTree = "<group>"; };
 		FE29A9581C20DCAC0074C4D9 /* IfStatement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IfStatement.cpp; sourceTree = "<group>"; };
 		FE29A9591C20DCAC0074C4D9 /* IfStatement.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IfStatement.hpp; sourceTree = "<group>"; };
 		FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SipMessage.cpp; sourceTree = "<group>"; };
@@ -194,7 +195,7 @@
 				FE88A6BE1C0C65DC00AB68A2 /* Connections */,
 				FE0ECE7A1BDF854600958E40 /* SIP */,
 				FE0ECE741BDF848600958E40 /* Commands */,
-				FE7911881BFF116B00A5DD60 /* Expression Evaluation */,
+				FE7911881BFF116B00A5DD60 /* Evaluation */,
 				FE610F101BE0D0F6002834FC /* Utils */,
 				FE0ECE781BDF850E00958E40 /* Docs */,
 				FEC54F8C1C20356200D316E9 /* bb */,
@@ -206,7 +207,6 @@
 			isa = PBXGroup;
 			children = (
 				FE0ECE5F1BDF832E00958E40 /* Command.h */,
-				FE0ECE5E1BDF832E00958E40 /* Command.cpp */,
 				FE9B0B9C1C11FCE0005FCE06 /* RecvCommand.h */,
 				FE9B0B9B1C11FCE0005FCE06 /* RecvCommand.cpp */,
 				FE9B0BA01C11FCE0005FCE06 /* SendCommand.h */,
@@ -265,9 +265,11 @@
 			name = Utils;
 			sourceTree = "<group>";
 		};
-		FE7911881BFF116B00A5DD60 /* Expression Evaluation */ = {
+		FE7911881BFF116B00A5DD60 /* Evaluation */ = {
 			isa = PBXGroup;
 			children = (
+				FE1104BD1C245A49001C5AC8 /* AssignmentEvaluator.hpp */,
+				FE1104BC1C245A49001C5AC8 /* AssignmentEvaluator.cpp */,
 				FE1104B51C22B188001C5AC8 /* ExpressionEvaluator.hpp */,
 				FE1104B41C22B188001C5AC8 /* ExpressionEvaluator.cpp */,
 				FED6782B1BFF7F9A00B739BE /* Token.h */,
@@ -280,7 +282,7 @@
 				FED678301BFF8E1900B739BE /* Paren.h */,
 				FE1104B71C22B934001C5AC8 /* Paren.cpp */,
 			);
-			name = "Expression Evaluation";
+			name = Evaluation;
 			sourceTree = "<group>";
 		};
 		FE88A6BE1C0C65DC00AB68A2 /* Connections */ = {
@@ -429,11 +431,11 @@
 				FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */,
 				FEF746121C1480C100598473 /* StartListeningCommand.cpp in Sources */,
 				FEF7461F1C16DD7B00598473 /* SetCommand.cpp in Sources */,
+				FE1104BE1C245A49001C5AC8 /* AssignmentEvaluator.cpp in Sources */,
 				FE9B0B981C11FBB0005FCE06 /* PauseCommand.cpp in Sources */,
 				FE9B0BA41C11FCE0005FCE06 /* SendCommand.cpp in Sources */,
 				FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */,
 				FEC54F371C1F082700D316E9 /* PrintCommand.cpp in Sources */,
-				FE0ECE6D1BDF832E00958E40 /* Command.cpp in Sources */,
 				FE88A6BD1C091DCD00AB68A2 /* ControlConnection.cpp in Sources */,
 				FE9B0BA21C11FCE0005FCE06 /* RecvCommand.cpp in Sources */,
 				FE1104B61C22B188001C5AC8 /* ExpressionEvaluator.cpp in Sources */,
@@ -476,7 +478,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
@@ -512,7 +514,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
@@ -527,6 +529,7 @@
 		FE0ECE541BDF818E00958E40 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "$(OTHER_CFLAGS)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;

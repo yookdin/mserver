@@ -20,5 +20,7 @@ extern const string brackets_var_regex_str;
 
 string unquote(string s);
 int find_end_str_position(string& line, string end_str);
+bool stob(string);
+void trim(string &line);
 
 #endif /* mserver_utils_hpp */

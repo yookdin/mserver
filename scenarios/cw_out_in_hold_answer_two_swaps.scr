@@ -1,43 +1,42 @@
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-<scenario file=receive_invite.scr/>       Call number 1
-<scenario file=send_invite_partial.scr user_number=12345678901/>  Call number 2: invite sent but doesn't receive OK
+run_scenario file=receive_invite.scr       # Call number 1
+run_scenario file=send_invite_partial.scr user_number=12345678901  # Call number 2: invite sent but doesn't receive OK
 
-----------------------------------------------------------------------------------------------------
-First call put on hold, second call answered
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_hold.scr call_number=1/>
+#----------------------------------------------------------------------------------------------------
+# First call put on hold, second call answered
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_hold.scr call_number=1
 
-<recv message=200 call_number = 2>
-</recv>
+recv message=200 call_number = 2
 
-<send>
+send
     [default_ack]
-</send>
+endsend
 
 
-----------------------------------------------------------------------------------------------------
-SWAP: Second call put on hold, first call taken out of hold
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_hold.scr call_number = 2 user_number = 12345678901/>
-<scenario file=receive_unhold.scr call_number = 1 />
+#----------------------------------------------------------------------------------------------------
+# SWAP: Second call put on hold, first call taken out of hold
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_hold.scr call_number = 2 user_number = 12345678901
+run_scenario file=receive_unhold.scr call_number = 1 
 
 
-----------------------------------------------------------------------------------------------------
-SWAP: First call put on hold, second call taken out of hold
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_hold.scr/>
-<scenario file=receive_unhold.scr call_number = 2 user_number = 12345678901/>
+#----------------------------------------------------------------------------------------------------
+# SWAP: First call put on hold, second call taken out of hold
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_hold.scr
+run_scenario file=receive_unhold.scr call_number = 2 user_number = 12345678901
 
 
-----------------------------------------------------------------------------------------------------
-Hangup call 2
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_bye.scr user_number = 12345678901/>
+#----------------------------------------------------------------------------------------------------
+# Hangup call 2
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_bye.scr user_number = 12345678901
 
-----------------------------------------------------------------------------------------------------
-Unhold and hangup call 1
-----------------------------------------------------------------------------------------------------
-<scenario file=receive_unhold.scr call_number = 1/>
-<scenario file=receive_bye.scr/>
+#----------------------------------------------------------------------------------------------------
+# Unhold and hangup call 1
+#----------------------------------------------------------------------------------------------------
+run_scenario file=receive_unhold.scr call_number = 1
+run_scenario file=receive_bye.scr

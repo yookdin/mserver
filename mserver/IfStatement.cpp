@@ -11,7 +11,7 @@
 
 //==========================================================================================================
 //==========================================================================================================
-IfStatement::IfStatement(bool _parent_execute, string condition_str, ScriptReader* reader, bool _implicit):
+IfStatement::IfStatement(bool _parent_execute, string condition_str, ScriptReader& reader, bool _implicit):
     parent_execute(_parent_execute), implicit(_implicit)
 {
     if(parent_execute)

@@ -1,14 +1,12 @@
 
-Send INVITE and get responses up to and including the 183, with no OK
+# Send INVITE and get responses up to and including the 183, with no OK
 
-<set>
-    default user_number = 12345678900 // Default value of user_number
-    default is_video = false
-    request_body = [is_video] ? [default_video_request_body] : [default_request_body]
-    default call_id_param = [call_id]
-</set>
+default user_number = 12345678900 # Default value of user_number
+default is_video = false
+request_body = [is_video] ? [default_video_request_body] : [default_request_body]
+default call_id_param = [call_id]
 
-<send>
+send
     INVITE sip:1800707070@[server_ip]:[server_port] SIP/2.0
     Via: SIP/2.0/[transport] [client_ip]:[client_port];branch=[branch]
     From: "Yuk" <sip:[user_number]@[client_ip]:[client_port]>;tag=[tag]
@@ -22,8 +20,8 @@ Send INVITE and get responses up to and including the 183, with no OK
     Content-Length: [len]
 
     [request_body]
-</send>
+endsend
 
-<recv message=100></recv>
-<recv message=180 optional></recv>
-<recv message=183></recv>
+recv message=100
+recv message=180 optional=true
+recv message=183

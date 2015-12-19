@@ -14,14 +14,6 @@
 void PrintCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
 {
     reader.replace_vars(line);
-    int end_pos = find_end_str_position(line, "/>");
-    cout << line.substr(0, end_pos) << endl;
+    cout << line << endl;
 }
 
-
-//==========================================================================================================
-//==========================================================================================================
-string PrintCommand::get_start_regex_str()
-{
-    return "<(print)";
-}

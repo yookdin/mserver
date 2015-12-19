@@ -1,18 +1,16 @@
 
 
-Receive invite but don't send OK
+# Receive invite but don't send OK
 
-<set>
-    default user_number = 12345678900 // Default value of user_number
-</set>
+default user_number = 12345678900 # Default value of user_number
 
-<recv message=INVITE></recv>
+recv message=INVITE
 
-<send>
+send
     [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 180 Ringing
     [last_Via]
     [last_From]
@@ -21,9 +19,9 @@ Receive invite but don't send OK
     [last_CSeq]
     Contact: <sip:[user_number]@[server_ip]:[server_port];transport=[transport]>
     Content-Length: 0
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 183 Session Progress
     [last_Via]
     [last_From]
@@ -37,4 +35,4 @@ Receive invite but don't send OK
     Content-Length: [len]
 
     [default_response_body]
-</send>
+endsend

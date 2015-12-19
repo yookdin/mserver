@@ -1,11 +1,11 @@
 
-Receive invite and send 407 response, then another invite, and send OK
+# Receive invite and send 407 response, then another invite, and send OK
   
-<scenario file=register.scr/>   Run the registration scenario
+run_scenario file=register.scr   # Run the registration scenario
 
-<recv message=INVITE></recv>
+recv message=INVITE
 
-<send>
+send
     SIP/2.0 407 Proxy Authentication Required
     [last_Via]
     [last_From]
@@ -14,17 +14,17 @@ Receive invite and send 407 response, then another invite, and send OK
     [last_CSeq]
     WWW-Authenticate: Digest realm="10.116.0.140", domain="10.116.0.140", nonce="603317111", algorithm=MD5
     Content-Length: 0
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK
 
-<recv message=INVITE></recv>
+recv message=INVITE
 
-<send>
+send
     [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -41,6 +41,6 @@ Receive invite and send 407 response, then another invite, and send OK
     Content-Length: [len]
 
     [default_response_body]
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK

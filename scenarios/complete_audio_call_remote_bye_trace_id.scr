@@ -1,15 +1,15 @@
 
-Receive audio call and end it from mserver
+# Receive audio call and end it from mserver
 
-<scenario file=register.scr/>
+run_scenario file=register.scr
 
-<recv message=INVITE></recv>
+recv message=INVITE
 
-<send>
+send
     [default_100_trying]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 183 Session Progress
     [last_Via]
     [last_From]
@@ -24,9 +24,9 @@ Receive audio call and end it from mserver
     Content-Length: [len]
 
     [default_response_body]
-</send>
+endsend
 
-<send>
+send
     SIP/2.0 200 OK
     [last_Via]
     [last_From]
@@ -44,11 +44,11 @@ Receive audio call and end it from mserver
     Content-Length: [len]
 
     [default_response_body]
-</send>
+endsend
 
-<recv message=ACK></recv>
+recv message=ACK
 
-<send>
+send
       BYE sip:1800707070@[server_ip]:[server_port];transport=tcp SIP/2.0
       [last_Via]
       From: [last_To:value]
@@ -57,8 +57,8 @@ Receive audio call and end it from mserver
       Max-Forwards: 9
       CSeq: 3 BYE
       Content-Length: 0
-</send>
+endsend
 
-<recv message=200></recv>
+recv message=200
 
-<scenario file=unregister.scr/>
+run_scenario file=unregister.scr

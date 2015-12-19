@@ -20,7 +20,7 @@ class ScriptReader;
 class IfStatement
 {
 public:
-    IfStatement(bool _execute, string condition_str, ScriptReader* reader, bool _implicit = false);
+    IfStatement(bool _execute, string condition_str, ScriptReader& reader, bool _implicit = false);
     
     const bool implicit;
     bool should_execute = false;
