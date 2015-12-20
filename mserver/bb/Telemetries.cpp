@@ -164,8 +164,7 @@ BB_TEST_F(CallTest, NoAudioTimeout)
     run_mserver_scenario("no_audio_timeout.scr");
     register_voxip();
     audio_call();
-    ssleep(21);
-    expect_termination_reason(app_reason_no_audio_timeout);
+    expect_termination_reason(app_reason_no_audio_timeout, 22);
 }
 
 
