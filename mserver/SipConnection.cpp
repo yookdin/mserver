@@ -111,12 +111,20 @@ void SipConnection::start(string in_ip)
 //======================================================================================================================
 // If optional is false return a message regardless of the kind.
 // If optional is true return a message only if it matches the given kind.
+// If reconnect is false, don't try to reconnect if the connection is closed.
 //======================================================================================================================
-SipMessage* SipConnection::get_message(string kind, bool optional, int timeout)
+SipMessage* SipConnection::get_message(string kind, bool optional, int timeout, bool should_reconnect)
 {
     if(pfd.fd == -1)
     {
-        connect();
+        if(should_reconnect)
+        {
+            connect();
+        }
+        else
+        {
+            return nullptr;
+        }
     }
         
     time_t start_time = time(nullptr);
@@ -139,10 +147,17 @@ SipMessage* SipConnection::get_message(string kind, bool optional, int timeout)
             }
             else if(num_bytes == 0) // Other side issued a close of the TCP connection
             {
-                // This might be the close of the connection from a previous test, because get_message() is called
-                // on demand only. So reconnect and continue to try and receive a message.
-                reconnect();
-                continue;
+                if(should_reconnect)
+                {
+                    // This might be the close of the connection from a previous test, because get_message() is called
+                    // on demand only. So reconnect and continue to try and receive a message.
+                    reconnect();
+                    continue;
+                }
+                else
+                {
+                    return nullptr;
+                }
             }
             else // Successful read
             {
@@ -275,10 +290,41 @@ void SipConnection::reconnect()
 
 
 //======================================================================================================================
+// Check that there are no pending messages after test ends. It is not enough to see if the message queue is empty, it
+// is needed to try and get a message, because a pending message might be waiting in the socket. However, when trying to
+// get a message from the socket, don't reconnect if the client already closed the connection.
 //======================================================================================================================
-bool SipConnection::are_pending_messages()
+void SipConnection::check_no_pending_messages()
 {
-    return !msg_queue.empty();
+    if(!msg_queue.empty())
+    {
+        throw string("There are pending unexpected messages: " + get_pending_messages_str());
+    }
+    
+    // This will never return a message because no message kind will equal an empty string and optional is true.
+    // If a message is received from the socket it will be left in the queue.
+    get_message("", true, 0, false);
+    
+    if(!msg_queue.empty())
+    {
+        throw string("There are pending unexpected messages: " + get_pending_messages_str());
+    }
+}
+
+
+//======================================================================================================================
+//======================================================================================================================
+string SipConnection::get_pending_messages_str()
+{
+    string result;
+    
+    for(auto m: msg_queue)
+    {
+        result += " " + m->get_kind();
+    }
+    
+    result.erase(0, 1); // Remove first space
+    return result;
 }
 
 

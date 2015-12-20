@@ -27,7 +27,10 @@ string ControlConnection::get_message()
         throw string("recvfrom() failed");
     }
 
-    return string(buf, num_bytes);
+    string msg(buf, num_bytes);
+    cout << "Received control message: " << msg << endl;
+    return msg;
+    
 }
 
 
@@ -35,6 +38,7 @@ string ControlConnection::get_message()
 //======================================================================================================================
 void ControlConnection::send_message(string str)
 {
+    cout << "Sending control message: " << str << endl;
     str.copy(buf, str.length());
     long num_bytes = sendto(bounded_socket, buf, str.length(), 0, (sockaddr *)&client_addr, addr_len);
 

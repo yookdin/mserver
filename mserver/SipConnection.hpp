@@ -21,13 +21,13 @@ public:
     SipConnection(string ip, int port);
     ~SipConnection() { close(pfd.fd); }
     
-    SipMessage* get_message(string kind, bool optional, int timeout); // Message kind is either method or status code
+    SipMessage* get_message(string kind, bool optional, int timeout, bool should_reconnect = true); // Message kind is either method or status code
     bool send_message(SipMessage &message);
     void clear();
     void start();
     void stop();
     void start(string in_ip);
-    bool are_pending_messages();
+    void check_no_pending_messages();
     
 private:
     string ip;
@@ -41,6 +41,7 @@ private:
     void reconnect();
     void connect();
     void try_poll();
+    string get_pending_messages_str();
 };
 
 #endif /* SipConnection_hpp */

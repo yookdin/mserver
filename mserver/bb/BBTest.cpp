@@ -61,6 +61,9 @@ void BBTest::TestBody()
         }
     }
     
+    //------------------------------------------------------------------------------------------------------------------
+    // Someone threw an error, fail the test, and notify mserver if necessary
+    //------------------------------------------------------------------------------------------------------------------
     if(!error.empty())
     {
         FAIL() << error;
@@ -130,14 +133,19 @@ void BBTest::wait_for_process_to_run(VoidLaunchInfo *launch_info, int timeout)
 
 
 //======================================================================================================================
+// Send mserver a control message telling it the parameters of thest to run
 //======================================================================================================================
 void BBTest::run_mserver_scenario(string filename, string params)
 {
-    TestsEnv::inst()->run_mserver_scenario(filename, params);
+    // Quote paths in case thay contain spaces.
+    string ctrl_msg = "scenario=" + quote(filename) + " test_dir=" + quote(TestsEnv::inst()->get_test_dir()) + " " + params;
+
+    TestsEnv::inst()->send_mserver_ctrl_msg(ctrl_msg);
 }
 
 
 //======================================================================================================================
+// Get a status message from mserver, telling if the test passed or failed from its point of view.
 //======================================================================================================================
 void BBTest::check_mserver_status()
 {

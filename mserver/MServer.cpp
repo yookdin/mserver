@@ -49,11 +49,13 @@ void MServer::run(int argc, char * argv[])
         sip_connection = new SipConnection(vars[SERVER_IP], stoi(vars[SERVER_PORT]));
         ctrl_connection = new ControlConnection(vars[SERVER_IP], stoi(vars[CONTROL_PORT]));
         
+        //--------------------------------------------------------------------------------------------------
+        // Run tests until a "bye" control message is received
+        //--------------------------------------------------------------------------------------------------
         while(true)
         {
             set_log_file(get_value(RUN_DIR) + "/mserver.log"); // Set the log file back to the global log file between tests
-            reset_connection(); // In case it was changed in the previous test. This will also restart listening in case it was stopped
-            
+
             //----------------------------------------------------------------------------------------------
             // Get and process a control message (indicating which scenario to run, etc.)
             //----------------------------------------------------------------------------------------------
@@ -63,8 +65,10 @@ void MServer::run(int argc, char * argv[])
             {
                 break;
             }
-            
-        	map<string, string> script_vars;
+
+            reset_connection(); // Go back to original ip, start listening if stopped
+
+            map<string, string> script_vars;
             process_control_message(ctrl_msg, script_vars);
             
             //----------------------------------------------------------------------------------------------
@@ -73,11 +77,7 @@ void MServer::run(int argc, char * argv[])
             try
             {
                 ScriptReader reader(get_value(SCENARIO), script_vars);
-                
-                if(sip_connection->are_pending_messages())
-                {
-                    throw string("There are pending messages after test finished");
-                }
+                sip_connection->check_no_pending_messages();
             }
             catch(string err) // Error caught here is a test error: report it and continue
             {
@@ -182,7 +182,6 @@ void MServer::process_args(int argc, char * argv[])
 //==========================================================================================================
 void MServer::process_control_message(string& ctrl_msg, map<string, string>& script_vars)
 {
-    cout << "Received control message: " << ctrl_msg << endl;
     map<string, Option> options;
     
     options.emplace(SCENARIO, Option(true, true));
@@ -209,7 +208,6 @@ void MServer::process_control_message(string& ctrl_msg, map<string, string>& scr
         throw string("Dir " + get_value(TEST_DIR) + " doesn't exist");
     }
     
-    ctrl_connection->send_message("ok"); // Notify sender that the message was received
     set_log_file(get_value(TEST_DIR) + "/mserver.log");
 }
 

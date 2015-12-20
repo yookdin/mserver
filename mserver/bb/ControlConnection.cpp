@@ -22,15 +22,6 @@ ControlConnection::ControlConnection(string ip, int port)
         throw string("socket() error");
     }
     
-    // Set the socket to be non-blocking
-    int flags = fcntl(my_socket, F_GETFL);
-    flags |= O_NONBLOCK;
-    
-    if(fcntl(my_socket, F_SETFL, flags) == -1)
-    {
-        throw string("fcntl() error");
-    }
-    
     bzero(&server_addr, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
@@ -61,31 +52,17 @@ void ControlConnection::send_message(string str)
 string ControlConnection::get_message()
 {
     LOG_DEBUG("Waiting for mserver control response");
-    int timeout = 2; // seconds
-    time_t start_time = time(nullptr);
     long num_bytes = 0;
     
-    while(time(nullptr) < start_time + timeout)
-    {
-        num_bytes = recvfrom(my_socket, buf, sizeof(buf), 0, (sockaddr *)&server_addr, &addr_len);
-        
-        if(num_bytes > 0)
-        {
-            break;
-        }
-        else // recvfrom() may return -1 because we set the socket to non-blocking; wait
-        {
-            msleep(50);
-        }
-    }
-
+    num_bytes = recvfrom(my_socket, buf, sizeof(buf), 0, (sockaddr *)&server_addr, &addr_len);
+    
     if(num_bytes <= 0)
     {
-        throw string("Timeout while waiting for mserver control response");
+        throw string("Getting mserver status message failed");
     }
     
     buf[num_bytes] = '\0'; // To enable printing
-    LOG_DEBUG("Got response message from mserver: %s", buf);
+    LOG_DEBUG("Got mserver status message: %s", buf);
     return string(buf, num_bytes);
 }
 

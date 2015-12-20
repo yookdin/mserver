@@ -34,7 +34,7 @@ public:
     void teardown_test();
     void set_metric(string field, string value);
     
-    void run_mserver_scenario(string filename, string params);
+    void send_mserver_ctrl_msg(string msg);
     string get_mserver_status();
     
     string get_sipp_exe();

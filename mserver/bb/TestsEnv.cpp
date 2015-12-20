@@ -382,17 +382,9 @@ string TestsEnv::get_proxy_log()
 
 //==================================================================================================
 //==================================================================================================
-void TestsEnv::run_mserver_scenario(string filename, string params)
+void TestsEnv::send_mserver_ctrl_msg(string msg)
 {
-    // Quote test-dir in case it contains spaces.
-    string ctrl_msg = "scenario=" + quote(filename) + " test_dir=" + quote(get_test_dir()) + " " + params;
-    ctrl_connection.send_message(ctrl_msg);
-    string response = ctrl_connection.get_message();
-    
-    if(response != "ok")
-    {
-        throw string("Expected response from mserver to be: \"ok\", but received: \"" + response + "\"");
-    }
+    ctrl_connection.send_message(msg);
 }
 
 

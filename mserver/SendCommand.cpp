@@ -34,7 +34,12 @@ void SendCommand::interpret(string &line, ifstream &file, ScriptReader &reader)
     }
     
     SipMessage* message = new SipMessage(msg_lines);
-    MServer::inst.send_sip_message(*message);
+    
+    if(!MServer::inst.send_sip_message(*message))
+    {
+        throw string("Send of message " + message->get_kind() + " failed");
+    }
+    
     reader.add_message(message);
 }
 
