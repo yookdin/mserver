@@ -86,11 +86,6 @@ void BBTest::SetUp()
 //======================================================================================================================
 void BBTest::TearDown()
 {
-    for(VoidLaunchInfo *launch_info : launch_infos)
-    {
-        delete launch_info;
-    }
-
     TestsEnv::inst()->teardown_test();
 }
 
@@ -111,7 +106,6 @@ void BBTest::config()
     VOIPManager::Inst()->SetConfigItem(VXSI_MAX_NUMBER_OF_ACTIVE_CALLS, 2);
     VOIPManager::Inst()->SetQualityServer("UDP", "127.0.0.1", 44444,  true);
     VOIPManager::Inst()->SetDeviceInfo("apple", "6", "iphone", "apple_factory", "ios", "8", "vonage", "100");
-    //VOIPManager::Inst()->SetAccountData("www.dummy.com", "1800707070", "pass1234", port.c_str(), "Elvin Jones");
     VOIPManager::Inst()->SetAccountData("www.dummy.com", "1800707070", "pass1234", MSERVER_SIP_PORT, "Elvin Jones");
     VxConnectivity::Inst()->Network()->setValue(1);
 }
@@ -120,17 +114,6 @@ void BBTest::config()
 // Default empty implementation, to be overrided in subclasses
 //======================================================================================================================
 void BBTest::voxip_ui_callback(EVoXIPUIEvent event, const char* data) {}
-
-//======================================================================================================================
-// Wait for process to notify it is running for up to <timeout> seconds.
-//======================================================================================================================
-void BBTest::wait_for_process_to_run(VoidLaunchInfo *launch_info, int timeout)
-{
-    if(!wait_true(launch_info->is_running, timeout))
-    {
-        throw string(launch_info->name + " process failed to run in " + to_string(timeout) + " seconds");
-    }
-}
 
 
 //======================================================================================================================

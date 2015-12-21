@@ -87,7 +87,6 @@ public:
     int timeout;            // Timeout to be used when waiting for the process to finish
 };
 
-typedef LaunchInfo<void> VoidLaunchInfo;
 
 //======================================================================================================================
 // Base for all test classes
@@ -110,8 +109,6 @@ public:
     int count_num_tcp_connection_attempts(string interface, string port, LaunchInfo<int> *launch_info);
 
 protected:
-    vector<VoidLaunchInfo*> launch_infos;
-    
     bool dont_check_mserver = false;
     void run_mserver_scenario(string filename, string params = "");
     void check_mserver_status();
@@ -122,12 +119,6 @@ protected:
     //------------------------------------------------------------------------------------------------------------------
     void register_voxip(int timeout = 5, bool throwIfFails = true);
     void unregister_voxip();
-
-
-    //------------------------------------------------------------------------------------------------------------------
-    // General utility methods
-    //------------------------------------------------------------------------------------------------------------------
-    void wait_for_process_to_run(VoidLaunchInfo *launch_info, int timeout);
 
 };
 
