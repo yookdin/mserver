@@ -24,7 +24,10 @@ public:
     void add_message(SipMessage* msg);
     SipMessage* get_last_message(int call_number = -1);
     void print_continue_title();
+    bool should_execute();
     
+    stack<IfStatement*> if_stack;
+
 private:
     //------------------------------------------------------------------------------------------------------------------
     // Controls the generation of call id
@@ -43,10 +46,6 @@ private:
     
     static map<string, Command*> commands;
     static string set_command_name;
-    
-    static map<string, Command*> init_commands();
-    static regex init_command_start_regex();
-
     static const string default_response_body;
     static const string default_request_body;
     static const string default_video_response_body;
@@ -55,16 +54,17 @@ private:
     static const string default_ack;
     static const string default_183_header;
     static const string default_183;
+    static const map<string, string> static_vars;
+
+    static map<string, Command*> init_commands();
+    static regex init_command_start_regex();
+    static map<string, string> init_static_vars();
     
     string filename;
     bool root;
     map<string, string> vars; // Map of var names and their values
     vector<SipMessage*>* messages;
 
-    stack<IfStatement*> if_stack;
-    typedef void(ScriptReader::*keyword_func)(string&);
-    map<string, keyword_func> keyword_funcs;
-    
     void replace_regular_vars(string &line, int call_number);
     void replace_literal_vars(string &line);
     void check_valid_value(string var, string value);
@@ -80,12 +80,6 @@ private:
     
     void interpret(string filename);
     void search_command(string& line, ifstream& file);
-    bool should_execute();
-    keyword_func get_keyword_func(string& line);
-    void handle_if(string& line);
-    void handle_else(string& line);
-    void handle_elseif(string& line);
-    void handle_endif(string& line);
     
     
     //==================================================================================================================

@@ -1,9 +1,9 @@
 
 # Unregistration scenario
 
-recv: message=REGISTER
+recv message=REGISTER
   
-expect: [Expires:value] == 0  # Check that the value of the 'Expires' field is equal to 0, o/w fail the test
+expect [Expires:value] == 0  # Check that the value of the 'Expires' field is equal to 0, o/w fail the test
   
 send
     SIP/2.0 200 OK

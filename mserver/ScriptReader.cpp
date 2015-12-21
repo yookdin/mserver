@@ -11,6 +11,7 @@
 #include "StartListeningCommand.hpp"
 #include "SetCommand.hpp"
 #include "PrintCommand.hpp"
+#include "ControlFlowCommands.hpp"
 #include "MServer.hpp"
 
 
@@ -38,19 +39,6 @@ ScriptReader::ScriptReader(string _filename, map<string, string> _vars, ScriptRe
         calls_map = parent->calls_map;
         messages = parent->messages;
     }
-    
-    vars[DEFAULT_REQUEST_BODY] = default_request_body;
-    vars[DEFAULT_RESPONSE_BODY] = default_response_body;
-    vars[DEFAULT_VIDEO_REQUEST_BODY] = default_video_request_body;
-    vars[DEFAULT_VIDEO_RESPONSE_BODY] = default_video_response_body;
-    vars[DEFAULT_100_TRYING] = default_100_trying;
-    vars[DEFAULT_ACK] = default_ack;
-    
-    keyword_funcs["if"] = &ScriptReader::handle_if;
-    keyword_funcs["elseif"] = &ScriptReader::handle_elseif;
-    keyword_funcs["else"] = &ScriptReader::handle_else;
-    keyword_funcs["endif"] = &ScriptReader::handle_endif;
-
     
     interpret(filename);
     print_end_title();
@@ -99,16 +87,7 @@ void ScriptReader::interpret(string filename)
             continue;
         }
         
-        keyword_func func = get_keyword_func(line);
-        
-        if(func != nullptr)
-        {
-            (this->*func)(line);
-        }
-        else if(should_execute())
-        {
-            search_command(line, file);
-        }
+        search_command(line, file);
     }
 
     //------------------------------------------------------------------------------------------------------
@@ -130,26 +109,6 @@ void ScriptReader::interpret(string filename)
 
 
 //==================================================================================================
-// Search for the function to handle the current control flow keyword
-//==================================================================================================
-ScriptReader::keyword_func ScriptReader::get_keyword_func(string& line)
-{
-    regex re("^ *(\\w+)");
-    smatch match;
-    bool found = regex_search(line, match, re);
-    string keyword = match[1];
-    
-    if(found && keyword_funcs.count(keyword) > 0)
-    {
-        line = match.suffix();
-        return keyword_funcs[keyword];
-    }
-    
-    return nullptr;
-}
-
-
-//==================================================================================================
 // Search for a command on the given line and execute it if found.
 //==================================================================================================
 void ScriptReader::search_command(string& line, ifstream& file)
@@ -159,64 +118,25 @@ void ScriptReader::search_command(string& line, ifstream& file)
     if(regex_search(line, match, command_start_regex))
     {
         string command_name = match[1];
-        line = match.suffix(); // Skip the matched part, so the command won't need to deal with it
-        commands[command_name]->interpret(line, file, *this);
+        
+        // Control flow commands need to always be called, so we know where we are in the control flow
+        // (e.g. when an if branch finished and an else started). Regular commands need to be executed
+        // only in places that the control flow allows it, as indicated by should_execute()
+        if(should_execute() || commands[command_name]->is_control_flow_command())
+        {
+            line = match.suffix(); // Skip the matched part, so the command won't need to deal with it
+            commands[command_name]->interpret(line, file, *this);
+        }
     }
     // Search for an assignment. Assignment are implicit calls to the set command.
-    else if(regex_search(line, match, assignment_regex))
+    else if(should_execute() && regex_search(line, match, assignment_regex))
     {
         commands[set_command_name]->interpret(line, file, *this);
     }
-}
-
-
-//==================================================================================================
-//==================================================================================================
-void ScriptReader::handle_if(string& line)
-{
-    if_stack.push(new IfStatement(should_execute(), line, *this));
-}
-
-
-//==================================================================================================
-//==================================================================================================
-void ScriptReader::handle_else(string& line)
-{
-    if(if_stack.empty())
+    else
     {
-        throw string("else with no preceding if");
+        throw string("Unrecognozed command: " + line);
     }
-    
-    if_stack.top()->switch_to_else();
-}
-
-
-//==================================================================================================
-//==================================================================================================
-void ScriptReader::handle_elseif(string& line)
-{
-    if(if_stack.empty())
-    {
-        throw string("elseif with no preceding if");
-    }
-
-    if_stack.top()->switch_to_else();
-    if_stack.push(new IfStatement(should_execute(), line, *this, true));
-}
-
-
-//==================================================================================================
-//==================================================================================================
-void ScriptReader::handle_endif(string& line)
-{
-    IfStatement* top;
-    
-    do
-    {
-        top = if_stack.top();
-        if_stack.pop();
-    }
-    while(top->implicit);
 }
 
 
@@ -396,6 +316,11 @@ string ScriptReader::get_value(string var, int call_number, bool try_as_last)
     if(vars.count(name) != 0)
     {
         return vars[name];
+    }
+    
+    if(static_vars.count(name) != 0)
+    {
+        return static_vars.at(name);
     }
     
     return MServer::inst.get_value(name);
@@ -654,6 +579,18 @@ void ScriptReader::print_continue_title()
 }
 
 
+
+
+
+/***********************************************************************************************************
+ ***********************************************************************************************************
+ *                                                                                                         *
+ *                                          STATIC STUFF                                                   *
+ *                                                                                                         *
+ ***********************************************************************************************************
+ ***********************************************************************************************************/
+
+
 //==========================================================================================================
 //==========================================================================================================
 string ScriptReader::set_command_name;
@@ -688,6 +625,10 @@ map<string, Command*> ScriptReader::init_commands()
     cmd = new StopListeningCommand();   local_commands[cmd->name] = cmd;
     cmd = new StartListeningCommand();  local_commands[cmd->name] = cmd;
     cmd = new PrintCommand();           local_commands[cmd->name] = cmd;
+    cmd = new IfCommand();              local_commands[cmd->name] = cmd;
+    cmd = new ElseCommand();            local_commands[cmd->name] = cmd;
+    cmd = new ElseifCommand();          local_commands[cmd->name] = cmd;
+    cmd = new EndifCommand();           local_commands[cmd->name] = cmd;
 
     cmd = new SetCommand();
     set_command_name = cmd->name;
@@ -709,7 +650,7 @@ regex ScriptReader::init_command_start_regex()
     }
     
     command_start_str.erase(command_start_str.length() - 1); // Remove the last '|'
-    command_start_str += ") *:? *";
+    command_start_str += ")\\b";
     return regex(command_start_str);
 }
 
@@ -871,6 +812,29 @@ Content-Length: [len]\n";
 //==========================================================================================================
 //==========================================================================================================
 const string ScriptReader::default_183 = ScriptReader::default_183_header + "\n" + ScriptReader::default_response_body;
+
+
+
+//==========================================================================================================
+//==========================================================================================================
+const map<string, string> ScriptReader::static_vars = ScriptReader::init_static_vars();
+
+
+//==========================================================================================================
+//==========================================================================================================
+map<string, string> ScriptReader::init_static_vars()
+{
+    map<string, string> local_vars;
+    
+    local_vars[DEFAULT_REQUEST_BODY] = default_request_body;
+    local_vars[DEFAULT_RESPONSE_BODY] = default_response_body;
+    local_vars[DEFAULT_VIDEO_REQUEST_BODY] = default_video_request_body;
+    local_vars[DEFAULT_VIDEO_RESPONSE_BODY] = default_video_response_body;
+    local_vars[DEFAULT_100_TRYING] = default_100_trying;
+    local_vars[DEFAULT_ACK] = default_ack;
+
+    return local_vars;
+}
 
 
 

@@ -10,11 +10,11 @@ run_scenario file=receive_hold.scr
 #----------------------------------------------------------------------------------------------------
 # Second call received and ended
 #----------------------------------------------------------------------------------------------------
-run_scenario: file = receive_invite.scr, user_number = 12345678902
-run_scenario: file = receive_bye.scr,    user_number=12345678902
+run_scenario file = receive_invite.scr, user_number = 12345678902
+run_scenario file = receive_bye.scr,    user_number=12345678902
 
 #----------------------------------------------------------------------------------------------------
 # First call unholded and ended
 #----------------------------------------------------------------------------------------------------
-run_scenario: file = receive_unhold.scr, call_number=1
-run_scenario: file = receive_bye.scr
+run_scenario file = receive_unhold.scr, call_number=1
+run_scenario file = receive_bye.scr
