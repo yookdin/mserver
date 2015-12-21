@@ -18,70 +18,10 @@ class CallTest: public BBTest
 public:
     CallTest();
     
-    virtual void SetUp();
     virtual void TearDown();
     virtual void voxip_ui_callback(EVoXIPUIEvent event, const char* data);
 
-
-    //------------------------------------------------------------------------------------------------------------------
-    // SIPP launchers for different scenarions
-    //------------------------------------------------------------------------------------------------------------------
-    void sipp_audio_call_local_and_remote_hold_sequential(VoidLaunchInfo *launch_info, bool local_first);
-    void sipp_audio_call_local_then_remote_hold_parallel(VoidLaunchInfo *launch_info, bool end_local_first);
-    void sipp_audio_call_remote_then_local_hold_parallel(VoidLaunchInfo *launch_info, bool end_local_first);
-
-    void sipp_simple_call(VoidLaunchInfo *launch_info, string script, bool unregister = true);
-    void sipp_simple_inbound_call(VoidLaunchInfo *launch_info, string script);
-    
-    void sipp_audio_call(VoidLaunchInfo *launch_info, bool local_bye);
-    void sipp_record_audio_call(VoidLaunchInfo *launch_info);
-    
-    void sipp_video_call(VoidLaunchInfo *launch_info);
-    void sipp_audio_call_local_hold(VoidLaunchInfo *launch_info, bool unhold);
-    void sipp_audio_call_remote_hold(VoidLaunchInfo *launch_info, bool unhold);
-    void sipp_audio_call_hold_end_remote_bye(VoidLaunchInfo *launch_info, bool is_local);
-    void sipp_call_handoff(VoidLaunchInfo *launch_info);
-    void sipp_invite_fail(VoidLaunchInfo *launch_info, string error_code);
-
-    void sipp_inbound_audio_call(VoidLaunchInfo *launch_info, bool local_bye);
-    void sipp_inbound_audio_call_with_hold(VoidLaunchInfo *launch_info, bool local_hold);
-    void sipp_inbound_audio_call_end_during_local_hold(VoidLaunchInfo *launch_info);
-    void sipp_inbound_audio_call_remote_end_during_local_hold(VoidLaunchInfo *launch_info);
-    void sipp_inbound_audio_call_while_on_hold(VoidLaunchInfo *launch_info);
-    
-    void sipp_invite_fail403(VoidLaunchInfo *launch_info);
-    void sipp_invite407(VoidLaunchInfo *launch_info);
-    void sipp_invite_fail407(VoidLaunchInfo *launch_info);
-    void sipp_audio_call_local_hold_fails(VoidLaunchInfo *launch_info, bool on_hold);
-    void sipp_inbound_audio_call_without_supported_codec(VoidLaunchInfo *launch_info);
-    
-    void sipp_call_then_reg_fail(VoidLaunchInfo *launch_info);
-    
 protected:
-    //------------------------------------------------------------------------------------------------------------------
-    // Do common preparations and launch proxy and sipp. Has to be template to enable launching different sipp functions
-    // with different parameters list. Must be defined here for some C++ reason.
-    //------------------------------------------------------------------------------------------------------------------
-    template <class FunctionType, class... Args>
-    void prepare_and_launch_processes(FunctionType&& func_pointer, Args&&... args)
-    {
-        launch_infos.push_back(new VoidLaunchInfo("proxy"));
-        launch_infos.push_back(new VoidLaunchInfo("sipp"));
-        int timeout = 5;
-        
-        //--------------------------------------------------------------------------------------------------------------
-        // Launch proxy
-        //--------------------------------------------------------------------------------------------------------------
-        launch_infos[0]->future_res = async(launch::async, &BBTest::launch_proxy, this, launch_infos[0]);
-        wait_for_process_to_run(launch_infos[0], timeout);
-
-        //--------------------------------------------------------------------------------------------------------------
-        // Launch SIPP
-        //--------------------------------------------------------------------------------------------------------------
-        // The weird last parameter is the way to pass the variable arguments list 'args' to another function
-        launch_infos[1]->future_res = async(launch::async, func_pointer, this, launch_infos[1], _VSTD::forward<Args>(args)...);
-        wait_for_process_to_run(launch_infos[1], timeout);
-    }
 
     //------------------------------------------------------------------------------------------------------------------
     // Parametrized tests
@@ -89,7 +29,6 @@ protected:
     void test_intersect_first_lose(bool is_video);
     void test_intersect_second_win(bool is_video, bool cancel_before_ok = false);
     void test_intersect_second_lose(bool is_video);
-    
     void test_connection_type(string connection_type);
 
     //------------------------------------------------------------------------------------------------------------------
@@ -155,7 +94,7 @@ protected:
     // Methods dealing with calls state
     //------------------------------------------------------------------------------------------------------------------
     Call* get_call(string call_id);
-    Call *get_call_by_sip_id(string sip_id);
+    Call* get_call_by_sip_id(string sip_id);
     Call* check_call_exists(string call_id);
     Call* check_call_connected(string call_id);
 

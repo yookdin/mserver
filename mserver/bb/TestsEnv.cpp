@@ -108,8 +108,7 @@ void TestsEnv::parse_args(int argc, char **argv)
         {
             create_dir(it.second);
         }
-        else if(!real_server && (it.first == SIPP_OPT || it.first == PROXY_OPT || it.first == SCENARIO_DIR_OPT) &&
-                !ifstream(it.second))
+        else if(!real_server && it.first == SCENARIO_DIR_OPT && !ifstream(it.second))
         {
             throw string("Directory/file \"" + it.second + "\" doesn't exists");
         }
@@ -319,64 +318,20 @@ void TestsEnv::create_dir(string dir)
     }
 }
 
+
+//======================================================================================================================
+//======================================================================================================================
 string TestsEnv::get_test_dir()
 {
     return opt_val_map[RUN_DIR_OPT] + "/" + test_dir;
 }
 
+
+//======================================================================================================================
+//======================================================================================================================
 string TestsEnv::get_run_dir()
 {
     return opt_val_map[RUN_DIR_OPT];
-}
-
-string TestsEnv::get_sipp_exe()
-{
-    return opt_val_map[SIPP_OPT];
-}
-
-string TestsEnv::get_proxy_exe()
-{
-    return opt_val_map[PROXY_OPT];
-}
-
-string TestsEnv::get_sipp_scenarios_dir()
-{
-    return opt_val_map[SCENARIO_DIR_OPT];
-}
-
-string TestsEnv::get_sipp_log()
-{
-    return get_test_dir() + "/" + SIPP_LOG;
-}
-
-string TestsEnv::get_sipp_err_log()
-{
-    return get_test_dir() + "/" + SIPP_ERR_LOG;
-}
-
-string TestsEnv::get_sipp_msg_log()
-{
-    return get_test_dir() + "/" + SIPP_MSG_LOG;
-}
-
-string TestsEnv::get_sipp_reg_script()
-{
-    return get_sipp_scenarios_dir() + "/" + SIPP_REG_SCRIPT;
-}
-
-string TestsEnv::get_sipp_complete_call_script()
-{
-    return get_sipp_scenarios_dir() + "/" + SIPP_COMPLETE_CALL_SCRIPT;
-}
-
-string TestsEnv::get_sipp_partial_call_script()
-{
-    return get_sipp_scenarios_dir() + "/" + SIPP_PARTIAL_CALL_SCRIPT;
-}
-
-string TestsEnv::get_proxy_log()
-{
-    return get_test_dir() + "/" + PROXY_LOG;
 }
 
 

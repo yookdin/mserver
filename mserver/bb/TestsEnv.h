@@ -37,18 +37,8 @@ public:
     void send_mserver_ctrl_msg(string msg);
     string get_mserver_status();
     
-    string get_sipp_exe();
-    string get_proxy_exe ();
     string get_test_dir();
     string get_run_dir();
-    string get_sipp_scenarios_dir();
-    string get_sipp_log();
-    string get_sipp_err_log();
-    string get_sipp_msg_log();
-    string get_sipp_reg_script();
-    string get_sipp_complete_call_script();
-    string get_sipp_partial_call_script();
-    string get_proxy_log();
 
     // Need to wait for event ready-to-register only the first time registering after voxip init
     bool need_ready_to_register = true;

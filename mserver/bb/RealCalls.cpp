@@ -25,7 +25,7 @@ BB_TEST_F(CallTest, DISABLED_transfer_real_call)
     if(ENV_NAME == "quala")
     {
         url = QUALA_URL;
-        user = "VH2160"; // 448
+        user = "VH2160"; // 448 o
         num1 = "449";
         num2 = "450";
     }

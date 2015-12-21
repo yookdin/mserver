@@ -100,25 +100,14 @@ public:
     virtual void post_internal_test_body(){} // Hook for doing generic per class checks after internal_test_body()
     virtual void SetUp();
     virtual void TearDown();
-    virtual void config(string port);
+    virtual void config();
 
     virtual void voxip_ui_callback(EVoXIPUIEvent event, const char* data);
 
     //------------------------------------------------------------------------------------------------------------------
     // General external processes methods
     //------------------------------------------------------------------------------------------------------------------
-    void launch_proxy(VoidLaunchInfo *launch_info);
     int count_num_tcp_connection_attempts(string interface, string port, LaunchInfo<int> *launch_info);
-
-    //------------------------------------------------------------------------------------------------------------------
-    // SIPP scenarios launchers
-    //------------------------------------------------------------------------------------------------------------------
-    void launch_sipp_server(VoidLaunchInfo *launch_info, string script);
-    void launch_sipp_server_full(VoidLaunchInfo *launch_info, string script, string params_file, string extra_parmas = "");
-    void launch_sipp_client(VoidLaunchInfo *launch_info, string script);
-    void launch_sipp_client(VoidLaunchInfo *launch_info, string script, string params_file, string extra_params = "");
-    void launch_sipp_for_registration(VoidLaunchInfo *launch_info);
-    void launch_sipp_for_registration_fail(VoidLaunchInfo *launch_info, string error_code);
 
 protected:
     vector<VoidLaunchInfo*> launch_infos;
@@ -127,22 +116,6 @@ protected:
     void run_mserver_scenario(string filename, string params = "");
     void check_mserver_status();
 
-    //------------------------------------------------------------------------------------------------------------------
-    // General external processes methods
-    //------------------------------------------------------------------------------------------------------------------
-    void launch_command(string command, VoidLaunchInfo *launch_info = nullptr);
-    void launch_command(char *const argv[], VoidLaunchInfo *launch_info = nullptr);
-
-    void create_fail_script(string script_template, string error_code, string &script_path);
-    string template_to_actual_script_name(string script_template);
-
-    //------------------------------------------------------------------------------------------------------------------
-    // SIPP scenarios launchers
-    //------------------------------------------------------------------------------------------------------------------
-    string build_sipp_command(string script, string port, string params_file, SippMode sipp_mode, string extra_params = "");
-    string build_sipp_command(string script, string port, string params_file);
-    string build_sipp_command(string script, string port, SippMode sipp_mode);
-    string build_sipp_command(string script, string port);
 
     //------------------------------------------------------------------------------------------------------------------
     // Methods for activating voxip
@@ -155,11 +128,7 @@ protected:
     // General utility methods
     //------------------------------------------------------------------------------------------------------------------
     void wait_for_process_to_run(VoidLaunchInfo *launch_info, int timeout);
-    void get_future_res(VoidLaunchInfo *launch_info);
-    void kill_processes(int timeout = -1);
 
-private:
-    static void kill_child_process(pid_t pid);
 };
 
 #endif /* defined(__VoxipBBTests__BBTest__) */

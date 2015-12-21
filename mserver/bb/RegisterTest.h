@@ -13,9 +13,6 @@
 
 class RegisterTest: public BBTest
 {
-public:
-    virtual void SetUp();
-
 protected:
 
     // General register fail test

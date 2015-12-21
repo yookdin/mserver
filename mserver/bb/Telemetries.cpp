@@ -171,13 +171,13 @@ BB_TEST_F(CallTest, NoAudioTimeout)
 //======================================================================================================================
 // TODO: how to create the media update failure?
 //======================================================================================================================
-BB_TEST_F(CallTest, DISABLED_PJMediaUpdateFail)
-{
-    prepare_and_launch_processes(&CallTest::sipp_simple_call, SIPP_INVITE_AND_CANCEL, false);
-    register_voxip();
-    audio_call_without_answer();
-    expect_termination_reason(app_reason_pjsip_failed_in_pjsua_call_on_media_update);
-}
+//BB_TEST_F(CallTest, DISABLED_PJMediaUpdateFail)
+//{
+//    prepare_and_launch_processes(&CallTest::sipp_simple_call, SIPP_INVITE_AND_CANCEL, false);
+//    register_voxip();
+//    audio_call_without_answer();
+//    expect_termination_reason(app_reason_pjsip_failed_in_pjsua_call_on_media_update);
+//}
 
 
 
