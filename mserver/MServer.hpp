@@ -26,7 +26,7 @@ public:
     SipMessage* get_sip_message(string kind, bool optional, int timeout); // Message kind is either method or status code
     bool send_sip_message(SipMessage &message);
     void advance_ip();
-    void reset_ip();
+    void reset_ip(bool last_failed = false);
     void stop_listening();
     void start_listening();
     void print_vars();
@@ -42,7 +42,7 @@ private:
     vector<string> ips;
     int cur_ip_index = 0;
     
-    void reset_connection();
+    void reset_connection(bool last_failed);
     void process_args(int argc, char * argv[]);
     void set_scenario_dir(char *argv_0);
     void process_control_message(string& ctrl_msg, map<string, string>& script_vars);

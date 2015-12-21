@@ -42,8 +42,11 @@ private:
     static const regex assignment_regex;
     
     static map<string, Command*> commands;
+    static string set_command_name;
+    
     static map<string, Command*> init_commands();
     static regex init_command_start_regex();
+
     static const string default_response_body;
     static const string default_request_body;
     static const string default_video_response_body;

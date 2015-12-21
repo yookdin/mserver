@@ -88,9 +88,9 @@ void SipConnection::listen()
 // Start listening on the given IP. If already listening on it, do nothing. If not listening at all, or on a different
 // IP, switch to this one.
 //======================================================================================================================
-void SipConnection::start(string in_ip)
+void SipConnection::start(string in_ip, bool force_restart)
 {
-    if(ip != in_ip || bounded_socket == -1)
+    if(force_restart || ip != in_ip || bounded_socket == -1)
     {
         if(ip != in_ip)
         {

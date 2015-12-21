@@ -31,26 +31,36 @@
 class Operator: public Token
 {
 public:
-    enum Associativiy {LEFT, RIGHT, NONE};
-    typedef Operator::Associativiy Associativity;
+    enum Associativity {LEFT, RIGHT, NONE};
+    typedef Operator::Associativity Associativity;
     
-    Operator(int _num_operands, int _precedence, Associativiy _associativiy):
-        Token(OP), num_operands(_num_operands), precedence(_precedence), associativiy(_associativiy) {}
-
+    Operator(int _num_operands, int _precedence, Associativity _associativity, string _str):
+    Token(OP), num_operands(_num_operands), precedence(_precedence), associativity(_associativity), str(_str) {}
+    
+    static const string add_str, sub_str, mul_str, div_str, mod_str, or_str, and_str, not_str, equal_str, not_equal_str,
+    less_than_str, greater_than_str, lte_str, gte_str, match_str, no_match_str, ternary_if_str, ternary_else_str;
+    
+    const string str;
     const int num_operands;
     const int precedence;
-    const Associativiy associativiy;
+    const Associativity associativity;
     
-    virtual Value* execute(vector<Value*> operands) = 0;
+    virtual string to_string() { return str; }
+    
+    //======================================================================================================
+    //======================================================================================================
+    Value* eval(vector<Value*> operands)
+    {
+        if(operands.size() != num_operands)
+        {
+            throw string("Wrong num of operands for " + str + ", expected " + std::to_string(num_operands) + ", got " + std::to_string(operands.size()));
+        }
+        
+        return execute(operands);
+    }
     
 protected:
-    void check_operands_num(long num, string str)
-    {
-        if(num != num_operands)
-        {
-            throw string("Wrong num of operands for " + str + ", expected " + std::to_string(num_operands) + ", got " + std::to_string(num));
-        }
-    }
+    virtual Value* execute(vector<Value*> operands) = 0;
 };
 
 //==========================================================================================================
@@ -58,17 +68,13 @@ protected:
 class Add: public Operator
 {
 public:
-    static const string str;
+    Add(): Operator(2, 3, LEFT, Operator::add_str) {}
     
-    Add(): Operator(2, 3, LEFT) {}
-    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] + *operands[1]);
     }
-    
-    string to_string() { return str; }
 };
 
 
@@ -77,17 +83,13 @@ public:
 class Subtract: public Operator
 {
 public:
-    static const string str;
+    Subtract(): Operator(2, 3, LEFT, Operator::sub_str) {}
     
-    Subtract(): Operator(2, 3, LEFT) {}
-    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] - *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -96,17 +98,13 @@ public:
 class Mul: public Operator
 {
 public:
-    static const string str;
+    Mul(): Operator(2, 2, LEFT, Operator::mul_str) {}
     
-    Mul(): Operator(2, 2, LEFT) {}
-    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] * *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -115,17 +113,13 @@ public:
 class Div: public Operator
 {
 public:
-    static const string str;
+    Div(): Operator(2, 2, LEFT, Operator::div_str) {}
     
-    Div(): Operator(2, 2, LEFT) {}
-    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] / *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -135,16 +129,14 @@ class Mod: public Operator
 {
 public:
     static const string str;
-
-    Mod(): Operator(2, 2, LEFT) {}
     
+    Mod(): Operator(2, 2, LEFT, Operator::mod_str) {}
+    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] % *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -154,16 +146,14 @@ class Or: public Operator
 {
 public:
     static const string str;
-
-    Or(): Operator(2, 8, LEFT) {}
     
+    Or(): Operator(2, 8, LEFT, Operator::or_str) {}
+    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] || *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -173,16 +163,14 @@ class And: public Operator
 {
 public:
     static const string str;
-
-    And(): Operator(2, 7, LEFT) {}
     
+    And(): Operator(2, 7, LEFT, Operator::and_str) {}
+    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] && *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -192,16 +180,14 @@ class Not: public Operator
 {
 public:
     static const string str;
-
-    Not(): Operator(1, 1, RIGHT) {}
     
+    Not(): Operator(1, 1, RIGHT, Operator::not_str) {}
+    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(!(*operands[0]));
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -210,17 +196,13 @@ public:
 class Equal: public Operator
 {
 public:
-    static const string str;
+    Equal(): Operator(2, 6, LEFT, Operator::equal_str) {}
     
-    Equal(): Operator(2, 6, LEFT) {}
-    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] == *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -229,17 +211,13 @@ public:
 class NotEqual: public Operator
 {
 public:
-    static const string str;
+    NotEqual(): Operator(2, 6, LEFT, Operator::not_equal_str) {}
     
-    NotEqual(): Operator(2, 6, LEFT) {}
-    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] != *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -249,16 +227,14 @@ class LessThan: public Operator
 {
 public:
     static const string str;
-
-    LessThan(): Operator(2, 5, NONE) {}
     
+    LessThan(): Operator(2, 5, NONE, Operator::less_than_str) {}
+    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] < *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -268,16 +244,14 @@ class GreaterThan: public Operator
 {
 public:
     static const string str;
-
-    GreaterThan(): Operator(2, 5, NONE) {}
     
+    GreaterThan(): Operator(2, 5, NONE, Operator::greater_than_str) {}
+    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] > *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -286,17 +260,13 @@ public:
 class LessThanEqual: public Operator
 {
 public:
-    static const string str;
+    LessThanEqual(): Operator(2, 5, NONE, Operator::lte_str) {}
     
-    LessThanEqual(): Operator(2, 5, NONE) {}
-    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] <= *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
@@ -306,55 +276,86 @@ class GreaterThanEqual: public Operator
 {
 public:
     static const string str;
-
-    GreaterThanEqual(): Operator(2, 5, NONE) {}
     
+    GreaterThanEqual(): Operator(2, 5, NONE, Operator::gte_str) {}
+    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(*operands[0] >= *operands[1]);
     }
-
-    string to_string() { return str; }
 };
 
 
 //==========================================================================================================
+// String matching
 //==========================================================================================================
 class Match: public Operator
 {
 public:
-    static const string str;
+    Match(): Operator(2, 4, NONE, Operator::match_str) {}
     
-    Match(): Operator(2, 4, NONE) {}
-
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(operands[0]->match(*operands[1]));
     }
-
-    string to_string() { return str; }
 };
 
 
 //==========================================================================================================
+// No string match
 //==========================================================================================================
 class NotMatch: public Operator
 {
 public:
-    static const string str;
+    NotMatch(): Operator(2, 4, NONE, Operator::no_match_str) {}
     
-    NotMatch(): Operator(2, 4, NONE) {}
-    
+protected:
     Value* execute(vector<Value*> operands)
     {
-        check_operands_num(operands.size(), str);
         return &(operands[0]->not_match(*operands[1]));
     }
-
-    string to_string() { return str; }
 };
+
+
+//==========================================================================================================
+// The "?" of the ternary conditional operator (x ? y : z). Only this operator will be used in the output
+// queue of a conversion to RPN of the original expression.
+//==========================================================================================================
+class TernaryIf: public Operator
+{
+public:
+    TernaryIf(): Operator(3, 10, RIGHT, Operator::ternary_if_str) {}
+    
+protected:
+    Value* execute(vector<Value*> operands)
+    {
+        return *operands[0] ? operands[1] : operands[2];
+    }
+};
+
+
+//==========================================================================================================
+// The ":" of the ternary conditional operator (x ? y : z). Will not be used in the output queue of a
+// conversion to RPN of the original expression. It serves only as a separator between the if and else parts
+// of the operator.
+//==========================================================================================================
+class TernaryElse: public Operator
+{
+public:
+    TernaryElse(): Operator(0, 9, NONE, Operator::ternary_else_str) {}
+    
+protected:
+    Value* execute(vector<Value*> operands)
+    {
+        throw string("TernaryElse::execute() should never be called!");
+    }
+};
+
+
+
+
 
 
 #endif /* Operator_h */

@@ -12,19 +12,22 @@
 // Make these static to enable mapping between the string identifier and the operator object
 // (o/w it won't be availabe until the object is created)
 
-const string Add::str = "+";
-const string Subtract::str = "-";
-const string Div::str = "/";
-const string Mul::str = "*";
-const string Mod::str = "%";
-const string Or::str = "||";
-const string And::str = "&&";
-const string Not::str = "!";
-const string Equal::str = "==";
-const string NotEqual::str = "!=";
-const string LessThan::str = "<";
-const string GreaterThan::str = ">";
-const string LessThanEqual::str = "<=";
-const string GreaterThanEqual::str = ">=";
-const string Match::str = "~";
-const string NotMatch::str = "!~";
+
+const string Operator::add_str = "+";
+const string Operator::sub_str = "-";
+const string Operator::mul_str = "*";
+const string Operator::div_str = "/";
+const string Operator::mod_str = "%";
+const string Operator::or_str = "||";
+const string Operator::and_str = "&&";
+const string Operator::not_str = "!";
+const string Operator::equal_str = "==";
+const string Operator::not_equal_str = "!=";
+const string Operator::less_than_str = "<";
+const string Operator::greater_than_str = ">";
+const string Operator::lte_str = "<=";
+const string Operator::gte_str = ">=";
+const string Operator::match_str = "~";
+const string Operator::no_match_str = "!~";
+const string Operator::ternary_if_str = "?";
+const string Operator::ternary_else_str = ":";

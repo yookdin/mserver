@@ -165,7 +165,7 @@ void ScriptReader::search_command(string& line, ifstream& file)
     // Search for an assignment. Assignment are implicit calls to the set command.
     else if(regex_search(line, match, assignment_regex))
     {
-        commands["set"]->interpret(line, file, *this);
+        commands[set_command_name]->interpret(line, file, *this);
     }
 }
 
@@ -174,7 +174,6 @@ void ScriptReader::search_command(string& line, ifstream& file)
 //==================================================================================================
 void ScriptReader::handle_if(string& line)
 {
-    //cout << "handle_if " << line << endl;
     if_stack.push(new IfStatement(should_execute(), line, *this));
 }
 
@@ -183,7 +182,6 @@ void ScriptReader::handle_if(string& line)
 //==================================================================================================
 void ScriptReader::handle_else(string& line)
 {
-    //cout << "handle_else" << endl;
     if(if_stack.empty())
     {
         throw string("else with no preceding if");
@@ -197,8 +195,6 @@ void ScriptReader::handle_else(string& line)
 //==================================================================================================
 void ScriptReader::handle_elseif(string& line)
 {
-    //cout << "handle_elseif " << line << endl;
-
     if(if_stack.empty())
     {
         throw string("elseif with no preceding if");
@@ -213,7 +209,6 @@ void ScriptReader::handle_elseif(string& line)
 //==================================================================================================
 void ScriptReader::handle_endif(string& line)
 {
-    //cout << "handle_endif " << endl;
     IfStatement* top;
     
     do
@@ -660,6 +655,11 @@ void ScriptReader::print_continue_title()
 
 
 //==========================================================================================================
+//==========================================================================================================
+string ScriptReader::set_command_name;
+
+
+//==========================================================================================================
 // Static commands, shared by all script readers
 //==========================================================================================================
 map<string, Command*> ScriptReader::commands = init_commands();
@@ -687,9 +687,12 @@ map<string, Command*> ScriptReader::init_commands()
     cmd = new NextIPCommand();          local_commands[cmd->name] = cmd;
     cmd = new StopListeningCommand();   local_commands[cmd->name] = cmd;
     cmd = new StartListeningCommand();  local_commands[cmd->name] = cmd;
-    cmd = new SetCommand();             local_commands[cmd->name] = cmd;
     cmd = new PrintCommand();           local_commands[cmd->name] = cmd;
-    
+
+    cmd = new SetCommand();
+    set_command_name = cmd->name;
+    local_commands[cmd->name] = cmd;
+
     return local_commands;
 }
 

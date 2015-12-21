@@ -26,7 +26,7 @@ public:
     void clear();
     void start();
     void stop();
-    void start(string in_ip);
+    void start(string in_ip, bool force_restart = false);
     void check_no_pending_messages();
     
 private:

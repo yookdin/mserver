@@ -66,6 +66,7 @@ public:
     virtual Value& operator>=(Value& other) { return throw_wrong_op(">="); }
     virtual Value& match     (Value& other) { return throw_wrong_op("~");  }
     virtual Value& not_match (Value& other) { return throw_wrong_op("!~"); }
+    virtual operator bool() { throw string("Operator bool not supported by type " + get_type_name()); };
     
     string get_type_name()
     {

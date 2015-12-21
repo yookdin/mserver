@@ -16,13 +16,8 @@
 class SetCommand: public Command
 {
 public:
-    SetCommand();
+    SetCommand(): Command("set") {}
     virtual void interpret(string &line, ifstream &file, ScriptReader &reader);
-    
-private:
-    const string value_str;
-    const string ternarry_op_str;
-    const regex var_set_regex;
 };
 
 

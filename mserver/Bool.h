@@ -28,6 +28,8 @@ public:
     Value& operator!()              { return *(new Bool(!val)); }
     Value& operator==(Value& other) { return *(new Bool(val == other.get_bool())); }
     Value& operator!=(Value& other) { return *(new Bool(val != other.get_bool())); }
+    virtual operator bool() { return val; };
+
 
     void flip() { val = !val; }
     virtual string to_string() { return (val ? "true" : "false"); }

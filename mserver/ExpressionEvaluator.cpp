@@ -42,22 +42,24 @@ ExpressionEvaluator::ExpressionEvaluator():
     // Map of constant tokens (ones without values)
     const_tokens[OpenParen::str] = new OpenParen;
     const_tokens[CloseParen::str] = new CloseParen;
-    const_tokens[Add::str] = new Add;
-    const_tokens[Subtract::str] = new Subtract;
-    const_tokens[Div::str] = new Div;
-    const_tokens[Mul::str] = new Mul;
-    const_tokens[Mod::str] = new Mod;
-    const_tokens[Equal::str] = new Equal;
-    const_tokens[NotEqual::str] = new NotEqual;
-    const_tokens[LessThan::str] = new LessThan;
-    const_tokens[GreaterThan::str] = new GreaterThan;
-    const_tokens[LessThanEqual::str] = new LessThanEqual;
-    const_tokens[GreaterThanEqual::str] = new GreaterThanEqual;
-    const_tokens[Or::str] = new Or;
-    const_tokens[And::str] = new And;
-    const_tokens[Not::str] = new Not;
-    const_tokens[Match::str] = new Match;
-    const_tokens[NotMatch::str] = new NotMatch;
+    const_tokens[Operator::add_str] = new Add;
+    const_tokens[Operator::sub_str] = new Subtract;
+    const_tokens[Operator::div_str] = new Div;
+    const_tokens[Operator::mul_str] = new Mul;
+    const_tokens[Operator::mod_str] = new Mod;
+    const_tokens[Operator::equal_str] = new Equal;
+    const_tokens[Operator::not_equal_str] = new NotEqual;
+    const_tokens[Operator::less_than_str] = new LessThan;
+    const_tokens[Operator::greater_than_str] = new GreaterThan;
+    const_tokens[Operator::lte_str] = new LessThanEqual;
+    const_tokens[Operator::gte_str] = new GreaterThanEqual;
+    const_tokens[Operator::or_str] = new Or;
+    const_tokens[Operator::and_str] = new And;
+    const_tokens[Operator::not_str] = new Not;
+    const_tokens[Operator::match_str] = new Match;
+    const_tokens[Operator::no_match_str] = new NotMatch;
+    const_tokens[Operator::ternary_if_str] = new TernaryIf;
+    const_tokens[Operator::ternary_else_str] = new TernaryElse;
 }
 
 
@@ -120,6 +122,7 @@ string ExpressionEvaluator::eval_as_string(string exp, ScriptReader& reader)
 
 
 //==========================================================================================================
+// Evaluate expression, return pointer to Value object, representing the value.
 //==========================================================================================================
 Value* ExpressionEvaluator::eval(string exp, ScriptReader& _reader)
 {
@@ -133,6 +136,8 @@ Value* ExpressionEvaluator::eval(string exp, ScriptReader& _reader)
 
 
 //==========================================================================================================
+// Turn expression in string format to a list of tokens. Tokens are values, operators, etc. If variable
+// reference is encountered, it is replaced by its value received from the reader.
 //==========================================================================================================
 void ExpressionEvaluator::convert_to_tokens(string &exp, vector<Token*>& tokens)
 {
@@ -194,7 +199,7 @@ void ExpressionEvaluator::convert_to_rpn(vector<Token*>& tokens, deque<Token*>& 
                     
                     // Lower precedence means apply first!
                     if(top->precedence < op->precedence ||
-                       (top->precedence == op->precedence && top->associativiy == Operator::LEFT))
+                       (top->precedence == op->precedence && top->associativity == Operator::LEFT))
                     {
                         output.push_back(ops.top());
                         ops.pop();
@@ -401,6 +406,13 @@ Value* ExpressionEvaluator::eval_rpn(deque<Token*>& output)
         {
             Operator* op = (Operator*)output.front();
             
+            if(op->to_string() == Operator::ternary_else_str)
+            {
+                // The ternary else (":") is only for separating the if and else parts of the ternary operator,
+                // it is not needed for the evaluation.
+                continue;
+            }
+            
             if(values.size() < op->num_operands)
             {
                 throw string("Not enough operands for operator " + op->to_string());
@@ -414,13 +426,16 @@ Value* ExpressionEvaluator::eval_rpn(deque<Token*>& output)
                 values.pop();
             }
             
-            values.push(op->execute(operands)); // Return the value of the operation to the stack
+            values.push(op->eval(operands)); // Return the value of the operation to the stack
             
             // The operands have been used and are no longer needed, delete them;
             // Note: don't delete ops - they're static and will be reused
             for(auto val: operands)
             {
-                delete val;
+                if(val != values.top()) // This may happen when applying the ternary operator
+                {
+                    delete val;
+                }
             }
         }
     } // for token in output

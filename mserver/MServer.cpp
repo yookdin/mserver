@@ -43,6 +43,8 @@ MServer::MServer()
 //==========================================================================================================
 void MServer::run(int argc, char * argv[])
 {
+    bool last_failed = false;
+    
     try
     {
         process_args(argc, argv);
@@ -66,8 +68,9 @@ void MServer::run(int argc, char * argv[])
                 break;
             }
 
-            reset_connection(); // Go back to original ip, start listening if stopped
-
+            reset_connection(last_failed); // Go back to original ip, start listening if stopped
+            last_failed = false;
+            
             map<string, string> script_vars;
             process_control_message(ctrl_msg, script_vars);
             
@@ -83,6 +86,7 @@ void MServer::run(int argc, char * argv[])
             {
                 cout << endl << err << endl;
                 ctrl_connection->send_message(err);
+                last_failed = true;
                 continue;
             }
             
@@ -300,19 +304,19 @@ void MServer::advance_ip()
 
 //==========================================================================================================
 //==========================================================================================================
-void MServer::reset_ip()
+void MServer::reset_ip(bool last_failed)
 {
     vars[SERVER_IP] = ips[cur_ip_index = 0];
-    sip_connection->start(vars[SERVER_IP]);
+    sip_connection->start(vars[SERVER_IP], last_failed);
 }
 
 
 //==========================================================================================================
 //==========================================================================================================
-void MServer::reset_connection()
+void MServer::reset_connection(bool last_failed)
 {
     sip_connection->clear();
-    reset_ip();
+    reset_ip(last_failed);
 }
 
 
