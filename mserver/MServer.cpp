@@ -30,7 +30,7 @@ MServer::MServer()
     vars[CLIENT_IP_TYPE] = "4";
     vars[AUDIO_IP_TYPE] = "4";
     vars[AUDIO_IP] = "127.0.0.1";
-    vars[AUDIO_PORT] = "20000";
+    vars[AUDIO_PORT] = "6000";
     vars[VIDEO_IP_TYPE] = "4";
     vars[VIDEO_IP] = "127.0.0.1";
     vars[VIDEO_PORT] = "30000";
@@ -66,6 +66,12 @@ void MServer::run(int argc, char * argv[])
             if(ctrl_msg == "bye")
             {
                 break;
+            }
+            
+            if(ctrl_msg == "awake?")
+            {
+                ctrl_connection->send_message("yes");
+                continue;
             }
 
             reset_connection(last_failed); // Go back to original ip, start listening if stopped
