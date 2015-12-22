@@ -120,49 +120,6 @@
 		FEC54F2D1C1B223B00D316E9 /* Call.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Call.hpp; sourceTree = "<group>"; };
 		FEC54F351C1F082700D316E9 /* PrintCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PrintCommand.cpp; sourceTree = "<group>"; };
 		FEC54F361C1F082700D316E9 /* PrintCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PrintCommand.hpp; sourceTree = "<group>"; };
-		FEC54F8D1C20356200D316E9 /* 3WayCall.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3WayCall.cpp; sourceTree = "<group>"; };
-		FEC54F8E1C20356200D316E9 /* BasicCalls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicCalls.cpp; sourceTree = "<group>"; };
-		FEC54F8F1C20356200D316E9 /* BBSimulatedConnectivity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBSimulatedConnectivity.cpp; sourceTree = "<group>"; };
-		FEC54F901C20356200D316E9 /* BBSimulatedConnectivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBSimulatedConnectivity.h; sourceTree = "<group>"; };
-		FEC54F911C20356200D316E9 /* BBSimulatedDeviceLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBSimulatedDeviceLayer.cpp; sourceTree = "<group>"; };
-		FEC54F921C20356200D316E9 /* BBSimulatedDeviceLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBSimulatedDeviceLayer.h; sourceTree = "<group>"; };
-		FEC54F931C20356200D316E9 /* BBSimulatedDeviceState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBSimulatedDeviceState.cpp; sourceTree = "<group>"; };
-		FEC54F941C20356200D316E9 /* BBSimulatedDeviceState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBSimulatedDeviceState.h; sourceTree = "<group>"; };
-		FEC54F951C20356200D316E9 /* BBSimulatedDNSResolver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBSimulatedDNSResolver.cpp; sourceTree = "<group>"; };
-		FEC54F961C20356200D316E9 /* BBSimulatedDNSResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBSimulatedDNSResolver.h; sourceTree = "<group>"; };
-		FEC54F971C20356200D316E9 /* BBSimulatedObserver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBSimulatedObserver.cpp; sourceTree = "<group>"; };
-		FEC54F981C20356200D316E9 /* BBSimulatedObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBSimulatedObserver.h; sourceTree = "<group>"; };
-		FEC54F991C20356200D316E9 /* BBSimulatedVideoCapture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBSimulatedVideoCapture.cpp; sourceTree = "<group>"; };
-		FEC54F9A1C20356200D316E9 /* BBSimulatedVideoCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBSimulatedVideoCapture.h; sourceTree = "<group>"; };
-		FEC54F9B1C20356200D316E9 /* BBSimulatedVideoRender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBSimulatedVideoRender.cpp; sourceTree = "<group>"; };
-		FEC54F9C1C20356200D316E9 /* BBSimulatedVideoRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBSimulatedVideoRender.h; sourceTree = "<group>"; };
-		FEC54F9D1C20356200D316E9 /* BBTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BBTest.cpp; sourceTree = "<group>"; };
-		FEC54F9E1C20356200D316E9 /* BBTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBTest.h; sourceTree = "<group>"; };
-		FEC54F9F1C20356200D316E9 /* bbutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bbutils.cpp; sourceTree = "<group>"; };
-		FEC54FA01C20356200D316E9 /* bbutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bbutils.h; sourceTree = "<group>"; };
-		FEC54FA11C20356200D316E9 /* Call.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Call.cpp; sourceTree = "<group>"; };
-		FEC54FA21C20356200D316E9 /* Call.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Call.h; sourceTree = "<group>"; };
-		FEC54FA31C20356200D316E9 /* CallFails.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CallFails.cpp; sourceTree = "<group>"; };
-		FEC54FA41C20356200D316E9 /* CallHandoff.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CallHandoff.cpp; sourceTree = "<group>"; };
-		FEC54FA51C20356200D316E9 /* CallTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CallTest.cpp; sourceTree = "<group>"; };
-		FEC54FA61C20356200D316E9 /* CallTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallTest.h; sourceTree = "<group>"; };
-		FEC54FA71C20356200D316E9 /* CallTestEventHandlers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CallTestEventHandlers.cpp; sourceTree = "<group>"; };
-		FEC54FA81C20356200D316E9 /* CallTransfer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CallTransfer.cpp; sourceTree = "<group>"; };
-		FEC54FA91C20356200D316E9 /* CallWaiting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CallWaiting.cpp; sourceTree = "<group>"; };
-		FEC54FAA1C20356200D316E9 /* common_headers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common_headers.h; sourceTree = "<group>"; };
-		FEC54FAB1C20356200D316E9 /* ControlConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlConnection.cpp; sourceTree = "<group>"; };
-		FEC54FAC1C20356200D316E9 /* ControlConnection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ControlConnection.hpp; sourceTree = "<group>"; };
-		FEC54FAD1C20356200D316E9 /* defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = defines.h; sourceTree = "<group>"; };
-		FEC54FAE1C20356200D316E9 /* Hold.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hold.cpp; sourceTree = "<group>"; };
-		FEC54FAF1C20356200D316E9 /* Intersecting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Intersecting.cpp; sourceTree = "<group>"; };
-		FEC54FB01C20356200D316E9 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		FEC54FB11C20356200D316E9 /* Media.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Media.cpp; sourceTree = "<group>"; };
-		FEC54FB21C20356200D316E9 /* RegisterTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RegisterTest.cpp; sourceTree = "<group>"; };
-		FEC54FB31C20356200D316E9 /* RegisterTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterTest.h; sourceTree = "<group>"; };
-		FEC54FB41C20356200D316E9 /* RegisterTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RegisterTests.cpp; sourceTree = "<group>"; };
-		FEC54FB51C20356200D316E9 /* Telemetries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Telemetries.cpp; sourceTree = "<group>"; };
-		FEC54FB61C20356200D316E9 /* TestsEnv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestsEnv.cpp; sourceTree = "<group>"; };
-		FEC54FB71C20356200D316E9 /* TestsEnv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestsEnv.h; sourceTree = "<group>"; };
 		FED6782B1BFF7F9A00B739BE /* Token.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		FED6782C1BFF810200B739BE /* Operator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Operator.h; sourceTree = "<group>"; };
 		FED678301BFF8E1900B739BE /* Paren.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paren.h; sourceTree = "<group>"; };
@@ -225,7 +182,6 @@
 				FE7911881BFF116B00A5DD60 /* Evaluation */,
 				FE610F101BE0D0F6002834FC /* Utils */,
 				FE0ECE781BDF850E00958E40 /* Docs */,
-				FEC54F8C1C20356200D316E9 /* bb */,
 			);
 			path = mserver;
 			sourceTree = "<group>";
@@ -361,56 +317,6 @@
 				FE29A9581C20DCAC0074C4D9 /* IfStatement.cpp */,
 			);
 			name = Reader;
-			sourceTree = "<group>";
-		};
-		FEC54F8C1C20356200D316E9 /* bb */ = {
-			isa = PBXGroup;
-			children = (
-				FEC54F8D1C20356200D316E9 /* 3WayCall.cpp */,
-				FEC54F8E1C20356200D316E9 /* BasicCalls.cpp */,
-				FEC54F8F1C20356200D316E9 /* BBSimulatedConnectivity.cpp */,
-				FEC54F901C20356200D316E9 /* BBSimulatedConnectivity.h */,
-				FEC54F911C20356200D316E9 /* BBSimulatedDeviceLayer.cpp */,
-				FEC54F921C20356200D316E9 /* BBSimulatedDeviceLayer.h */,
-				FEC54F931C20356200D316E9 /* BBSimulatedDeviceState.cpp */,
-				FEC54F941C20356200D316E9 /* BBSimulatedDeviceState.h */,
-				FEC54F951C20356200D316E9 /* BBSimulatedDNSResolver.cpp */,
-				FEC54F961C20356200D316E9 /* BBSimulatedDNSResolver.h */,
-				FEC54F971C20356200D316E9 /* BBSimulatedObserver.cpp */,
-				FEC54F981C20356200D316E9 /* BBSimulatedObserver.h */,
-				FEC54F991C20356200D316E9 /* BBSimulatedVideoCapture.cpp */,
-				FEC54F9A1C20356200D316E9 /* BBSimulatedVideoCapture.h */,
-				FEC54F9B1C20356200D316E9 /* BBSimulatedVideoRender.cpp */,
-				FEC54F9C1C20356200D316E9 /* BBSimulatedVideoRender.h */,
-				FEC54F9D1C20356200D316E9 /* BBTest.cpp */,
-				FEC54F9E1C20356200D316E9 /* BBTest.h */,
-				FEC54F9F1C20356200D316E9 /* bbutils.cpp */,
-				FEC54FA01C20356200D316E9 /* bbutils.h */,
-				FEC54FA11C20356200D316E9 /* Call.cpp */,
-				FEC54FA21C20356200D316E9 /* Call.h */,
-				FEC54FA31C20356200D316E9 /* CallFails.cpp */,
-				FEC54FA41C20356200D316E9 /* CallHandoff.cpp */,
-				FEC54FA51C20356200D316E9 /* CallTest.cpp */,
-				FEC54FA61C20356200D316E9 /* CallTest.h */,
-				FEC54FA71C20356200D316E9 /* CallTestEventHandlers.cpp */,
-				FEC54FA81C20356200D316E9 /* CallTransfer.cpp */,
-				FEC54FA91C20356200D316E9 /* CallWaiting.cpp */,
-				FEC54FAA1C20356200D316E9 /* common_headers.h */,
-				FEC54FAB1C20356200D316E9 /* ControlConnection.cpp */,
-				FEC54FAC1C20356200D316E9 /* ControlConnection.hpp */,
-				FEC54FAD1C20356200D316E9 /* defines.h */,
-				FEC54FAE1C20356200D316E9 /* Hold.cpp */,
-				FEC54FAF1C20356200D316E9 /* Intersecting.cpp */,
-				FEC54FB01C20356200D316E9 /* main.cpp */,
-				FEC54FB11C20356200D316E9 /* Media.cpp */,
-				FEC54FB21C20356200D316E9 /* RegisterTest.cpp */,
-				FEC54FB31C20356200D316E9 /* RegisterTest.h */,
-				FEC54FB41C20356200D316E9 /* RegisterTests.cpp */,
-				FEC54FB51C20356200D316E9 /* Telemetries.cpp */,
-				FEC54FB61C20356200D316E9 /* TestsEnv.cpp */,
-				FEC54FB71C20356200D316E9 /* TestsEnv.h */,
-			);
-			path = bb;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
