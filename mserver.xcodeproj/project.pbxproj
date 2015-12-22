@@ -18,6 +18,12 @@
 		FE2FFC511BE76B3E004E05A2 /* SipMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC4F1BE76B3E004E05A2 /* SipMessage.cpp */; };
 		FE2FFC671BEB79A1004E05A2 /* SipConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC651BEB79A1004E05A2 /* SipConnection.cpp */; };
 		FE2FFC701BEF89E5004E05A2 /* OptionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */; };
+		FE3DFDFC1C295DF100EACC71 /* WebRTC in Frameworks */ = {isa = PBXBuildFile; fileRef = FEB4A4911C284153002C9BE9 /* WebRTC */; };
+		FE3DFDFF1C295E8400EACC71 /* WebrtcWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE3DFDFD1C295E8400EACC71 /* WebrtcWrapper.cpp */; };
+		FE3DFE001C295EC700EACC71 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEB4A49F1C285C44002C9BE9 /* AudioToolbox.framework */; };
+		FE3DFE011C295EC700EACC71 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEB4A49B1C285BCC002C9BE9 /* CoreAudio.framework */; };
+		FE3DFE021C295ED400EACC71 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEB4A4B11C285D4F002C9BE9 /* Cocoa.framework */; };
+		FE3DFE031C295EE600EACC71 /* libstdc++.6.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FE3DFDEE1C28735B00EACC71 /* libstdc++.6.tbd */; };
 		FE88A6BD1C091DCD00AB68A2 /* ControlConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE88A6BB1C091DCD00AB68A2 /* ControlConnection.cpp */; };
 		FE924AA51C0C823D00769C34 /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE924AA31C0C823D00769C34 /* Connection.cpp */; };
 		FE9B0B981C11FBB0005FCE06 /* PauseCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B961C11FBB0005FCE06 /* PauseCommand.cpp */; };
@@ -27,6 +33,7 @@
 		FE9B0BA41C11FCE0005FCE06 /* SendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0B9F1C11FCE0005FCE06 /* SendCommand.cpp */; };
 		FE9B0BA71C1262AA005FCE06 /* NextIPCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FE9B0BA51C1262AA005FCE06 /* NextIPCommand.cpp */; };
 		FEB4A48E1C2814CD002C9BE9 /* ControlFlowCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEB4A48C1C2814CD002C9BE9 /* ControlFlowCommands.cpp */; };
+		FEB4A4961C284570002C9BE9 /* PlayFileCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEB4A4941C284570002C9BE9 /* PlayFileCommand.cpp */; };
 		FEC54F2E1C1B223B00D316E9 /* Call.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEC54F2C1C1B223B00D316E9 /* Call.cpp */; };
 		FEC54F371C1F082700D316E9 /* PrintCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEC54F351C1F082700D316E9 /* PrintCommand.cpp */; };
 		FED678321BFFD8E300B739BE /* Operator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FED678311BFFD8E300B739BE /* Operator.cpp */; };
@@ -37,13 +44,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		FE0ECE4A1BDF818E00958E40 /* CopyFiles */ = {
+		FE0ECE4A1BDF818E00958E40 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -75,6 +83,9 @@
 		FE2FFC661BEB79A1004E05A2 /* SipConnection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SipConnection.hpp; sourceTree = "<group>"; };
 		FE2FFC6E1BEF89E5004E05A2 /* OptionParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OptionParser.cpp; sourceTree = "<group>"; };
 		FE2FFC6F1BEF89E5004E05A2 /* OptionParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OptionParser.hpp; sourceTree = "<group>"; };
+		FE3DFDEE1C28735B00EACC71 /* libstdc++.6.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.tbd"; path = "usr/lib/libstdc++.6.tbd"; sourceTree = SDKROOT; };
+		FE3DFDFD1C295E8400EACC71 /* WebrtcWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WebrtcWrapper.cpp; sourceTree = "<group>"; };
+		FE3DFDFE1C295E8400EACC71 /* WebrtcWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WebrtcWrapper.hpp; sourceTree = "<group>"; };
 		FE5C5F4E1C01D4E200A773C0 /* scenario.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scenario.txt; sourceTree = "<group>"; };
 		FE610F111BE0D126002834FC /* bimap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bimap.h; sourceTree = "<group>"; };
 		FE79118A1BFF119700A5DD60 /* Value.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Value.h; sourceTree = "<group>"; };
@@ -99,6 +110,12 @@
 		FE9B0BA61C1262AA005FCE06 /* NextIPCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NextIPCommand.hpp; sourceTree = "<group>"; };
 		FEB4A48C1C2814CD002C9BE9 /* ControlFlowCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlFlowCommands.cpp; sourceTree = "<group>"; };
 		FEB4A48D1C2814CD002C9BE9 /* ControlFlowCommands.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ControlFlowCommands.hpp; sourceTree = "<group>"; };
+		FEB4A4911C284153002C9BE9 /* WebRTC */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = WebRTC; path = ../../src/VoXIP/iPhoneVoxipFramework/VoXIPFramework/Libs/Release/out_mac/WebRTC.framework/WebRTC; sourceTree = "<group>"; };
+		FEB4A4941C284570002C9BE9 /* PlayFileCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayFileCommand.cpp; sourceTree = "<group>"; };
+		FEB4A4951C284570002C9BE9 /* PlayFileCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayFileCommand.hpp; sourceTree = "<group>"; };
+		FEB4A49B1C285BCC002C9BE9 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		FEB4A49F1C285C44002C9BE9 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		FEB4A4B11C285D4F002C9BE9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		FEC54F2C1C1B223B00D316E9 /* Call.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Call.cpp; sourceTree = "<group>"; };
 		FEC54F2D1C1B223B00D316E9 /* Call.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Call.hpp; sourceTree = "<group>"; };
 		FEC54F351C1F082700D316E9 /* PrintCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PrintCommand.cpp; sourceTree = "<group>"; };
@@ -165,6 +182,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE3DFE031C295EE600EACC71 /* libstdc++.6.tbd in Frameworks */,
+				FE3DFE021C295ED400EACC71 /* Cocoa.framework in Frameworks */,
+				FE3DFE001C295EC700EACC71 /* AudioToolbox.framework in Frameworks */,
+				FE3DFE011C295EC700EACC71 /* CoreAudio.framework in Frameworks */,
+				FE3DFDFC1C295DF100EACC71 /* WebRTC in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				FE0ECE4E1BDF818E00958E40 /* mserver */,
+				FEB4A4B31C285DA0002C9BE9 /* Frameworks */,
 				FE0ECE4D1BDF818E00958E40 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -194,6 +217,7 @@
 				FE0ECE611BDF832E00958E40 /* main.cpp */,
 				FE0ECE7E1BDF882B00958E40 /* MServer.hpp */,
 				FE0ECE7D1BDF882B00958E40 /* MServer.cpp */,
+				FEB4A4971C284D2E002C9BE9 /* Media */,
 				FEC54F211C1AD71C00D316E9 /* Reader */,
 				FE88A6BE1C0C65DC00AB68A2 /* Connections */,
 				FE0ECE7A1BDF854600958E40 /* SIP */,
@@ -232,6 +256,8 @@
 				FEC54F351C1F082700D316E9 /* PrintCommand.cpp */,
 				FEB4A48D1C2814CD002C9BE9 /* ControlFlowCommands.hpp */,
 				FEB4A48C1C2814CD002C9BE9 /* ControlFlowCommands.cpp */,
+				FEB4A4951C284570002C9BE9 /* PlayFileCommand.hpp */,
+				FEB4A4941C284570002C9BE9 /* PlayFileCommand.cpp */,
 			);
 			name = Commands;
 			sourceTree = "<group>";
@@ -301,6 +327,27 @@
 				FE88A6BB1C091DCD00AB68A2 /* ControlConnection.cpp */,
 			);
 			name = Connections;
+			sourceTree = "<group>";
+		};
+		FEB4A4971C284D2E002C9BE9 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				FE3DFDFE1C295E8400EACC71 /* WebrtcWrapper.hpp */,
+				FE3DFDFD1C295E8400EACC71 /* WebrtcWrapper.cpp */,
+			);
+			name = Media;
+			sourceTree = "<group>";
+		};
+		FEB4A4B31C285DA0002C9BE9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FE3DFDEE1C28735B00EACC71 /* libstdc++.6.tbd */,
+				FEB4A4B11C285D4F002C9BE9 /* Cocoa.framework */,
+				FEB4A49F1C285C44002C9BE9 /* AudioToolbox.framework */,
+				FEB4A49B1C285BCC002C9BE9 /* CoreAudio.framework */,
+				FEB4A4911C284153002C9BE9 /* WebRTC */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		FEC54F211C1AD71C00D316E9 /* Reader */ = {
@@ -375,7 +422,7 @@
 			buildPhases = (
 				FE0ECE481BDF818E00958E40 /* Sources */,
 				FE0ECE491BDF818E00958E40 /* Frameworks */,
-				FE0ECE4A1BDF818E00958E40 /* CopyFiles */,
+				FE0ECE4A1BDF818E00958E40 /* Copy Files */,
 			);
 			buildRules = (
 			);
@@ -443,11 +490,13 @@
 				FE0ECE7F1BDF882B00958E40 /* MServer.cpp in Sources */,
 				FEC54F371C1F082700D316E9 /* PrintCommand.cpp in Sources */,
 				FE88A6BD1C091DCD00AB68A2 /* ControlConnection.cpp in Sources */,
+				FEB4A4961C284570002C9BE9 /* PlayFileCommand.cpp in Sources */,
 				FE9B0BA21C11FCE0005FCE06 /* RecvCommand.cpp in Sources */,
 				FE1104B61C22B188001C5AC8 /* ExpressionEvaluator.cpp in Sources */,
 				FE1104B81C22B934001C5AC8 /* Paren.cpp in Sources */,
 				FE9B0BA71C1262AA005FCE06 /* NextIPCommand.cpp in Sources */,
 				FE0ECE981BE0B76400958E40 /* SipParser.cpp in Sources */,
+				FE3DFDFF1C295E8400EACC71 /* WebrtcWrapper.cpp in Sources */,
 				FE924AA51C0C823D00769C34 /* Connection.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -459,8 +508,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -490,9 +539,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = "\"/Users/ydinari/src/VoXIP/iPhoneVoxipFramework/VoXIPFramework/Libs/Release/out_mac/WebRTC.framework\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lc++";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -501,8 +552,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -526,8 +577,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = "\"/Users/ydinari/src/VoXIP/iPhoneVoxipFramework/VoXIPFramework/Libs/Release/out_mac/WebRTC.framework\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-lc++";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -535,15 +588,42 @@
 		FE0ECE541BDF818E00958E40 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "$(OTHER_CFLAGS)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_MODULES_AUTOLINK = YES;
+				ENABLE_TESTABILITY = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"/Users/ydinari/src/VoXIP/iPhoneVoxipFramework/VoXIPFramework/Libs/Release/out_mac",
+				);
+				HEADER_SEARCH_PATHS = /Users/ydinari/src/VoXIP/iPhoneVoxipFramework/VoXIPFramework/Libs/Release/out_mac/WebRTC.framework/Headers;
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Debug;
 		};
 		FE0ECE551BDF818E00958E40 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_MODULES_AUTOLINK = YES;
+				ENABLE_TESTABILITY = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"/Users/ydinari/src/VoXIP/iPhoneVoxipFramework/VoXIPFramework/Libs/Release/out_mac",
+				);
+				HEADER_SEARCH_PATHS = /Users/ydinari/src/VoXIP/iPhoneVoxipFramework/VoXIPFramework/Libs/Release/out_mac/WebRTC.framework/Headers;
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;
 		};
